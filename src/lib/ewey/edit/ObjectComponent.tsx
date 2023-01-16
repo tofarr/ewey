@@ -1,6 +1,5 @@
 import EweyProps from '../EweyProps'
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -8,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import EditComponent from '.'
 
 const ObjectComponent = ({ value, schema, path, setValue}: EweyProps) => {
-  if (schema.type != 'object') {
+  if (schema.type !== 'object') {
     return null
   }
   const { properties } = schema

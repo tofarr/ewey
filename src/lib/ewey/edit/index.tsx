@@ -1,7 +1,6 @@
 import EweyProps from '../EweyProps'
 import ArrayComponent from './ArrayComponent'
 import BooleanComponent from './BooleanComponent'
-import DateComponent from './DateComponent'
 import DateTimeComponent from './DateTimeComponent'
 import NumberComponent from './NumberComponent'
 import ObjectComponent from './ObjectComponent'
@@ -12,7 +11,6 @@ const COMPONENT_TYPES = [
   NumberComponent,
   BooleanComponent,
   DateTimeComponent,
-  DateComponent,
   StringComponent,
   ObjectComponent,
   ArrayComponent
