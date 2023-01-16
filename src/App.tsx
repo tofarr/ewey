@@ -12,7 +12,7 @@ const userSchema = {
     date_of_birth: {type: "string", format: "date"},
     active: {type: "boolean"},
     high_score: {type: "integer"},
-    average_score: {type: "float"},
+    average_score: {type: "number"},
     notes: {type: "string"},
     tags: {
       type: "array",
