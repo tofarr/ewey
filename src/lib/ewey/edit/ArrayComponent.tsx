@@ -5,6 +5,9 @@ import ListItem from '@mui/material/ListItem';
 import Paper from '@mui/material/Paper';
 import EditComponent from '.'
 
+// THE ARRAY COMPONENT NEEDS A WAY OF MAKING NEW ITEMS - A DEFAULT
+// WE COULD ALSO CONSIDER A "LabelProvider" pattern...
+
 const ArrayComponent = ({ value, schema, path, setValue }: EweyProps) => {
   if (schema.type !== 'array') {
     return null
