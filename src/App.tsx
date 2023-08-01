@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import EditComponent from './lib/ewey/edit'
+import Ewey from './lib/ewey';
+import { FACTORIES } from './lib/ewey/factory';
+import FieldSetFactory from './lib/ewey/factory/FieldSetFactory';
+import NamedFactory from './lib/ewey/factory/NamedFactory';
+import ReadOnlyFactory from './lib/ewey/factory/ReadOnlyFactory';
 
 const userSchema = {
   name: "user",
@@ -39,12 +43,19 @@ const user = {
   updated_at: "2023-01-05T16:11:08+00:00"
 }
 
+const Component = Ewey(userSchema)
+const CustomComponent = Ewey(userSchema, [
+  ...FACTORIES,
+  new NamedFactory("user", new ReadOnlyFactory(new FieldSetFactory(true, ['name', 'email', 'date_of_birth', 'high_score', 'tags'])))
+])
+
 function App() {
   const [value, setValue] = useState(user)
 
   return (
     <div className="App">
-      <EditComponent value={value} schema={userSchema} path={[]} setValue={setValue} />
+      <Component value={value} onSetValue={setValue} />
+      <CustomComponent value={value} onSetValue={setValue} />
     </div>
   );
 }
