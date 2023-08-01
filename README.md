@@ -1,3 +1,10 @@
+#TODOS:
+
+* Turn this into a proper component library
+* Add project to npmjs.org
+* Add code quality workflows for this project
+* See about adding this as a hosted package
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
