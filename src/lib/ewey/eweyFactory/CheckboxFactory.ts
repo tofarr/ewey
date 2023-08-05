@@ -1,10 +1,11 @@
 import CheckboxComponent from '../eweyComponent/CheckboxComponent';
 import EweyFactory from './EweyFactory';
+import JsonSchema from './JsonSchema'
 
 class CheckboxFactory implements EweyFactory {
   priority: number = 100
 
-  create(schema: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
     if (schema?.type !== 'boolean'){
       return null
     }

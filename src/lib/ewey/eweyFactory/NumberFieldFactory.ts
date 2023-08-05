@@ -2,13 +2,14 @@ import { Validator } from '@cfworker/json-schema';
 
 import NumberFieldWrapper from '../eweyComponent/NumberFieldWrapper';
 import EweyFactory from './EweyFactory';
+import JsonSchema from './JsonSchema'
 
 const NUMBER_TYPES = ['integer', 'number']
 
 class NumberFieldFactory implements EweyFactory {
   priority: number = 110
 
-  create(schema: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
     if (!NUMBER_TYPES.includes(schema.type)){
       return null
     }

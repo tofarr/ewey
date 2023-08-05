@@ -2,13 +2,14 @@ import { Validator } from '@cfworker/json-schema';
 
 import DatePickerWrapper from '../eweyComponent/DatePickerWrapper';
 import EweyFactory from './EweyFactory';
+import JsonSchema from './JsonSchema'
 
 const FORMATS = ['date-time', 'date']
 
 class DatePickerFactory implements EweyFactory {
   priority: number = 110
 
-  create(schema: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
     if (!schema || schema.type !== 'string' || !FORMATS.includes(schema.format)) {
       return null
     }

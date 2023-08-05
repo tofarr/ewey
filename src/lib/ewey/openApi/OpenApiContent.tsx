@@ -24,7 +24,8 @@ const OpenApiContent: FC<OpenApiContentProps> = ({
   const [ResultsComponent, setResultsComponent] = useState<any>(null)
   useEffect(() => {
     const resultSchema = getResultSchema(schema, path, method as string)
-    const c = JsonSchemaComponentFactory(resultSchema, factories)
+    const components = schema.schema.components
+    const c = JsonSchemaComponentFactory(resultSchema, components, factories)
     setResultsComponent(() => c)
   }, [path, method, schema, factories])
 

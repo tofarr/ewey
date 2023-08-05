@@ -54,7 +54,8 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   })
   useEffect(() => {
     const operationSchema = getFormSchema(schema, path, method)
-    const c = JsonSchemaComponentFactory(operationSchema, factories)
+    const components = schema.schema.components
+    const c = JsonSchemaComponentFactory(operationSchema, components, factories)
     setFormComponent(() => c)
   }, [path, method, schema, factories])
 

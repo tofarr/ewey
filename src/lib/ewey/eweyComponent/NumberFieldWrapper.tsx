@@ -6,7 +6,7 @@ import EweyComponent from './EweyComponent';
 
 const NumberFieldWrapper = (validator: Validator): EweyComponent<string> => {
   const NumberFieldComponent: EweyComponent<string> = ({value, onSetValue}) => {
-    const [displayValue, setDisplayValue] = useState(''+value)
+    const [displayValue, setDisplayValue] = useState(value == null ? '' : value.toString())
     const validationResult = validator.validate(value || null)
     const props: any = {
       error: !validationResult.valid,

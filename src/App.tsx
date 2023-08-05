@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
+// import Dialog from '@mui/material/Dialog';
+// import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { /*JsonSchemaComponentFactory, */ OpenApiContent, OpenApiForm, OpenApiQuery, OpenApiSchemaProvider, OpenApiSummary } from './lib/ewey';
+import { /*JsonSchemaComponentFactory, OpenApiContent, OpenApiForm, OpenApiQuery, */ OpenApiSchemaProvider, OpenApiSummary } from './lib/ewey';
 // import { FACTORIES } from './lib/ewey/eweyFactory';
 // import FieldSetFactory from './lib/ewey/eweyFactory/FieldSetFactory';
 // import NamedFactory from './lib/ewey/eweyFactory/NamedFactory';
@@ -71,7 +71,7 @@ function App() {
         {/*<Form onSuccess={alert} onError={alert} />*/}
         <OpenApiSchemaProvider url="http://localhost:8000/openapi.json">
           <Grid container padding={1} spacing={1} direction="column">
-            <Grid item>
+            {/*<Grid item>
               <OpenApiForm
                 path="/actions/say-hello"
                 method="get"
@@ -93,7 +93,7 @@ function App() {
             </Grid>
             <Grid item>
               <OpenApiQuery path="/actions/current-time" method="get" params={{}} />
-            </Grid>
+            </Grid>*/}
             <Grid item>
               <OpenApiSummary />
             </Grid>

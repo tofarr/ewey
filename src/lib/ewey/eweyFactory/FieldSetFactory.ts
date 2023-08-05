@@ -1,6 +1,7 @@
 import FieldSetWrapper from '../eweyComponent/FieldSetWrapper';
 import EweyFactory from './EweyFactory';
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
+import JsonSchema from './JsonSchema'
 
 class FieldSetFactory implements EweyFactory {
   inclusive: boolean = false
@@ -13,14 +14,14 @@ class FieldSetFactory implements EweyFactory {
     this.fieldNames = fieldNames
   }
 
-  create(schema: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
     if (!schema || schema.type !== 'object') {
       return null
     }
     const componentsByKey: any = {}
     for (const key in schema.properties) {
       if(this.includeField(key)){
-        componentsByKey[key] = JsonSchemaComponentFactory(schema.properties[key], factories)
+        componentsByKey[key] = JsonSchemaComponentFactory(schema.properties[key], factories, components)
       }
     }
     const fieldSetComponent = FieldSetWrapper(schema.name, componentsByKey)

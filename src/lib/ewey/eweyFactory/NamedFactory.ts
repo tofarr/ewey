@@ -1,4 +1,5 @@
 import EweyFactory from './EweyFactory';
+import JsonSchema from './JsonSchema'
 
 class NamedFactory implements EweyFactory {
   name: string
@@ -11,9 +12,9 @@ class NamedFactory implements EweyFactory {
     this.priority = priority
   }
 
-  create(schema: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
     if (schema?.name === this.name){
-      return this.factory.create(schema, factories)
+      return this.factory.create(schema, factories, components)
     }
     return null
   }
