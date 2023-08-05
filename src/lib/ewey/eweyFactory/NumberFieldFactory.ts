@@ -1,6 +1,6 @@
 import { Validator } from '@cfworker/json-schema';
 
-import NumberFieldWrapper from '../component/NumberFieldWrapper';
+import NumberFieldWrapper from '../eweyComponent/NumberFieldWrapper';
 import EweyFactory from './EweyFactory';
 
 const NUMBER_TYPES = ['integer', 'number']

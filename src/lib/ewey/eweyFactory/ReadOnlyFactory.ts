@@ -1,5 +1,5 @@
-import ReadOnlyWrapper from '../component/ReadOnlyWrapper';
-import EweyComponent from '../component/EweyComponent';
+import ReadOnlyWrapper from '../eweyComponent/ReadOnlyWrapper';
+import EweyComponent from '../eweyComponent/EweyComponent';
 import EweyFactory from './EweyFactory';
 
 class ReadOnlyFactory implements EweyFactory {

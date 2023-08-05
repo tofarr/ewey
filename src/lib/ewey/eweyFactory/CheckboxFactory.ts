@@ -1,4 +1,4 @@
-import CheckboxComponent from '../component/CheckboxComponent';
+import CheckboxComponent from '../eweyComponent/CheckboxComponent';
 import EweyFactory from './EweyFactory';
 
 class CheckboxFactory implements EweyFactory {

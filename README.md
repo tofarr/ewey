@@ -1,5 +1,6 @@
 #TODOS:
 
+* Need to be able to generate for full openapi forms too
 * Turn this into a proper component library
 * Add project to npmjs.org
 * Add code quality workflows for this project

@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import FormLabel from '@mui/material/FormLabel';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import EweyComponent from './EweyComponent';
 
@@ -43,14 +42,12 @@ const FieldSetWrapper = (name: string, componentsByKey: any) => {
     }
 
     return (
-      <Paper>
-        <Box p={1} textAlign="left">
-          <Box pb={2}>
-            <Typography variant="h3">{keyToLabel(name)}</Typography>
-          </Box>
-          {Object.keys(componentsByKey).map(renderField)}
+      <Box p={1} textAlign="left">
+        <Box pb={2}>
+          <Typography variant="h3">{keyToLabel(name)}</Typography>
         </Box>
-      </Paper>
+        {Object.keys(componentsByKey).map(renderField)}
+      </Box>
     )
   }
 

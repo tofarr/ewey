@@ -1,6 +1,6 @@
-import ListWrapper from '../component/ListWrapper';
+import ListWrapper from '../eweyComponent/ListWrapper';
 import EweyFactory from './EweyFactory';
-import Ewey from '../';
+import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
 
 class ListFactory implements EweyFactory {
   priority: number = 100
@@ -10,7 +10,7 @@ class ListFactory implements EweyFactory {
     if (!schema || schema.type !== 'array' || !schema.items) {
       return null
     }
-    const component = Ewey(schema.items, factories)
+    const component = JsonSchemaComponentFactory(schema.items, factories)
     const listCompponent = ListWrapper(component, this.createItem)
     return listCompponent
   }

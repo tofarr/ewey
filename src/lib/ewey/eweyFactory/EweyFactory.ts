@@ -1,5 +1,4 @@
-import { ReactNode } from 'react'
-import EweyComponent from '../component/EweyComponent'
+import EweyComponent from '../eweyComponent/EweyComponent'
 
 interface EweyFactory{
   priority: number

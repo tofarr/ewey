@@ -29,7 +29,7 @@ const ListWrapper = (ItemComponent: EweyComponent<any>, createItem?: () => any) 
 
       function handleRemoveItem() {
         const newValue = value?.splice(index, 1)
-        onSetValue?.(value)
+        onSetValue?.(newValue)
       }
 
       return (

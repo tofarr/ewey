@@ -1,6 +1,6 @@
 import { Validator } from '@cfworker/json-schema';
 
-import DatePickerWrapper from '../component/DatePickerWrapper';
+import DatePickerWrapper from '../eweyComponent/DatePickerWrapper';
 import EweyFactory from './EweyFactory';
 
 const FORMATS = ['date-time', 'date']

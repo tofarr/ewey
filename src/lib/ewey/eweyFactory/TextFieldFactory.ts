@@ -1,6 +1,6 @@
 import { Validator } from '@cfworker/json-schema';
 
-import TextFieldWrapper from '../component/TextFieldWrapper';
+import TextFieldWrapper from '../eweyComponent/TextFieldWrapper';
 import EweyFactory from './EweyFactory';
 
 class TextFieldFactory implements EweyFactory {

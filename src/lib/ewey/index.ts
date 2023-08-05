@@ -1,19 +1,7 @@
-import EweyFactory from './factory/EweyFactory';
-import { FACTORIES } from './factory';
-
-const Ewey = (schema: any, factories?: EweyFactory[]) => {
-  if (!factories) {
-    factories = FACTORIES
-  } else {
-    factories.sort((a, b) => b.priority - a.priority)
-  }
-  for (const factory of factories) {
-    const component = factory.create(schema, factories)
-    if (component) {
-      return component
-    }
-  }
-  throw new Error('no_factory')
-}
-
-export default Ewey
+export { default as JsonSchemaComponentFactory } from './JsonSchemaComponentFactory';
+export { default as OpenApiContent } from './openApi/OpenApiContent';
+export { default as OpenApiForm } from './openApi/OpenApiForm';
+export { default as OpenApiQuery } from './openApi/OpenApiQuery';
+export { default as OpenApiSchemaLoader } from './openApi/OpenApiSchemaLoader';
+export { default as OpenApiSchemaProvider } from './openApi/OpenApiSchemaProvider';
+export { default as OpenApiSummary } from './openApi/OpenApiSummary';
