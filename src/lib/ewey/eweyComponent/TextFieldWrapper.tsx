@@ -1,6 +1,7 @@
 import { ChangeEvent } from 'react';
 import { Validator } from '@cfworker/json-schema';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import EweyComponent from './EweyComponent';
 
 const TextFieldWrapper = (validator: Validator, multiline: boolean, variant: string = "body2"): EweyComponent<string> => {
@@ -13,13 +14,15 @@ const TextFieldWrapper = (validator: Validator, multiline: boolean, variant: str
       value: value
     }
     if (onSetValue) {
-      props.onChange = (event: ChangeEvent<HTMLInputElement>) => onSetValue(event.target.value)
-    } else {
-      props.disabled = true
+      return <TextField
+        error={!validationResult.valid}
+        fullWidth
+        multiline={multiline}
+        value={value}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => onSetValue(event.target.value)}
+      />
     }
-    return (
-      <TextField {...props} />
-    )
+    return <Typography>{value}</Typography>
   }
   return TextFieldComponent
 }

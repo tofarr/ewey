@@ -21,7 +21,7 @@ class FieldSetFactory implements EweyFactory {
     const componentsByKey: any = {}
     for (const key in schema.properties) {
       if(this.includeField(key)){
-        componentsByKey[key] = JsonSchemaComponentFactory(schema.properties[key], factories, components)
+        componentsByKey[key] = JsonSchemaComponentFactory(schema.properties[key], components, factories)
       }
     }
     const fieldSetComponent = FieldSetWrapper(schema.name, componentsByKey)

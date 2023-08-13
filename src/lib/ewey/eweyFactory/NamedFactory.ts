@@ -14,7 +14,7 @@ class NamedFactory implements EweyFactory {
 
   create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
     if (schema?.name === this.name){
-      return this.factory.create(schema, factories, components)
+      return this.factory.create(schema, components, factories)
     }
     return null
   }

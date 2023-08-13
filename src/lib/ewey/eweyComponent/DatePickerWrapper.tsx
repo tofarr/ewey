@@ -9,12 +9,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import ClearIcon from '@mui/icons-material/Clear';
 
 const DatePickerWrapper = (validator: Validator, format: string): EweyComponent<string | null> => {
   const DatePickerComponent: EweyComponent<string | null> = ({value, onSetValue}) => {
     const [displayValue, setDisplayValue] = useState<Dayjs | null>(dayjs(value));
-    const Picker = format === 'date' ? DatePicker : DateTimePicker
+    const dateOnly = format === 'date'
+    const Picker = dateOnly ? DatePicker : DateTimePicker
     const validationResult = validator.validate(value || null)
 
     function handleChange(newValue?: Dayjs | null){
@@ -25,6 +27,17 @@ const DatePickerWrapper = (validator: Validator, format: string): EweyComponent<
       }else{
         setDisplayValue(null)
       }
+    }
+
+    if (!onSetValue){
+      if (!value){
+        return <Typography></Typography>
+      }
+      const date = new Date(value)
+      if (dateOnly) {
+        return <Typography>{date.toLocaleDateString()}</Typography>
+      }
+      return <Typography>{date.toLocaleString()}</Typography>
     }
 
     return (
@@ -39,9 +52,9 @@ const DatePickerWrapper = (validator: Validator, format: string): EweyComponent<
                 renderInput={(params: any) => <TextField {...params} error={!validationResult.valid} />}
               />
             </Grid>
-            {onSetValue && <Grid item>
+            <Grid item>
               <IconButton onClick={() => handleChange(null)}><ClearIcon /></IconButton>
-            </Grid>}
+            </Grid>
           </Grid>
         </LocalizationProvider>
       </Fragment>

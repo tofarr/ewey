@@ -13,7 +13,7 @@ class ReadOnlyFactory implements EweyFactory {
   }
 
   create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
-    const component = this.factory.create(schema, factories, components)
+    const component = this.factory.create(schema, components, factories)
     return ReadOnlyWrapper(component as EweyComponent<any>)
   }
 }

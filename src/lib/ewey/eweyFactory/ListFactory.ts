@@ -11,7 +11,7 @@ class ListFactory implements EweyFactory {
     if (!schema || schema.type !== 'array' || !schema.items) {
       return null
     }
-    const component = JsonSchemaComponentFactory(schema.items, factories, components)
+    const component = JsonSchemaComponentFactory(schema.items, components, factories)
     const listCompponent = ListWrapper(component, this.createItem)
     return listCompponent
   }

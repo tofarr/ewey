@@ -12,7 +12,7 @@ class RefFactory implements EweyFactory {
       return null
     }
     const componentName = schema["$ref"].substring(13)
-    return RefWrapper(componentName, factories, components)
+    return RefWrapper(componentName, components, factories)
   }
 }
 

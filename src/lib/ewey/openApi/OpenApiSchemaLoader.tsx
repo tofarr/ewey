@@ -1,10 +1,8 @@
 import { FC, useEffect, useState } from 'react';
-import Paper from '@mui/material/Paper';
 import { useQuery } from '@tanstack/react-query'
 import OpenApiSchema from './OpenApiSchema';
 import ErrorComponent, { ErrorComponentProperties } from './../component/ErrorComponent';
 import LoadingComponent from './../component/LoadingComponent';
-import AnimatedHeightResizer from './../component/AnimatedHeightResizer';
 import { sanitizeOpenApiSchema } from './util';
 
 export interface OpenApiSchemaLoaderChildProperties {
@@ -33,24 +31,13 @@ const OpenApiSchemaLoader: FC<OpenApiSchemaLoaderProperties> = ({url, children, 
       ),
   })
 
-  function renderContent(): any {
-    if (error) {
-      return (errorComponent as FC<ErrorComponentProperties>)({})
-    }
-    if (data) {
-      return children({schema: data})
-    }
-    return (loadingComponent as FC)({})
+  if (error) {
+    return (errorComponent as FC<ErrorComponentProperties>)({})
   }
-
-  return (
-    <Paper>
-      <AnimatedHeightResizer>
-        {renderContent()}
-      </AnimatedHeightResizer>
-    </Paper>
-  )
-
+  if (data) {
+    return children({schema: data})
+  }
+  return (loadingComponent as FC)({})
 }
 
 export default OpenApiSchemaLoader

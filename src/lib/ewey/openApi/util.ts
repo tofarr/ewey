@@ -1,4 +1,5 @@
 import OpenApiSchema from './OpenApiSchema';
+import { jsonObjToQueryStr } from 'json-urley'
 
 export const sanitizeOpenApiSchema = (schema: OpenApiSchema, url: string) => {
   if (!schema.servers) {
@@ -57,7 +58,7 @@ export const getResultSchema = (apiSchema: OpenApiSchema, path: string, method: 
 }
 
 export const remapReferences = (formSchema: any, apiSchema: any) => {
-  console.log('TODO: Remap references')
+  formSchema = { ...formSchema, components: apiSchema.components }
   return formSchema
 }
 
@@ -70,21 +71,16 @@ export const invoke = async (schema: any, path: string, method: string, value: a
   }
 }
 
-export const toUrlParams = (params: any, prefix: string = "", target?: URLSearchParams) => {
-  target = Object.keys(params).reduce((accumulator, key) => {
-    accumulator.append(prefix+key, params[key])
-    return accumulator
-  }, target || new URLSearchParams());
-  return target
-}
-
 async function invokeWithNoBody(schema: any, path: string, method: string, value: any) {
   let baseUrl = schema.schema.servers[0].url
   if (baseUrl.endsWith('/')) {
     baseUrl = baseUrl.substring(0, baseUrl.length - 1)
   }
   const url = new URL(baseUrl + path)
-  toUrlParams(value, "", url.searchParams)
+  const queryStr = jsonObjToQueryStr(value)
+  if (queryStr) {
+    url.search = "?" + queryStr
+  }
   const rawResponse = await fetch(
     url.toString(),
     {
