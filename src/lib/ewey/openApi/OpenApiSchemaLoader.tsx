@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { useQuery } from '@tanstack/react-query'
 import OpenApiSchema from './OpenApiSchema';
 import ErrorComponent, { ErrorComponentProperties } from './../component/ErrorComponent';
@@ -23,7 +23,7 @@ const OpenApiSchemaLoader: FC<OpenApiSchemaLoaderProperties> = ({url, children, 
   if (!errorComponent) {
     errorComponent = ErrorComponent
   }
-  const { isLoading, error, data } = useQuery({
+  const { error, data } = useQuery({
     queryKey: [url],
     queryFn: () =>
       fetch(url).then(

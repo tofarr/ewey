@@ -21,7 +21,7 @@ const NullableFieldWrapper = (Component: EweyComponent<any>, createItem?: () => 
           <Grid>
             <Box display="flex" justifyContent="flex-end" padding={1}>
               <Button onClick={() => onSetValue(null)}>
-                <AddIcon />
+                <DeleteIcon />
               </Button>
             </Box>
           </Grid>

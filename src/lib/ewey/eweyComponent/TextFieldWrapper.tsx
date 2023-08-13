@@ -7,12 +7,6 @@ import EweyComponent from './EweyComponent';
 const TextFieldWrapper = (validator: Validator, multiline: boolean, variant: string = "body2"): EweyComponent<string> => {
   const TextFieldComponent: EweyComponent<string> = ({value, onSetValue}) => {
     const validationResult = validator.validate(value || null)
-    const props: any = {
-      error: !validationResult.valid,
-      fullWidth: true,
-      multiline,
-      value: value
-    }
     if (onSetValue) {
       return <TextField
         error={!validationResult.valid}
