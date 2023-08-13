@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import FormLabel from '@mui/material/FormLabel';
@@ -7,6 +8,7 @@ import EweyComponent from './EweyComponent';
 const FieldSetWrapper = (name: string, componentsByKey: any) => {
 
   const FieldSetComponent: EweyComponent<any> = ({value, onSetValue}) => {
+    const { t } = useTranslation()
 
     function renderField(key: string){
       const Component = componentsByKey[key]
@@ -28,7 +30,7 @@ const FieldSetWrapper = (name: string, componentsByKey: any) => {
               }}>
                 <Grid item>
                   <Box pt={2}>
-                    <FormLabel>{keyToLabel(key)}</FormLabel>
+                    <FormLabel>{t(key, keyToLabel(key))}</FormLabel>
                   </Box>
                 </Grid>
               </Grid>
@@ -44,7 +46,7 @@ const FieldSetWrapper = (name: string, componentsByKey: any) => {
     return (
       <Box p={1} textAlign="left">
         {name && <Box pb={2}>
-          <Typography variant="h3">{keyToLabel(name)}</Typography>
+          <Typography variant="h3">{t(name, keyToLabel(name))}</Typography>
         </Box>}
         {Object.keys(componentsByKey).map(renderField)}
       </Box>
