@@ -80,7 +80,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   return (
     <form onSubmit={handleSubmit}>
       <Paper>
-        <Box padding={1} marginBottom={1}>
+        <Box padding={2} marginBottom={1}>
           <FormComponent value={value} onSetValue={setValue} />
         </Box>
         <FormSubmitComponent submitting={isLoading} valid={valid} onSubmit={handleInvoke} />

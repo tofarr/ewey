@@ -14,7 +14,7 @@ export interface SubmitComponentProperties {
 
 const SubmitComponent: FC<SubmitComponentProperties> = ({valid, submitting, onSubmit}) => {
   return (
-    <Box display="flex" justifyContent="flex-end" padding={1}>
+    <Box display="flex" justifyContent="flex-end" padding={2}>
       <Button onClick={onSubmit} variant="contained" disabled={submitting || !valid}>
         {submitting ? <CircularProgress size={24} /> : <PlayArrowIcon />}
       </Button>

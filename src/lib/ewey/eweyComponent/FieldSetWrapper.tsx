@@ -57,7 +57,7 @@ const FieldSetWrapper = (name: string, componentsByKey: any) => {
 
 }
 
-function keyToLabel(key: string) {
+export function keyToLabel(key: string) {
   return key.split('_').map(p => p[0].toUpperCase() + p.substr(1)).join(' ')
 }
 

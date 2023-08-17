@@ -46,7 +46,6 @@ const OAuthLoginForm: FC<OAuthLoginFormProps> = ({ url }) => {
         return
       }
       const content = await response.json()
-      messageBroker.triggerMessage('Login Successful', 'success', 3000)
       bearerToken.setToken(content.access_token)
     }catch(e){
       messageBroker.triggerError(e)
@@ -54,22 +53,16 @@ const OAuthLoginForm: FC<OAuthLoginFormProps> = ({ url }) => {
   }
 
   return (
-    <Grid container justifyContent="center">
-      <Grid item xs md={8} lg={6}>
-        <Paper>
-          <form onSubmit={handleLogin}>
-            <Box pt={2} pr={4} pb={2} pl={4}>
-              <FormComponent value={login} onSetValue={setLogin} />
-            </Box>
-            <Box display="flex" justifyContent="flex-end" pr={4} pb={4} pl={4}>
-              <Button type="submit" variant="contained">
-                <LockOpenIcon />
-              </Button>
-            </Box>
-          </form>
-        </Paper>
-      </Grid>
-    </Grid>
+    <form onSubmit={handleLogin}>
+      <Box pt={2} pr={4} pb={2} pl={4}>
+        <FormComponent value={login} onSetValue={setLogin} />
+      </Box>
+      <Box display="flex" justifyContent="flex-end" pr={4} pb={4} pl={4}>
+        <Button type="submit" variant="contained">
+          <LockOpenIcon />
+        </Button>
+      </Box>
+    </form>
   )
 }
 
