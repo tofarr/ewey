@@ -1,38 +1,72 @@
-import { FC, useState } from 'react';
+import { FC, FormEvent, useContext, useState } from 'react';
+import { jsonObjToQueryStr } from 'json-urley'
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
+import { OAuthBearerTokenContext, BearerToken } from './OAuthBearerTokenProvider';
+import { useMessageBroker } from '../message/MessageBrokerContext';
 
-export interface OAuthLoginFormProps {
-  url: string
+interface OAuthLoginFormProps {
+  url : string
 }
 
 const FormComponent = JsonSchemaComponentFactory({
   type: "object",
   name: "Login",
   properties: {
-    username: {type: "string"},
-    password: {type: "string"}
+    username: {type: "string", maxLength: 255},
+    password: {type: "string", maxLength: 255}
   }
 }, {})
 
 const OAuthLoginForm: FC<OAuthLoginFormProps> = ({ url }) => {
   const [login, setLogin] = useState({username: "", password: ""})
+  const bearerToken = useContext(OAuthBearerTokenContext) as BearerToken
+  const messageBroker = useMessageBroker()
 
-  function handleLogin() {
-    alert('login')
+  async function handleLogin(event: FormEvent) {
+    event.preventDefault()
+    const formData = new FormData();
+    formData.append('username', login.username);
+    formData.append('password', login.password);
+    try{
+      const response = await fetch(
+        url,
+        {
+          method: "POST",
+          body: formData
+        }
+      )
+      if (response.status != 200) {
+        const content = await response.text()
+        messageBroker.triggerError(content)
+        return
+      }
+      const content = await response.json()
+      messageBroker.triggerMessage('Login Successful', 'success', 3000)
+      bearerToken.setToken(content.access_token)
+    }catch(e){
+      messageBroker.triggerError(e)
+    }
   }
 
   return (
     <Grid container justifyContent="center">
       <Grid item xs md={8} lg={6}>
         <Paper>
-          <Box pt={2} pr={4} pb={2} pl={4}>
-            <FormComponent value={login} onSetValue={setLogin} />
-          </Box>
+          <form onSubmit={handleLogin}>
+            <Box pt={2} pr={4} pb={2} pl={4}>
+              <FormComponent value={login} onSetValue={setLogin} />
+            </Box>
+            <Box display="flex" justifyContent="flex-end" pr={4} pb={4} pl={4}>
+              <Button type="submit" variant="contained">
+                <LockOpenIcon />
+              </Button>
+            </Box>
+          </form>
         </Paper>
       </Grid>
     </Grid>

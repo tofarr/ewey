@@ -9,7 +9,7 @@ const NUMBER_TYPES = ['integer', 'number']
 class NumberFieldFactory implements EweyFactory {
   priority: number = 110
 
-  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, currentPath: string[], factories: EweyFactory[]) {
     if (!NUMBER_TYPES.includes(schema.type)){
       return null
     }

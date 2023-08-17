@@ -6,17 +6,18 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { OpenApiSchemaProvider, OpenApiSummary } from './lib/ewey';
-import AnimatedHeightResizer from './lib/ewey/component/AnimatedHeightResizer';
+import { MessageDisplayProvider, OpenApiSchemaProvider, OpenApiSummary } from './lib/ewey';
 const queryClient = new QueryClient()
 
 function App() {
   return (
     <div className="App">
       <QueryClientProvider client={queryClient}>
-        <OpenApiSchemaProvider url="http://localhost:8000/openapi.json">
-          <OpenApiSummary />
-        </OpenApiSchemaProvider>
+        <MessageDisplayProvider>
+          <OpenApiSchemaProvider url="http://localhost:8000/openapi.json">
+            <OpenApiSummary />
+          </OpenApiSchemaProvider>
+        </MessageDisplayProvider>
       </QueryClientProvider>
     </div>
   );

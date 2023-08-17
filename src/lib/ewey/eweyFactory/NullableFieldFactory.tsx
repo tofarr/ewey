@@ -6,7 +6,7 @@ import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
 class NullableFieldFactory implements EweyFactory {
   priority: number = 100
 
-  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, currentPath: string[], factories: EweyFactory[]) {
     const anyOf = schema?.anyOf
     if (!anyOf || anyOf.length !== 2) {
       return null
@@ -19,7 +19,7 @@ class NullableFieldFactory implements EweyFactory {
     } else {
       return null
     }
-    const wrappedField = JsonSchemaComponentFactory(wrappedSchema, components, factories)
+    const wrappedField = JsonSchemaComponentFactory(wrappedSchema, components, currentPath, factories)
     return NullableFieldWrapper(wrappedField)
   }
 }

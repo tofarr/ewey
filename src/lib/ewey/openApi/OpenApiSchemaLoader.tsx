@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { useQuery } from '@tanstack/react-query'
 import OpenApiSchema from './OpenApiSchema';
-import ErrorComponent, { ErrorComponentProperties } from './../component/ErrorComponent';
-import LoadingComponent from './../component/LoadingComponent';
+import ErrorComponent, { ErrorComponentProperties } from '../component/ErrorComponent';
+import LoadingComponent from '../component/LoadingComponent';
 import { sanitizeOpenApiSchema } from './util';
 
 export interface OpenApiSchemaLoaderChildProperties {

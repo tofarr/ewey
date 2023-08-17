@@ -5,3 +5,4 @@ export { default as OpenApiQuery } from './openApi/OpenApiQuery';
 export { default as OpenApiSchemaLoader } from './openApi/OpenApiSchemaLoader';
 export { default as OpenApiSchemaProvider } from './openApi/OpenApiSchemaProvider';
 export { default as OpenApiSummary } from './openApi/OpenApiSummary';
+export { MessageDisplayProvider } from './message/MessageDisplayProvider';

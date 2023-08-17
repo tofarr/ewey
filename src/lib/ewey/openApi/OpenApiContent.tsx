@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { getResultSchema } from './util';
-import EweyFactory from './../eweyFactory/EweyFactory';
-import JsonSchemaComponentFactory from './../JsonSchemaComponentFactory';
+import EweyFactory from '../eweyFactory/EweyFactory';
+import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
 import { useOpenApiSchema } from './OpenApiSchemaContext';
 
 export interface OpenApiContentProps {
@@ -25,7 +25,7 @@ const OpenApiContent: FC<OpenApiContentProps> = ({
   useEffect(() => {
     const resultSchema = getResultSchema(schema, path, method as string)
     const components = schema.schema.components
-    const c = JsonSchemaComponentFactory(resultSchema, components, factories)
+    const c = JsonSchemaComponentFactory(resultSchema, components, [], factories)
     setResultsComponent(() => c)
   }, [path, method, schema, factories])
 

@@ -23,18 +23,18 @@ import {
   Routes,
 } from "react-router-dom";
 
-import OAuthLoginForm from './../oauth/OAuthLoginForm';
+import OAuthLoginForm from '../oauth/OAuthLoginForm';
 import { useOpenApiSchema } from './OpenApiSchemaContext';
 import OAuthBearerTokenProvider, { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
 import OpenApiContent from './OpenApiContent';
 import OpenApiForm from './OpenApiForm';
-import { requiresAuth } from './util';
+import { requiresAuth, getLoginUrl } from './util';
 
 interface Operation {
   path: string
   method: string
   operationId: string
-  requiresAuth: boolean
+  authUrl: string
 }
 
 interface LayoutProps {
@@ -53,7 +53,12 @@ const OpenApiSummary: FC = () => {
     for (const path in paths){
       for (const method in paths[path]) {
         const openApiMethod = paths[path][method]
-        operations.push({ path, method, operationId: openApiMethod.operationId, requiresAuth: requiresAuth(openApiMethod) })
+        operations.push({
+           path,
+            method,
+            operationId: openApiMethod.operationId,
+            authUrl: requiresAuth(openApiMethod) ? getLoginUrl(schema) : null,
+        })
       }
     }
     return operations
@@ -115,14 +120,14 @@ const OpenApiSummary: FC = () => {
   )
 }
 
-const OperationRoute = ({ method, path, operationId, requiresAuth }: Operation) => {
+const OperationRoute = ({ method, path, operationId, authUrl }: Operation) => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [result, setResult] = useState(null)
   const token = useOAuthBearerToken()
 
   function renderAuth() {
     return (
-      <OAuthLoginForm url="https://foobar.com" />
+      <OAuthLoginForm url={authUrl} />
     )
   }
 
@@ -138,7 +143,7 @@ const OperationRoute = ({ method, path, operationId, requiresAuth }: Operation) 
   return (
     <Route key={operationId} path={operationId} element={
       <Fragment>
-        {(requiresAuth && !token) ? renderAuth() : renderForm()}
+        {(authUrl && !token) ? renderAuth() : renderForm()}
         <Dialog
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}>

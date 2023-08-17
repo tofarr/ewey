@@ -1,7 +1,7 @@
 import { FC, ReactElement } from 'react';
 import OpenApiSchemaLoader from './OpenApiSchemaLoader'
 import { OpenApiSchemaContext } from './OpenApiSchemaContext'
-import { ErrorComponentProperties } from './../component/ErrorComponent';
+import { ErrorComponentProperties } from '../component/ErrorComponent';
 
 export interface OpenApiSchemaProviderProperties{
   url: string

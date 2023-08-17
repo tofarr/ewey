@@ -10,7 +10,12 @@ export interface OAuthBearerTokenProviderProps {
   storage?: OAuthBearerTokenStorage
 }
 
-export const OAuthBearerTokenContext = createContext<string>("")
+export interface BearerToken{
+  token: string
+  setToken: (token: string) => void
+}
+
+export const OAuthBearerTokenContext = createContext<BearerToken | null>(null)
 
 const OAuthBearerTokenProvider: FC<OAuthBearerTokenProviderProps> = ({ children, storage }) => {
   const [token, setToken] = useState(storage?.load() || "")
@@ -20,7 +25,7 @@ const OAuthBearerTokenProvider: FC<OAuthBearerTokenProviderProps> = ({ children,
     }
   }, [token])
   return (
-    <OAuthBearerTokenContext.Provider value={token}>
+    <OAuthBearerTokenContext.Provider value={{token, setToken}}>
       {children}
     </OAuthBearerTokenContext.Provider>
   )
@@ -30,7 +35,7 @@ export default OAuthBearerTokenProvider
 
 export const useOAuthBearerToken = () => {
   // Hack to force type checker to accept the type of the context
-  const token: string = useContext(OAuthBearerTokenContext);
+  const token = useContext(OAuthBearerTokenContext) as BearerToken;
   return token;
 }
 

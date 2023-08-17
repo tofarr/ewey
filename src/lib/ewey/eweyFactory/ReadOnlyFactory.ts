@@ -12,8 +12,8 @@ class ReadOnlyFactory implements EweyFactory {
     this.priority = priority
   }
 
-  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
-    const component = this.factory.create(schema, components, factories)
+  create(schema: JsonSchema, components: any, currentPath: string[], factories: EweyFactory[]) {
+    const component = this.factory.create(schema, components, currentPath, factories)
     return ReadOnlyWrapper(component as EweyComponent<any>)
   }
 }

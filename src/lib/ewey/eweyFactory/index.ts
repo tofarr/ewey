@@ -1,4 +1,4 @@
-import EweyFactory from './../eweyFactory/EweyFactory';
+import EweyFactory from '../eweyFactory/EweyFactory';
 import CheckboxFactory from './CheckboxFactory';
 import DatePickerFactory from './DatePickerFactory';
 import FieldSetFactory from './FieldSetFactory';

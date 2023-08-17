@@ -129,3 +129,11 @@ export const requiresAuth = (openApiMethod: any) => {
   const bearer = security.find((s: any) => Object.keys(s).includes("OAuth2PasswordBearer"))
   return !!bearer
 }
+
+export const getLoginUrl = (schema: OpenApiSchema) => {
+  let result = schema?.schema?.components?.securitySchemes?.OAuth2PasswordBearer?.flows?.password?.tokenUrl
+  if (result) {
+    result = schema.schema.servers[0].url + result
+  }
+  return result
+}

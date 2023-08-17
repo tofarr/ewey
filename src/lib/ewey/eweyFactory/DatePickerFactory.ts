@@ -9,7 +9,7 @@ const FORMATS = ['date-time', 'date']
 class DatePickerFactory implements EweyFactory {
   priority: number = 110
 
-  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, currentPath: string[], factories: EweyFactory[]) {
     if (!schema || schema.type !== 'string' || !FORMATS.includes(schema.format)) {
       return null
     }

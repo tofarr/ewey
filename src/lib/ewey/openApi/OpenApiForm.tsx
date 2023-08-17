@@ -5,9 +5,9 @@ import Paper from '@mui/material/Paper';
 import { useMutation } from '@tanstack/react-query'
 import { useOpenApiSchema } from './OpenApiSchemaContext';
 import { invoke, getFormSchema, headersFromToken, requiresAuth } from './util';
-import EweyFactory from './../eweyFactory/EweyFactory';
-import JsonSchemaComponentFactory from './../JsonSchemaComponentFactory';
-import SubmitComponent, { SubmitComponentProperties } from './../component/SubmitComponent';
+import EweyFactory from '../eweyFactory/EweyFactory';
+import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
+import SubmitComponent, { SubmitComponentProperties } from '../component/SubmitComponent';
 import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
 
 export interface OpenApiFormProps {
@@ -33,7 +33,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
     FormSubmitComponent = SubmitComponent
   }
   const schema = useOpenApiSchema()
-  const headers = headersFromToken(useOAuthBearerToken())
+  const headers = headersFromToken(useOAuthBearerToken()?.token)
   const [value, setValue] = useState<any>(initialValue || {})
   const validator = new Validator(schema)
   const { valid } = validator.validate(value)
@@ -57,7 +57,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   useEffect(() => {
     const operationSchema = getFormSchema(schema, path, method)
     const components = schema.schema.components
-    const c = JsonSchemaComponentFactory(operationSchema, components, factories)
+    const c = JsonSchemaComponentFactory(operationSchema, components, [], factories)
     setFormComponent(() => c)
   }, [path, method, schema, factories])
 

@@ -7,11 +7,13 @@ class ListFactory implements EweyFactory {
   priority: number = 100
   createItem?: () => any
 
-  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, currentPath: string[], factories: EweyFactory[]) {
     if (!schema || schema.type !== 'array' || !schema.items) {
       return null
     }
-    const component = JsonSchemaComponentFactory(schema.items, components, factories)
+    currentPath.push('items')
+    const component = JsonSchemaComponentFactory(schema.items, components, currentPath, factories)
+    currentPath.pop()
     const listCompponent = ListWrapper(component, this.createItem)
     return listCompponent
   }

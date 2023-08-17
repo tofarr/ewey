@@ -14,14 +14,16 @@ class FieldSetFactory implements EweyFactory {
     this.fieldNames = fieldNames
   }
 
-  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, currentPath: string[], factories: EweyFactory[]) {
     if (!schema || schema.type !== 'object') {
       return null
     }
     const componentsByKey: any = {}
     for (const key in schema.properties) {
       if(this.includeField(key)){
-        componentsByKey[key] = JsonSchemaComponentFactory(schema.properties[key], components, factories)
+        currentPath.push(key)
+        componentsByKey[key] = JsonSchemaComponentFactory(schema.properties[key], components, currentPath, factories)
+        currentPath.pop()
       }
     }
     const fieldSetComponent = FieldSetWrapper(schema.name, componentsByKey)

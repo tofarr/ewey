@@ -12,9 +12,9 @@ class NamedFactory implements EweyFactory {
     this.priority = priority
   }
 
-  create(schema: JsonSchema, components: any, factories: EweyFactory[]) {
+  create(schema: JsonSchema, components: any, currentPath: string[], factories: EweyFactory[]) {
     if (schema?.name === this.name){
-      return this.factory.create(schema, components, factories)
+      return this.factory.create(schema, components, currentPath, factories)
     }
     return null
   }
