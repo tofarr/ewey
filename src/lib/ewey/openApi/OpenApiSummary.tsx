@@ -7,7 +7,6 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import Alert from '@mui/material/Alert';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import Drawer from '@mui/material/Drawer';
@@ -16,68 +15,34 @@ import IconButton from '@mui/material/IconButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
-import Snackbar from '@mui/material/Snackbar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import {
-  BrowserRouter,
   createBrowserRouter,
   createRoutesFromElements,
   Link,
-  Navigate,
   Outlet,
   Route,
   RouterProvider,
-  Routes,
 } from "react-router-dom";
 import OAuthLoginForm from '../oauth/OAuthLoginForm';
-import { useOpenApiSchema } from './OpenApiSchemaContext';
+import { OpenApiOperation } from './model/OpenApiOperation';
+import { useOpenApi } from './OpenApiProvider';
 import OAuthBearerTokenProvider, { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
 import { keyToLabel } from '../eweyComponent/FieldSetWrapper';
 import OpenApiContent from './OpenApiContent';
 import OpenApiForm from './OpenApiForm';
-import { requiresAuth, getLoginUrl } from './util';
 
-interface Operation {
-  path: string
-  method: string
-  operationId: string
-  requiresAuth: boolean
-}
-
-interface LayoutProps {
-  operations: Operation[]
-}
 
 const OpenApiSummary: FC = () => {
-  const schema = useOpenApiSchema()
-  const operations = getOperations()
-  const token = useOAuthBearerToken()
-
-  function getOperations(){
-    const operations: Operation[] = []
-    const paths = schema.schema.paths
-    for (const path in paths){
-      for (const method in paths[path]) {
-        const openApiMethod = paths[path][method]
-        const opRequiresAuth = requiresAuth(openApiMethod)
-        operations.push({
-            path,
-            method,
-            operationId: openApiMethod.operationId,
-            requiresAuth: opRequiresAuth
-        })
-      }
-    }
-    return operations
-  }
+  const openApi = useOpenApi()
 
   const router = createBrowserRouter(createRoutesFromElements(
     <Route
       path="/"
-      element={<SummaryLayout operations={operations} />}>
-      {operations.map(op => <Route key={op.operationId} path={op.operationId} element={<OperationElement {...op} />} />)}
+      element={<SummaryLayout operations={openApi.operations} />}>
+      {openApi.operations.map(op => <Route key={op.operationId} path={op.operationId} element={<OperationElement {...op} />} />)}
       <Route key="*" path="*" element={<RouteError message="not_found" />} />
     </Route>
   ));
@@ -90,15 +55,16 @@ const OpenApiSummary: FC = () => {
 }
 
 interface SummaryLayoutProps {
-  operations: Operation[]
+  operations: OpenApiOperation[]
 }
 
 
 const SummaryLayout: FC<SummaryLayoutProps> = ({ operations }) => {
+  const { t } = useTranslation()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [loginDialogOpen, setLoginDialogOpen] = useState(false)
-  const schema = useOpenApiSchema()
-  const { title, version } = schema.schema.info
+  const openApi = useOpenApi()
+  const { title, version } = openApi.schema.info
   const token = useOAuthBearerToken()
 
   function handleLogin(){
@@ -109,7 +75,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations }) => {
     token.setToken('')
   }
 
-  function renderOperationMenuItem({ operationId, requiresAuth }: Operation){
+  function renderOperationMenuItem({ operationId, requiresAuth }: OpenApiOperation){
     const disabled = requiresAuth && !token.token
     let menuItem = (
       <MenuItem key={operationId} disabled={disabled}>
@@ -158,11 +124,13 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations }) => {
                 {version}
               </Typography>
             </Grid>
-            <Grid item>
-              <IconButton onClick={handleLogin} color="inherit">
-                {token.token ? <KeyOffIcon /> : <KeyIcon />}
-              </IconButton>
-            </Grid>
+            {openApi.loginUrl &&
+              <Grid item>
+                <IconButton onClick={handleLogin} color="inherit">
+                  {token.token ? <KeyOffIcon /> : <KeyIcon />}
+                </IconButton>
+              </Grid>
+            }
           </Grid>
         </Toolbar>
       </AppBar>
@@ -172,15 +140,18 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations }) => {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       >
-        {operations.map(renderOperationMenuItem)}
+        {openApi.operations.map(renderOperationMenuItem)}
       </Drawer>
-      <Dialog
-        open={loginDialogOpen && !token.token}
-        onClose={() => setLoginDialogOpen(false)}>
-        <DialogContent>
-          <OAuthLoginForm url={getLoginUrl(schema)} />
-        </DialogContent>
-      </Dialog>
+      {openApi.loginUrl &&
+        <Dialog
+          open={loginDialogOpen && !token.token}
+          onClose={() => setLoginDialogOpen(false)}>
+          <DialogContent>
+            <Typography variant="h4">{t('login', keyToLabel('login'))}</Typography>
+            <OAuthLoginForm url={openApi.loginUrl} />
+          </DialogContent>
+        </Dialog>
+      }
       <Outlet />
     </Fragment>
   )
@@ -200,7 +171,8 @@ const RouteError = ({ message }: RouteErrorProps) => {
 }
 
 
-const OperationElement = ({ method, path, operationId, requiresAuth }: Operation) => {
+const OperationElement = ({ operationId, requiresAuth }: OpenApiOperation) => {
+  const { t } = useTranslation()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [result, setResult] = useState(null)
   const token = useOAuthBearerToken()
@@ -211,10 +183,10 @@ const OperationElement = ({ method, path, operationId, requiresAuth }: Operation
 
   function renderForm(){
     return (
-      <OpenApiForm path={path} method={method} initialValue={{}} onSuccess={(r) => {
+      <OpenApiForm operationId={operationId} initialValue={{}} onSuccess={(r) => {
         setResult(r)
         setDialogOpen(true)
-      }} />
+      }} displaySummary />
     )
   }
 
@@ -223,12 +195,14 @@ const OperationElement = ({ method, path, operationId, requiresAuth }: Operation
       {(requiresAuth && (!token.token)) ? renderAuth() : renderForm()}
       <Dialog
         open={dialogOpen}
-        onClose={() => setDialogOpen(false)}>
+        onClose={() => setDialogOpen(false)}
+        fullWidth
+        maxWidth="lg">
         <DialogContent>
-          <OpenApiContent
-            path={path}
-            method={method}
-            value={result} />
+          <Box pb={2}>
+            <Typography variant="h4">{t(operationId, keyToLabel(operationId))}</Typography>
+          </Box>
+          <OpenApiContent operationId={operationId} value={result} />
         </DialogContent>
       </Dialog>
     </Fragment>

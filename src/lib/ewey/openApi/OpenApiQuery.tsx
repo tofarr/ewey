@@ -1,16 +1,15 @@
 import { FC } from 'react';
 import { useQuery } from '@tanstack/react-query'
-import { invoke, headersFromToken, requiresAuth } from './util';
+//import { invoke, headersFromToken, requiresAuth, getFetchParamsFromSchema } from './util';
 import EweyFactory from '../eweyFactory/EweyFactory';
 import LoadingComponent from '../component/LoadingComponent';
 import ErrorComponent, { ErrorComponentProperties } from '../component/ErrorComponent';
-import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
-import { useOpenApiSchema } from './OpenApiSchemaContext';
-import OpenApiContent from './OpenApiContent';
+//import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
+//import { useOpenApiSchema } from './OpenApiSchemaContext';
+//import OpenApiContent from './OpenApiContent';
 
 export interface OpenApiQueryProps {
-  path: string,
-  method?: string,
+  operationId: string,
   factories?: EweyFactory[],
   params?: any,
   onSuccess?: (result: any) => void,
@@ -19,9 +18,9 @@ export interface OpenApiQueryProps {
   ResultsErrorComponent?: FC<ErrorComponentProperties>
 }
 
+/*
 const OpenApiQuery: FC<OpenApiQueryProps> = ({
-  path,
-  method,
+  operationId,
   factories,
   params,
   onSuccess,
@@ -29,16 +28,14 @@ const OpenApiQuery: FC<OpenApiQueryProps> = ({
   ResultsLoadingComponent,
   ResultsErrorComponent
 }) => {
-  if (!method) {
-    method = "get"
-  }
   if (!ResultsLoadingComponent) {
     ResultsLoadingComponent = LoadingComponent
   }
   if (!ResultsErrorComponent) {
     ResultsErrorComponent = ErrorComponent
   }
-  const schema = useOpenApiSchema()
+  const openApi = useOpenApi()
+  const { path, method } = getFetchParamsFromSchema(schema, operationId)
   const headers = headersFromToken(useOAuthBearerToken()?.token)
   const url = schema.schema.servers[0].url + path
   const { isLoading, error, data: value } = useQuery({
@@ -56,8 +53,7 @@ const OpenApiQuery: FC<OpenApiQueryProps> = ({
 
   return (
     <OpenApiContent
-      path={path}
-      method={method}
+      operationId={operationId}
       factories={factories}
       value={value}
     />
@@ -65,3 +61,4 @@ const OpenApiQuery: FC<OpenApiQueryProps> = ({
 }
 
 export default OpenApiQuery
+*/

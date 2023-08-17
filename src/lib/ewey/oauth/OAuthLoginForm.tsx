@@ -57,7 +57,7 @@ const OAuthLoginForm: FC<OAuthLoginFormProps> = ({ url }) => {
       <Box pt={2} pr={4} pb={2} pl={4}>
         <FormComponent value={login} onSetValue={setLogin} />
       </Box>
-      <Box display="flex" justifyContent="flex-end" pr={4} pb={4} pl={4}>
+      <Box display="flex" justifyContent="flex-end" pr={4} pb={2} pl={4}>
         <Button type="submit" variant="contained">
           <LockOpenIcon />
         </Button>

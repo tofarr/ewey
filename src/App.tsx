@@ -6,7 +6,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { MessageDisplayProvider, OpenApiSchemaProvider, OpenApiSummary } from './lib/ewey';
+import { MessageDisplayProvider, OpenApiProvider, OpenApiSummary } from './lib/ewey';
 const queryClient = new QueryClient()
 
 function App() {
@@ -14,9 +14,9 @@ function App() {
     <div className="App">
       <QueryClientProvider client={queryClient}>
         <MessageDisplayProvider>
-          <OpenApiSchemaProvider url="http://localhost:8000/openapi.json">
+          <OpenApiProvider url="http://localhost:8000/openapi.json">
             <OpenApiSummary />
-          </OpenApiSchemaProvider>
+          </OpenApiProvider>
         </MessageDisplayProvider>
       </QueryClientProvider>
     </div>

@@ -2,46 +2,51 @@ import { FC, FormEvent, useEffect, useState } from 'react';
 import { Validator } from '@cfworker/json-schema';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query'
-import { useOpenApiSchema } from './OpenApiSchemaContext';
-import { invoke, getFormSchema, headersFromToken, requiresAuth } from './util';
+import { useOpenApi } from './OpenApiProvider';
+import { keyToLabel } from '../eweyComponent/FieldSetWrapper';
+// import { invoke, getFormSchema, headersFromToken, requiresAuth, getFetchParamsFromSchema } from './util';
 import EweyFactory from '../eweyFactory/EweyFactory';
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
 import SubmitComponent, { SubmitComponentProperties } from '../component/SubmitComponent';
 import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
 
 export interface OpenApiFormProps {
-  path: string,
-  method: string,
+  operationId: string,
   factories?: EweyFactory[],
   initialValue?: any,
   onSuccess?: (result: any) => void,
   onError?: (error: any) => void,
   FormSubmitComponent?: FC<SubmitComponentProperties>
+  displaySummary: boolean
 }
 
 const OpenApiForm: FC<OpenApiFormProps> = ({
-  path,
-  method,
+  operationId,
   factories,
   initialValue,
   onSuccess,
   onError,
-  FormSubmitComponent
+  FormSubmitComponent,
+  displaySummary
 }) => {
   if (!FormSubmitComponent) {
     FormSubmitComponent = SubmitComponent
   }
-  const schema = useOpenApiSchema()
+  const { t } = useTranslation()
+  const openApi = useOpenApi()
+  const operation = openApi.getOperation(operationId)
   const headers = headersFromToken(useOAuthBearerToken()?.token)
   const [value, setValue] = useState<any>(initialValue || {})
-  const validator = new Validator(schema)
+  const validator = new Validator(operation.paramsSchema)
   const { valid } = validator.validate(value)
   const [FormComponent, setFormComponent] = useState<any>(null)
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
       try{
-        const result = await invoke(schema, path, method, value, headers)
+        const result = await operation.invoke(value, headers)
         if (onSuccess) {
           onSuccess(result)
         }
@@ -55,11 +60,9 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
     }
   })
   useEffect(() => {
-    const operationSchema = getFormSchema(schema, path, method)
-    const components = schema.schema.components
-    const c = JsonSchemaComponentFactory(operationSchema, components, [], factories)
+    const c = JsonSchemaComponentFactory(operation.paramsSchema, openApi.schema.components, [], factories)
     setFormComponent(() => c)
-  }, [path, method, schema, factories])
+  }, [operationId, operation.paramsSchema, openApi.schema.components, factories])
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
@@ -80,13 +83,25 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   return (
     <form onSubmit={handleSubmit}>
       <Paper>
-        <Box padding={2} marginBottom={1}>
+        <Box padding={2} marginBottom={2}>
+          <Typography variant="h4">{t(operationId, keyToLabel(operationId))}</Typography>
+          {displaySummary && operation.summary && <Box pt={1} pb={1}>
+            <Typography variant="body2">{operation.summary}</Typography>
+          </Box>}
           <FormComponent value={value} onSetValue={setValue} />
         </Box>
         <FormSubmitComponent submitting={isLoading} valid={valid} onSubmit={handleInvoke} />
       </Paper>
     </form>
   )
+}
+
+export const headersFromToken = (token: string) => {
+  const result: { [key: string]: string } = {}
+  if (token) {
+    result['Authorization'] = `Bearer ${token}`
+  }
+  return result
 }
 
 export default OpenApiForm

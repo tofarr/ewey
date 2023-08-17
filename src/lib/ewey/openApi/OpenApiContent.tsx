@@ -1,33 +1,26 @@
 import { FC, useEffect, useState } from 'react';
-import { getResultSchema } from './util';
 import EweyFactory from '../eweyFactory/EweyFactory';
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
-import { useOpenApiSchema } from './OpenApiSchemaContext';
+import { useOpenApi } from './OpenApiProvider';
 
 export interface OpenApiContentProps {
-  path: string,
-  method?: string,
+  operationId: string
   factories?: EweyFactory[],
   value?: any,
 }
 
 const OpenApiContent: FC<OpenApiContentProps> = ({
-  path,
-  method,
+  operationId,
   factories,
   value
 }) => {
-  if (!method) {
-    method = "get"
-  }
-  const schema = useOpenApiSchema()
+  const openApi = useOpenApi()
+  const operation = openApi.getOperation(operationId)
   const [ResultsComponent, setResultsComponent] = useState<any>(null)
   useEffect(() => {
-    const resultSchema = getResultSchema(schema, path, method as string)
-    const components = schema.schema.components
-    const c = JsonSchemaComponentFactory(resultSchema, components, [], factories)
+    const c = JsonSchemaComponentFactory(operation.resultSchema, openApi.schema.components, [], factories)
     setResultsComponent(() => c)
-  }, [path, method, schema, factories])
+  }, [operationId, operation.resultSchema, openApi.schema.components, factories])
 
   return ResultsComponent && <ResultsComponent value={value} />
 }

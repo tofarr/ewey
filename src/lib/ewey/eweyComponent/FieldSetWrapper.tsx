@@ -45,9 +45,6 @@ const FieldSetWrapper = (name: string, componentsByKey: any) => {
 
     return (
       <Box p={1} textAlign="left">
-        {name && <Box pb={2}>
-          <Typography variant="h4">{t(name, keyToLabel(name))}</Typography>
-        </Box>}
         {Object.keys(componentsByKey).map(renderField)}
       </Box>
     )
