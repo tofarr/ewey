@@ -40,7 +40,6 @@ export class MessageBroker {
   }
 
   triggerError(error: any){
-    console.log('Error', error)
     if (error.message){
       error = error.message
     } else if (error) {

@@ -33,9 +33,9 @@ class UrlParamsOperation implements OpenApiOperation {
     requiresAuth: boolean,
     url: string,
     method: UrlParamsMethod,
+    summary: string = "",
     validateParams: boolean = true,
-    validateResult: boolean = false,
-    summary: string = ""
+    validateResult: boolean = false
   ) {
     this.operationId = operationId
     this.paramsSchema = paramsSchema
@@ -43,9 +43,9 @@ class UrlParamsOperation implements OpenApiOperation {
     this.requiresAuth = requiresAuth
     this.url = url
     this.method = method
+    this.summary = summary
     this.paramsValidator = validateParams ? new Validator(this.paramsSchema) : null
     this.resultValidator = validateResult ? new Validator(this.resultSchema) : null
-    this.summary = summary
   }
 
   async invoke(params: JsonType, headers?: OpenApiHeaders) {

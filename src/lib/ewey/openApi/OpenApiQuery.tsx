@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { useQuery } from '@tanstack/react-query'
-//import { invoke, headersFromToken, requiresAuth, getFetchParamsFromSchema } from './util';
 import EweyFactory from '../eweyFactory/EweyFactory';
 import LoadingComponent from '../component/LoadingComponent';
 import ErrorComponent, { ErrorComponentProperties } from '../component/ErrorComponent';
-//import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
-//import { useOpenApiSchema } from './OpenApiSchemaContext';
-//import OpenApiContent from './OpenApiContent';
+import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
+import { useOpenApi } from './OpenApiProvider';
+import OpenApiContent from './OpenApiContent';
+import { headersFromToken } from './OpenApiForm';
 
 export interface OpenApiQueryProps {
   operationId: string,
@@ -18,7 +18,6 @@ export interface OpenApiQueryProps {
   ResultsErrorComponent?: FC<ErrorComponentProperties>
 }
 
-/*
 const OpenApiQuery: FC<OpenApiQueryProps> = ({
   operationId,
   factories,
@@ -35,12 +34,11 @@ const OpenApiQuery: FC<OpenApiQueryProps> = ({
     ResultsErrorComponent = ErrorComponent
   }
   const openApi = useOpenApi()
-  const { path, method } = getFetchParamsFromSchema(schema, operationId)
+  const operation = openApi.getOperation(operationId)
   const headers = headersFromToken(useOAuthBearerToken()?.token)
-  const url = schema.schema.servers[0].url + path
   const { isLoading, error, data: value } = useQuery({
-    queryKey: [url],
-    queryFn: () => invoke(schema, path, method as string, params, headers)
+    queryKey: [operation.operationId],
+    queryFn: () => operation.invoke(params, headers)
   })
 
   if (isLoading) {
@@ -61,4 +59,3 @@ const OpenApiQuery: FC<OpenApiQueryProps> = ({
 }
 
 export default OpenApiQuery
-*/

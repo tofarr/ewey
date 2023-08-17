@@ -27,6 +27,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import OAuthLoginForm from '../oauth/OAuthLoginForm';
+import { useMessageBroker } from '../message/MessageBrokerContext';
 import { OpenApiOperation } from './model/OpenApiOperation';
 import { useOpenApi } from './OpenApiProvider';
 import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
@@ -174,6 +175,7 @@ const OperationElement = ({ operationId, requiresAuth }: OpenApiOperation) => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [result, setResult] = useState(null)
   const token = useOAuthBearerToken()
+  const messageBroker = useMessageBroker()
 
   function renderAuth() {
     return <RouteError message="login_to_continue" />
@@ -181,10 +183,15 @@ const OperationElement = ({ operationId, requiresAuth }: OpenApiOperation) => {
 
   function renderForm(){
     return (
-      <OpenApiForm operationId={operationId} initialValue={{}} onSuccess={(r) => {
-        setResult(r)
-        setDialogOpen(true)
-      }} displaySummary />
+      <OpenApiForm
+        operationId={operationId}
+        initialValue={{}}
+        displaySummary
+        onSuccess={(r) => {
+          setResult(r)
+          setDialogOpen(true)
+        }}
+        onError={(error) => messageBroker.triggerError(error)} />
     )
   }
 

@@ -1,6 +1,7 @@
 import { ChangeEvent } from 'react';
 import { Validator } from '@cfworker/json-schema';
 import { Variant } from '@mui/material/styles/createTypography';
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import EweyComponent from './EweyComponent';
@@ -18,7 +19,11 @@ const TextFieldWrapper = (validator: Validator, multiline: boolean, type: string
         onChange={(event: ChangeEvent<HTMLInputElement>) => onSetValue(event.target.value)}
       />
     }
-    return <Typography variant={variant}>{value}</Typography>
+    return (
+      <Box pl={1} pt={2} pb={2}>
+        <Typography variant={variant}>{value}</Typography>
+      </Box>
+    )
   }
   return TextFieldComponent
 }

@@ -70,9 +70,13 @@ const ListWrapper = (ItemComponent: EweyComponent<any>, createItem?: () => any) 
       )
     }
 
+    if ((!value || !value.length)  && !createItem) {
+      return null
+    }
+
     return (
       <Paper>
-        <Box p={1} textAlign="left">
+        <Box textAlign="left">
           <List>
             {value.map(renderItem)}
           </List>
