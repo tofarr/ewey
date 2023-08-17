@@ -29,7 +29,7 @@ import {
 import OAuthLoginForm from '../oauth/OAuthLoginForm';
 import { OpenApiOperation } from './model/OpenApiOperation';
 import { useOpenApi } from './OpenApiProvider';
-import OAuthBearerTokenProvider, { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
+import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
 import { keyToLabel } from '../eweyComponent/FieldSetWrapper';
 import OpenApiContent from './OpenApiContent';
 import OpenApiForm from './OpenApiForm';
@@ -48,9 +48,7 @@ const OpenApiSummary: FC = () => {
   ));
 
   return (
-    <OAuthBearerTokenProvider>
-      <RouterProvider router={router} />
-    </OAuthBearerTokenProvider>
+    <RouterProvider router={router} />
   )
 }
 

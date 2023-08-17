@@ -7,17 +7,21 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { MessageDisplayProvider, OpenApiProvider, OpenApiSummary } from './lib/ewey';
+import OAuthBearerTokenProvider, { Storage } from './lib/ewey/oauth/OAuthBearerTokenProvider';
+
 const queryClient = new QueryClient()
 
 function App() {
   return (
     <div className="App">
       <QueryClientProvider client={queryClient}>
-        <MessageDisplayProvider>
-          <OpenApiProvider url="http://localhost:8000/openapi.json">
-            <OpenApiSummary />
-          </OpenApiProvider>
-        </MessageDisplayProvider>
+        <OAuthBearerTokenProvider storage={new Storage()}>
+          <MessageDisplayProvider>
+            <OpenApiProvider url="http://localhost:8000/openapi.json">
+              <OpenApiSummary />
+            </OpenApiProvider>
+          </MessageDisplayProvider>
+        </OAuthBearerTokenProvider>
       </QueryClientProvider>
     </div>
   );

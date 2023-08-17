@@ -18,13 +18,12 @@ export interface BearerToken{
 export const OAuthBearerTokenContext = createContext<BearerToken | null>(null)
 
 const OAuthBearerTokenProvider: FC<OAuthBearerTokenProviderProps> = ({ children, storage }) => {
-  const [token, setToken] = useState("")/*storage?.load() || "")
+  const [token, setToken] = useState(storage?.load() || "")
   useEffect(() => {
     if (storage) {
       storage.store(token)
     }
-  }, [token])*/
-  console.log("TRACE:OAuthBearerTokenProvider", token)
+  }, [token])
   return (
     <OAuthBearerTokenContext.Provider value={{token, setToken}}>
       {children}
