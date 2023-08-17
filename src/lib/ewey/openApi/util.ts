@@ -1,3 +1,4 @@
+import OpenApiHeaders from './OpenApiHeaders';
 import OpenApiSchema from './OpenApiSchema';
 import { jsonObjToQueryStr } from 'json-urley'
 
@@ -8,6 +9,12 @@ export const sanitizeOpenApiSchema = (schema: OpenApiSchema, url: string) => {
     schema.servers = [{
       url: apiUrl.toString()
     }]
+  }
+  for (const server of schema.servers) {
+    const { url } = server
+    if (url.endsWith('/')){
+      server.url = url.substring(0, url.length - 1)
+    }
   }
   return schema
 }
@@ -62,21 +69,25 @@ export const remapReferences = (formSchema: any, apiSchema: any) => {
   return formSchema
 }
 
-export const invoke = async (schema: any, path: string, method: string, value: any) => {
+export const headersFromToken = (token: string) => {
+  const result: { [key: string]: string } = {}
+  if (token) {
+    result['Authorization'] = `Bearer ${token}`
+  }
+  return result
+}
+
+export const invoke = async (schema: any, path: string, method: string, value: any, headers: OpenApiHeaders) => {
   method = method.toLowerCase()
   if (["get", "delete", "options"].includes(method)){
-    return invokeWithNoBody(schema, path, method, value)
+    return invokeWithNoBody(schema, path, method, value, headers)
   } else {
-    return invokeWithBody(schema, path, method, value)
+    return invokeWithBody(schema, path, method, value, headers)
   }
 }
 
-async function invokeWithNoBody(schema: any, path: string, method: string, value: any) {
-  let baseUrl = schema.schema.servers[0].url
-  if (baseUrl.endsWith('/')) {
-    baseUrl = baseUrl.substring(0, baseUrl.length - 1)
-  }
-  const url = new URL(baseUrl + path)
+async function invokeWithNoBody(schema: any, path: string, method: string, value: any, headers: OpenApiHeaders) {
+  const url = new URL(schema.schema.servers[0].url + path)
   const queryStr = jsonObjToQueryStr(value)
   if (queryStr) {
     url.search = "?" + queryStr
@@ -87,6 +98,7 @@ async function invokeWithNoBody(schema: any, path: string, method: string, value
       method: method,
       headers: {
         'Accept': 'application/json',
+        ...headers
       }
     }
   )
@@ -94,18 +106,26 @@ async function invokeWithNoBody(schema: any, path: string, method: string, value
   return content
 }
 
-async function invokeWithBody(schema: any, path: string, method: string, value: any) {
+async function invokeWithBody(schema: any, path: string, method: string, value: any, headers: OpenApiHeaders) {
+  const url = schema.schema.servers[0].url + path
   const rawResponse = await fetch(
-    schema.schema.servers[0].url,
+    url,
     {
       method: method,
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...headers
       },
       body: JSON.stringify(value)
     }
   )
   const content = await rawResponse.json()
   return content
+}
+
+export const requiresAuth = (openApiMethod: any) => {
+  const security = openApiMethod?.security || []
+  const bearer = security.find((s: any) => Object.keys(s).includes("OAuth2PasswordBearer"))
+  return !!bearer
 }

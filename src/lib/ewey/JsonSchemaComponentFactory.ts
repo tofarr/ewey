@@ -6,9 +6,6 @@ const JsonSchemaComponentFactory = (schema: JsonSchema, components: any, factori
   if (!factories) {
     factories = FACTORIES
   } else {
-    if (!factories.sort){
-      debugger
-    }
     factories.sort((a, b) => b.priority - a.priority)
   }
   for (const factory of factories) {
@@ -17,7 +14,6 @@ const JsonSchemaComponentFactory = (schema: JsonSchema, components: any, factori
       return component
     }
   }
-  debugger
   throw new Error('no_factory')
 }
 

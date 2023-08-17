@@ -10,27 +10,31 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import {
   BrowserRouter,
   createBrowserRouter,
   createRoutesFromElements,
   Link,
+  Navigate,
   Outlet,
   Route,
   RouterProvider,
   Routes,
-
-
 } from "react-router-dom";
 
+import OAuthLoginForm from './../oauth/OAuthLoginForm';
 import { useOpenApiSchema } from './OpenApiSchemaContext';
+import OAuthBearerTokenProvider, { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
 import OpenApiContent from './OpenApiContent';
 import OpenApiForm from './OpenApiForm';
+import { requiresAuth } from './util';
 
 interface Operation {
   path: string
   method: string
   operationId: string
+  requiresAuth: boolean
 }
 
 interface LayoutProps {
@@ -41,68 +45,100 @@ const OpenApiSummary: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const schema = useOpenApiSchema()
   const operations = getOperations()
+  const { title, version } = schema.schema.info
 
   function getOperations(){
     const operations: Operation[] = []
     const paths = schema.schema.paths
     for (const path in paths){
       for (const method in paths[path]) {
-        operations.push({ path, method, operationId: paths[path][method].operationId })
+        const openApiMethod = paths[path][method]
+        operations.push({ path, method, operationId: openApiMethod.operationId, requiresAuth: requiresAuth(openApiMethod) })
       }
     }
     return operations
   }
 
   return (
-    <BrowserRouter>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={() => setDrawerOpen(true)}
-          >
-            <MenuIcon color="inherit" />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      >
-        {operations.map(operation => (
-          <Link
-            key={operation.operationId}
-            to={operation.operationId}
-            style={{color: "inherit", textDecoration: "inherit"}}
-            onClick={() => setDrawerOpen(false)}>
-            <MenuItem>{operation.operationId}</MenuItem>
-          </Link>
-        ))}
-      </Drawer>
-      <Routes>
-        {operations.map(OperationRoute)}
-        <Route path="*" element={<div style={{padding: "100px"}}>Foobar</div>} />
-      </Routes>
-    </BrowserRouter>
+    <OAuthBearerTokenProvider>
+      <BrowserRouter>
+        <AppBar position="fixed">
+          <Toolbar>
+            <Grid container alignItems="center">
+              <Grid item>
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                  onClick={() => setDrawerOpen(true)}
+                >
+                  <MenuIcon color="inherit" />
+                </IconButton>
+              </Grid>
+              <Grid item xs>
+                <Typography variant="h6">
+                  {title}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography>
+                  {version}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+        <Toolbar />
+        <Drawer
+          anchor="left"
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        >
+          {operations.map(operation => (
+            <Link
+              key={operation.operationId}
+              to={operation.operationId}
+              style={{color: "inherit", textDecoration: "inherit"}}
+              onClick={() => setDrawerOpen(false)}>
+              <MenuItem>{operation.operationId}</MenuItem>
+            </Link>
+          ))}
+        </Drawer>
+        <Routes>
+          {operations.map(OperationRoute)}
+          <Route path="*" element={<Navigate to={operations[0].operationId} replace={true} />} />
+        </Routes>
+      </BrowserRouter>
+    </OAuthBearerTokenProvider>
   )
 }
 
-const OperationRoute = ({ method, path, operationId }: Operation) => {
+const OperationRoute = ({ method, path, operationId, requiresAuth }: Operation) => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [result, setResult] = useState(null)
+  const token = useOAuthBearerToken()
+
+  function renderAuth() {
+    return (
+      <OAuthLoginForm url="https://foobar.com" />
+    )
+  }
+
+  function renderForm(){
+    return (
+      <OpenApiForm path={path} method={method} initialValue={{}} onSuccess={(r) => {
+        setResult(r)
+        setDialogOpen(true)
+      }} />
+    )
+  }
+
   return (
     <Route key={operationId} path={operationId} element={
       <Fragment>
-        <OpenApiForm path={path} method={method} initialValue={{}} onSuccess={(r) => {
-          setResult(r)
-          setDialogOpen(true)
-        }} />
+        {(requiresAuth && !token) ? renderAuth() : renderForm()}
         <Dialog
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}>

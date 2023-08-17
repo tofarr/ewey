@@ -11,6 +11,7 @@ class TextFieldFactory implements EweyFactory {
     if (!schema || schema.type !== 'string') {
       return null
     }
+    debugger
     const validator = new Validator(schema)
     const maxLength = schema.maxLength
     const multiline = !(schema.format) && ((!maxLength) || (maxLength > 255))

@@ -4,10 +4,11 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { useMutation } from '@tanstack/react-query'
 import { useOpenApiSchema } from './OpenApiSchemaContext';
-import { invoke, getFormSchema } from './util';
+import { invoke, getFormSchema, headersFromToken, requiresAuth } from './util';
 import EweyFactory from './../eweyFactory/EweyFactory';
 import JsonSchemaComponentFactory from './../JsonSchemaComponentFactory';
 import SubmitComponent, { SubmitComponentProperties } from './../component/SubmitComponent';
+import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
 
 export interface OpenApiFormProps {
   path: string,
@@ -32,6 +33,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
     FormSubmitComponent = SubmitComponent
   }
   const schema = useOpenApiSchema()
+  const headers = headersFromToken(useOAuthBearerToken())
   const [value, setValue] = useState<any>(initialValue || {})
   const validator = new Validator(schema)
   const { valid } = validator.validate(value)
@@ -39,7 +41,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
       try{
-        const result = await invoke(schema, path, method, value)
+        const result = await invoke(schema, path, method, value, headers)
         if (onSuccess) {
           onSuccess(result)
         }

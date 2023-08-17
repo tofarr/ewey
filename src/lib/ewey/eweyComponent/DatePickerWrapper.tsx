@@ -20,7 +20,7 @@ const DatePickerWrapper = (validator: Validator, format: string): EweyComponent<
     const validationResult = validator.validate(value || null)
 
     function handleChange(newValue?: Dayjs | null){
-      const dateStr: any = newValue ? newValue.toDate().toISOString() : null;
+      const dateStr: string | null = newValue ? newValue.toDate().toISOString() : null;
       (onSetValue as any)(dateStr)
       if (dateStr) {
         setDisplayValue(dayjs(dateStr))
