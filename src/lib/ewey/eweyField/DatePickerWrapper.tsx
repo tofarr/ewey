@@ -1,4 +1,4 @@
-import EweyComponent from './EweyComponent';
+import EweyField from './EweyField';
 import { Validator } from '@cfworker/json-schema';
 import { Fragment, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
@@ -12,8 +12,8 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import ClearIcon from '@mui/icons-material/Clear';
 
-const DatePickerWrapper = (validator: Validator, format: string): EweyComponent<string | null> => {
-  const DatePickerComponent: EweyComponent<string | null> = ({value, onSetValue}) => {
+const DatePickerWrapper = (validator: Validator, format: string): EweyField<string | null> => {
+  const DatePickerComponent: EweyField<string | null> = ({value, onSetValue}) => {
     const [displayValue, setDisplayValue] = useState<Dayjs | null>(dayjs(value));
     const dateOnly = format === 'date'
     const Picker = dateOnly ? DatePicker : DateTimePicker

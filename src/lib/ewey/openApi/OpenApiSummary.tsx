@@ -31,7 +31,7 @@ import { useMessageBroker } from '../message/MessageBrokerContext';
 import { OpenApiOperation } from './model/OpenApiOperation';
 import { useOpenApi } from './OpenApiProvider';
 import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
-import { keyToLabel } from '../eweyComponent/FieldSetWrapper';
+import { keyToLabel } from '../eweyField/FieldSetWrapper';
 import OpenApiContent from './OpenApiContent';
 import OpenApiForm from './OpenApiForm';
 

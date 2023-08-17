@@ -1,4 +1,4 @@
-import FieldSetWrapper from '../eweyComponent/FieldSetWrapper';
+import FieldSetWrapper from '../eweyField/FieldSetWrapper';
 import EweyFactory from './EweyFactory';
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
 import JsonSchema from './JsonSchema'

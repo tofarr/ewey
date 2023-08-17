@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query'
 import { useOpenApi } from './OpenApiProvider';
-import { keyToLabel } from '../eweyComponent/FieldSetWrapper';
+import { keyToLabel } from '../eweyField/FieldSetWrapper';
 import EweyFactory from '../eweyFactory/EweyFactory';
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
 import SubmitComponent, { SubmitComponentProperties } from '../component/SubmitComponent';

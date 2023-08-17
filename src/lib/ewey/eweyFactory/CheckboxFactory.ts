@@ -1,4 +1,4 @@
-import CheckboxComponent from '../eweyComponent/CheckboxComponent';
+import CheckboxField from '../eweyField/CheckboxField';
 import EweyFactory from './EweyFactory';
 import JsonSchema from './JsonSchema'
 
@@ -9,7 +9,7 @@ class CheckboxFactory implements EweyFactory {
     if (schema?.type !== 'boolean'){
       return null
     }
-    return CheckboxComponent
+    return CheckboxField
   }
 }
 

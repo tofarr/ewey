@@ -1,5 +1,5 @@
-import ReadOnlyWrapper from '../eweyComponent/ReadOnlyWrapper';
-import EweyComponent from '../eweyComponent/EweyComponent';
+import ReadOnlyWrapper from '../eweyField/ReadOnlyWrapper';
+import EweyField from '../eweyField/EweyField';
 import EweyFactory from './EweyFactory';
 import JsonSchema from './JsonSchema'
 
@@ -14,7 +14,7 @@ class ReadOnlyFactory implements EweyFactory {
 
   create(schema: JsonSchema, components: any, currentPath: string[], factories: EweyFactory[]) {
     const component = this.factory.create(schema, components, currentPath, factories)
-    return ReadOnlyWrapper(component as EweyComponent<any>)
+    return ReadOnlyWrapper(component as EweyField<any>)
   }
 }
 

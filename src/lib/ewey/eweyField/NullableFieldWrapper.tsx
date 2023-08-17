@@ -1,12 +1,12 @@
-import EweyComponent from './EweyComponent';
+import EweyField from './EweyField';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
-const NullableFieldWrapper = (Component: EweyComponent<any>, createItem?: () => any) => {
-  const NullableComponent: EweyComponent<any> = ({value, onSetValue}) => {
+const NullableFieldWrapper = (Component: EweyField<any>, createItem?: () => any) => {
+  const NullableComponent: EweyField<any> = ({value, onSetValue}) => {
     if (onSetValue == null) {
       return (
         <Component value={value} />

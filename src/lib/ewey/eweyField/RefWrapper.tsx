@@ -1,9 +1,9 @@
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
-import EweyComponent from './EweyComponent';
+import EweyField from './EweyField';
 import EweyFactory from '../eweyFactory/EweyFactory';
 
 const RefWrapper = (componentName: string, components: any, currentPath: string[], factories: EweyFactory[]) => {
-  const RefComponent: EweyComponent<any> = ({value, onSetValue}) => {
+  const RefComponent: EweyField<any> = ({value, onSetValue}) => {
     if (!value) {
       return null
     }

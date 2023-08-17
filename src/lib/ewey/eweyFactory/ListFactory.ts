@@ -1,4 +1,4 @@
-import ListWrapper from '../eweyComponent/ListWrapper';
+import ListWrapper from '../eweyField/ListWrapper';
 import EweyFactory from './EweyFactory';
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
 import JsonSchema from './JsonSchema'

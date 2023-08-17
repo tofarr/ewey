@@ -1,4 +1,4 @@
-import RefWrapper from '../eweyComponent/RefWrapper';
+import RefWrapper from '../eweyField/RefWrapper';
 import EweyFactory from './EweyFactory';
 import JsonSchema from '../eweyFactory/JsonSchema';
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';

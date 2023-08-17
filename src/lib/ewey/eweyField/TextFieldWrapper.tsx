@@ -4,10 +4,10 @@ import { Variant } from '@mui/material/styles/createTypography';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import EweyComponent from './EweyComponent';
+import EweyField from './EweyField';
 
-const TextFieldWrapper = (validator: Validator, multiline: boolean, type: string = "text", variant: Variant = "body2"): EweyComponent<string> => {
-  const TextFieldComponent: EweyComponent<string> = ({value, onSetValue}) => {
+const TextFieldWrapper = (validator: Validator, multiline: boolean, type: string = "text", variant: Variant = "body2"): EweyField<string> => {
+  const TextFieldComponent: EweyField<string> = ({value, onSetValue}) => {
     const validationResult = validator.validate(value || null)
     if (onSetValue) {
       return <TextField

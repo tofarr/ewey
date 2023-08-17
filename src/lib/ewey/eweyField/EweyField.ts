@@ -1,7 +1,7 @@
 import EweyProps from './EweyProps'
 
-interface EweyComponent<T>{
+interface EweyField<T>{
   (props: EweyProps<T>): JSX.Element | null
 }
 
-export default EweyComponent
+export default EweyField

@@ -6,11 +6,11 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
-import EweyComponent from './EweyComponent';
+import EweyField from './EweyField';
 
-const ListWrapper = (ItemComponent: EweyComponent<any>, createItem?: () => any) => {
+const ListWrapper = (ItemComponent: EweyField<any>, createItem?: () => any) => {
 
-  const ListComponent: EweyComponent<any[]> = ({value, onSetValue}) => {
+  const ListComponent: EweyField<any[]> = ({value, onSetValue}) => {
     if (!value) {
       value = []
     }

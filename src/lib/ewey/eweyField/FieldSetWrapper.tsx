@@ -3,11 +3,11 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import FormLabel from '@mui/material/FormLabel';
 import Typography from '@mui/material/Typography';
-import EweyComponent from './EweyComponent';
+import EweyField from './EweyField';
 
 const FieldSetWrapper = (name: string, componentsByKey: any) => {
 
-  const FieldSetComponent: EweyComponent<any> = ({value, onSetValue}) => {
+  const FieldSetComponent: EweyField<any> = ({value, onSetValue}) => {
     const { t } = useTranslation()
 
     function renderField(key: string){

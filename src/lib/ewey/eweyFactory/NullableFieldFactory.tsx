@@ -1,4 +1,4 @@
-import NullableFieldWrapper from '../eweyComponent/NullableFieldWrapper';
+import NullableFieldWrapper from '../eweyField/NullableFieldWrapper';
 import EweyFactory from './EweyFactory';
 import JsonSchema from './JsonSchema'
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';

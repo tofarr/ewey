@@ -1,6 +1,6 @@
 import { Validator } from '@cfworker/json-schema';
 
-import DatePickerWrapper from '../eweyComponent/DatePickerWrapper';
+import DatePickerWrapper from '../eweyField/DatePickerWrapper';
 import EweyFactory from './EweyFactory';
 import JsonSchema from './JsonSchema'
 
