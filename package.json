@@ -1,6 +1,6 @@
 {
   "name": "ewey",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
     "@cfworker/json-schema": "^1.12.5",
@@ -38,7 +38,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prettier": "npx prettier src --write",
-    "prettierCheck": "npx prettier src --check"
+    "prettierCheck": "npx prettier src --check",
+    "githubUpdateVersion": "node scripts/githubUpdateVersion"
   },
   "eslintConfig": {
     "extends": [
