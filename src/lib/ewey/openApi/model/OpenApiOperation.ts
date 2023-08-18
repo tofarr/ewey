@@ -1,5 +1,5 @@
 import JsonSchema from '../../eweyFactory/JsonSchema';
-import JsonType from './JsonType';
+import JsonType from '../../eweyField/JsonType';
 import OpenApiHeaders from './OpenApiHeaders';
 import OpenApiOperationSchema from './OpenApiOperationSchema';
 import OpenApiSchema from './OpenApiSchema';

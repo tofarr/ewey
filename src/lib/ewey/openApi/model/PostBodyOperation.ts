@@ -1,6 +1,6 @@
 import { Validator } from '@cfworker/json-schema';
 import JsonSchema from '../../eweyFactory/JsonSchema';
-import JsonType from './JsonType';
+import JsonType from '../../eweyField/JsonType';
 import { createUrl } from './OpenApi';
 import OpenApiHeaders from './OpenApiHeaders';
 import OpenApiOperationSchema from './OpenApiOperationSchema';
