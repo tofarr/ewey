@@ -1,4 +1,3 @@
+type OpenApiHeaders = { [key: string]: string };
 
-type OpenApiHeaders = { [key: string]: string }
-
-export default OpenApiHeaders
+export default OpenApiHeaders;

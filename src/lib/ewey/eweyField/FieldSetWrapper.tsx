@@ -1,32 +1,34 @@
-import { useTranslation } from 'react-i18next';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import FormLabel from '@mui/material/FormLabel';
-import EweyField from './EweyField';
+import { useTranslation } from "react-i18next";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import FormLabel from "@mui/material/FormLabel";
+import EweyField from "./EweyField";
 
 const FieldSetWrapper = (name: string, componentsByKey: any) => {
+  const FieldSetComponent: EweyField<any> = ({ value, onSetValue }) => {
+    const { t } = useTranslation();
 
-  const FieldSetComponent: EweyField<any> = ({value, onSetValue}) => {
-    const { t } = useTranslation()
-
-    function renderField(key: string){
-      const Component = componentsByKey[key]
-      const fieldValue = value[key]
-      let onSetFieldValue = null
+    function renderField(key: string) {
+      const Component = componentsByKey[key];
+      const fieldValue = value[key];
+      let onSetFieldValue = null;
       if (onSetValue) {
         onSetFieldValue = (newFieldValue: any) => {
-          const newValue = {...value}
-          newValue[key] = newFieldValue
-          onSetValue(newValue)
-        }
+          const newValue = { ...value };
+          newValue[key] = newFieldValue;
+          onSetValue(newValue);
+        };
       }
       return (
-        <Box key={key} sx={{ paddingBottom: { xs: 1, md: 2 }}}>
+        <Box key={key} sx={{ paddingBottom: { xs: 1, md: 2 } }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12} md={3}>
-              <Grid container sx={{
-                justifyContent: { sm: "flex-start", md: "flex-end" },
-              }}>
+              <Grid
+                container
+                sx={{
+                  justifyContent: { sm: "flex-start", md: "flex-end" },
+                }}
+              >
                 <Grid item>
                   <Box pt={2}>
                     <FormLabel>{t(key, keyToLabel(key))}</FormLabel>
@@ -39,22 +41,24 @@ const FieldSetWrapper = (name: string, componentsByKey: any) => {
             </Grid>
           </Grid>
         </Box>
-      )
+      );
     }
 
     return (
       <Box p={1} textAlign="left">
         {Object.keys(componentsByKey).map(renderField)}
       </Box>
-    )
-  }
+    );
+  };
 
-  return FieldSetComponent
-
-}
+  return FieldSetComponent;
+};
 
 export function keyToLabel(key: string) {
-  return key.split('_').map(p => p[0].toUpperCase() + p.substr(1)).join(' ')
+  return key
+    .split("_")
+    .map((p) => p[0].toUpperCase() + p.substr(1))
+    .join(" ");
 }
 
-export default FieldSetWrapper
+export default FieldSetWrapper;

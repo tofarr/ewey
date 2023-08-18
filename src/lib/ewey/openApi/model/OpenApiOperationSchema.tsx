@@ -1,4 +1,3 @@
+type OpenApiOperationSchema = any;
 
-type OpenApiOperationSchema = any
-
-export default OpenApiOperationSchema
+export default OpenApiOperationSchema;

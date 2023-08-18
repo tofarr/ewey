@@ -1,23 +1,33 @@
-import EweyFactory from './eweyFactory/EweyFactory';
-import { FACTORIES } from './eweyFactory';
-import JsonSchema from './eweyFactory/JsonSchema';
+import EweyFactory from "./eweyFactory/EweyFactory";
+import { FACTORIES } from "./eweyFactory";
+import JsonSchema from "./eweyFactory/JsonSchema";
 
-const JsonSchemaComponentFactory = (schema: JsonSchema, components: any, currentPath?: string[], factories?: EweyFactory[]) => {
+const JsonSchemaComponentFactory = (
+  schema: JsonSchema,
+  components: any,
+  currentPath?: string[],
+  factories?: EweyFactory[],
+) => {
   if (!factories) {
-    factories = FACTORIES
+    factories = FACTORIES;
   } else {
-    factories.sort((a, b) => b.priority - a.priority)
+    factories.sort((a, b) => b.priority - a.priority);
   }
   if (!currentPath) {
-    currentPath = []
+    currentPath = [];
   }
   for (const factory of factories) {
-    const component = factory.create(schema, components, currentPath, factories)
+    const component = factory.create(
+      schema,
+      components,
+      currentPath,
+      factories,
+    );
     if (component) {
-      return component
+      return component;
     }
   }
-  throw new Error('no_factory')
-}
+  throw new Error("no_factory");
+};
 
-export default JsonSchemaComponentFactory
+export default JsonSchemaComponentFactory;

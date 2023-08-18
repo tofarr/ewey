@@ -1,4 +1,3 @@
-
 type JsonType =
   | boolean
   | number
@@ -6,8 +5,8 @@ type JsonType =
   | JsonType[]
   | { [key: string]: JsonType };
 
-export default JsonType
+export default JsonType;
 
 export interface JsonObjectType {
-  [key: string]: JsonType
+  [key: string]: JsonType;
 }

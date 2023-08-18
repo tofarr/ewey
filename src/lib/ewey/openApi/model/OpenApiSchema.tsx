@@ -1,4 +1,3 @@
+type OpenApiSchema = any;
 
-type OpenApiSchema = any
-
-export default OpenApiSchema
+export default OpenApiSchema;

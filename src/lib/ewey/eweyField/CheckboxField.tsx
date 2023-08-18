@@ -1,16 +1,14 @@
-import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
-import EweyField from './EweyField';
+import Checkbox, { CheckboxProps } from "@mui/material/Checkbox";
+import EweyField from "./EweyField";
 
-const CheckboxField: EweyField<boolean> = ({value, onSetValue}) => {
+const CheckboxField: EweyField<boolean> = ({ value, onSetValue }) => {
   const props: CheckboxProps = {
-    checked: !!value
-  }
+    checked: !!value,
+  };
   if (onSetValue) {
-    props.onClick = () => onSetValue(!value)
+    props.onClick = () => onSetValue(!value);
   }
-  return (
-    <Checkbox {...props} />
-  )
-}
+  return <Checkbox {...props} />;
+};
 
-export default CheckboxField
+export default CheckboxField;

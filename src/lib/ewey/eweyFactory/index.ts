@@ -1,13 +1,13 @@
-import EweyFactory from '../eweyFactory/EweyFactory';
-import CheckboxFactory from './CheckboxFactory';
-import DatePickerFactory from './DatePickerFactory';
-import FieldSetFactory from './FieldSetFactory';
-import ListFactory from './ListFactory';
-import NullableFieldFactory from './NullableFieldFactory';
-import NumberFieldFactory from './NumberFieldFactory';
-import RefFactory from './RefFactory';
-import TableFactory from './TableFactory';
-import TextFieldFactory from './TextFieldFactory';
+import EweyFactory from "../eweyFactory/EweyFactory";
+import CheckboxFactory from "./CheckboxFactory";
+import DatePickerFactory from "./DatePickerFactory";
+import FieldSetFactory from "./FieldSetFactory";
+import ListFactory from "./ListFactory";
+import NullableFieldFactory from "./NullableFieldFactory";
+import NumberFieldFactory from "./NumberFieldFactory";
+import RefFactory from "./RefFactory";
+import TableFactory from "./TableFactory";
+import TextFieldFactory from "./TextFieldFactory";
 
 export const FACTORIES: EweyFactory[] = [
   new TableFactory(),
@@ -18,5 +18,5 @@ export const FACTORIES: EweyFactory[] = [
   new NullableFieldFactory(),
   new NumberFieldFactory(),
   new RefFactory(),
-  new TextFieldFactory()
-]
+  new TextFieldFactory(),
+];

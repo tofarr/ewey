@@ -1,4 +1,3 @@
+type JsonSchema = any;
 
-type JsonSchema = any
-
-export default JsonSchema
+export default JsonSchema;
