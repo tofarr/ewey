@@ -1,17 +1,7 @@
-import { Validator } from '@cfworker/json-schema';
-
 import TableWrapper from '../eweyField/TableWrapper';
 import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
 import EweyFactory from './EweyFactory';
 import JsonSchema from './JsonSchema';
-
-const PERMITTED_TYPES = [
-  'boolean',
-  'integer',
-  'null',
-  'number',
-  'string'
-]
 
 class TableFactory implements EweyFactory {
   priority: number
@@ -33,15 +23,15 @@ class TableFactory implements EweyFactory {
     if (ref) {
       items = components[ref.split('/components/')[1]]
     }
-    if (!items || items.type != 'object') {
+    if (!items || items.type !== 'object') {
       return null
     }
     if (this.pathMatch) {
-      if (this.pathMatch.length != currentPath.length) {
+      if (this.pathMatch.length !== currentPath.length) {
         return null
       }
       for (let i = 0; i < this.pathMatch.length; i++) {
-        if(this.pathMatch[i] != currentPath[i]){
+        if(this.pathMatch[i] !== currentPath[i]){
           return null
         }
       }

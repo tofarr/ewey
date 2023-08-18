@@ -1,4 +1,4 @@
-import { FC, Fragment, useState } from 'react';
+import { FC, Fragment, ReactElement, useState } from 'react';
 import KeyIcon from '@mui/icons-material/Key';
 import KeyOffIcon from '@mui/icons-material/KeyOff';
 import LockIcon from '@mui/icons-material/Lock';
@@ -15,16 +15,15 @@ import IconButton from '@mui/material/IconButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
   Link,
-  Outlet,
+  Navigate,
   Route,
-  RouterProvider,
+  useParams,
 } from "react-router-dom";
 import OAuthLoginForm from '../oauth/OAuthLoginForm';
 import { useMessageBroker } from '../message/MessageBrokerContext';
@@ -32,33 +31,46 @@ import { OpenApiOperation } from './model/OpenApiOperation';
 import { useOpenApi } from './OpenApiProvider';
 import { useOAuthBearerToken } from '../oauth/OAuthBearerTokenProvider';
 import { keyToLabel } from '../eweyField/FieldSetWrapper';
+import EweyFactory from '../eweyFactory/EweyFactory';
+import JsonSchema from '../eweyFactory/JsonSchema'
 import OpenApiContent from './OpenApiContent';
 import OpenApiForm from './OpenApiForm';
+import OpenApiProvider from './OpenApiProvider';
+import OpenApiQuery from './OpenApiQuery';
 
-
-const OpenApiSummary: FC = () => {
-  const openApi = useOpenApi()
-
-  const router = createBrowserRouter(createRoutesFromElements(
-    <Route
-      path="/"
-      element={<SummaryLayout operations={openApi.operations} />}>
-      {openApi.operations.map(op => <Route key={op.operationId} path={op.operationId} element={<OperationElement {...op} />} />)}
-      <Route key="*" path="*" element={<RouteError message="not_found" />} />
-    </Route>
-  ));
-
+export const openApiSummaryRoute = (prefix: string, url: string) => {
   return (
-    <RouterProvider router={router} />
+    <Route path={`${prefix}/:op?`} element={
+      <OpenApiProvider url={url}>
+        <OpenApiSummary />
+      </OpenApiProvider>
+    } />
+  )
+}
+
+export interface OpenApiSummaryProps {
+  factories?: EweyFactory[]
+}
+
+const OpenApiSummary = ({ factories }: OpenApiSummaryProps) => {
+  const openApi = useOpenApi()
+  const { op } = useParams()
+  if (!op) {
+    return <Navigate to={openApi.operations[0].operationId} />
+  }
+  const operation = openApi.operations.find(o => o.operationId === op)
+  return (
+    <SummaryLayout>
+      {operation ? <OperationElement factories={factories} {...operation} /> : <RouteError message="not_found" />}
+    </SummaryLayout>
   )
 }
 
 interface SummaryLayoutProps {
-  operations: OpenApiOperation[]
+  children: ReactElement | ReactElement[]
 }
 
-
-const SummaryLayout: FC<SummaryLayoutProps> = ({ operations }) => {
+const SummaryLayout: FC<SummaryLayoutProps> = ({ children }) => {
   const { t } = useTranslation()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [loginDialogOpen, setLoginDialogOpen] = useState(false)
@@ -88,7 +100,8 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations }) => {
     return (
       <Link
         key={operationId}
-        to={operationId}
+        to={`../${operationId}`}
+        relative="path"
         style={{color: "inherit", textDecoration: "inherit"}}
         onClick={() => setDrawerOpen(false)}>
         {menuItem}
@@ -98,7 +111,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations }) => {
 
   return (
     <Fragment>
-      <AppBar position="fixed">
+      <AppBar position="static">
         <Toolbar>
           <Grid container alignItems="center" spacing={2}>
             <Grid item>
@@ -133,7 +146,6 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations }) => {
           </Grid>
         </Toolbar>
       </AppBar>
-      <Toolbar />
       <Drawer
         anchor="left"
         open={drawerOpen}
@@ -151,7 +163,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations }) => {
           </DialogContent>
         </Dialog>
       }
-      <Outlet />
+      {children}
     </Fragment>
   )
 }
@@ -169,8 +181,14 @@ const RouteError = ({ message }: RouteErrorProps) => {
   )
 }
 
+export interface OperationElementProps {
+  operationId: string
+  requiresAuth: boolean
+  paramsSchema: JsonSchema
+  factories?: EweyFactory[]
+}
 
-const OperationElement = ({ operationId, requiresAuth }: OpenApiOperation) => {
+const OperationElement = ({ operationId, requiresAuth, paramsSchema, factories }: OperationElementProps) => {
   const { t } = useTranslation()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [result, setResult] = useState(null)
@@ -183,35 +201,54 @@ const OperationElement = ({ operationId, requiresAuth }: OpenApiOperation) => {
 
   function renderForm(){
     return (
-      <OpenApiForm
-        operationId={operationId}
-        initialValue={{}}
-        displaySummary
-        onSuccess={(r) => {
-          setResult(r)
-          setDialogOpen(true)
-        }}
-        onError={(error) => messageBroker.triggerError(error)} />
+      <Fragment>
+        <OpenApiForm
+          operationId={operationId}
+          initialValue={{}}
+          displaySummary
+          onSuccess={(r) => {
+            setResult(r)
+            setDialogOpen(true)
+          }}
+          onError={(error) => messageBroker.triggerError(error)} />
+        <Dialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          fullWidth
+          maxWidth="lg">
+          <DialogContent>
+            <Box pb={2}>
+              <Typography variant="h4">{t(operationId, keyToLabel(operationId))}</Typography>
+            </Box>
+            <OpenApiContent operationId={operationId} value={result} factories={factories} />
+          </DialogContent>
+        </Dialog>
+      </Fragment>
     )
   }
 
-  return (
-    <Fragment>
-      {(requiresAuth && (!token.token)) ? renderAuth() : renderForm()}
-      <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        fullWidth
-        maxWidth="lg">
-        <DialogContent>
-          <Box pb={2}>
-            <Typography variant="h4">{t(operationId, keyToLabel(operationId))}</Typography>
-          </Box>
-          <OpenApiContent operationId={operationId} value={result} />
-        </DialogContent>
-      </Dialog>
-    </Fragment>
-  )
+  function renderResults(){
+    return (
+      <Paper>
+        <Box padding={2}>
+        <Box pb={2}>
+          <Typography variant="h4">{keyToLabel(operationId)}</Typography>
+        </Box>
+        <OpenApiQuery operationId={operationId} />
+        </Box>
+      </Paper>
+    )
+  }
+
+  if (requiresAuth && (!token.token)) {
+    return renderAuth()
+  }
+
+  if (!Object.keys(paramsSchema.properties).length) {
+    return renderResults()
+  }
+
+  return renderForm()
 }
 
 

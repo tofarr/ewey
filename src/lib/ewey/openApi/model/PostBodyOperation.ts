@@ -14,7 +14,7 @@ enum PostBodyMethod {
   PATCH = 'PATCH'
 }
 
-class PostBodyOperation implements OpenApiOperation {
+export class PostBodyOperation implements OpenApiOperation {
   operationId: string
   paramsSchema: JsonSchema
   resultSchema: JsonSchema
@@ -48,6 +48,9 @@ class PostBodyOperation implements OpenApiOperation {
   }
 
   async invoke(params: JsonType, headers?: OpenApiHeaders) {
+    if (!params) {
+      params = {}
+    }
     const rawResponse = await fetch(
       this.url,
       {

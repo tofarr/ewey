@@ -29,7 +29,7 @@ export class MessageBroker {
   }
 
   removeListener(listenerId: string) {
-    this.listeners = this.listeners.filter(listener => listener.id != listenerId)
+    this.listeners = this.listeners.filter(listener => listener.id !== listenerId)
   }
 
   triggerMessage(text: string, severity: AlertColor = "info", duration: number = 0) {

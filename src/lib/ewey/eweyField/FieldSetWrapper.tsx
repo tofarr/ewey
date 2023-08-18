@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import FormLabel from '@mui/material/FormLabel';
-import Typography from '@mui/material/Typography';
 import EweyField from './EweyField';
 
 const FieldSetWrapper = (name: string, componentsByKey: any) => {

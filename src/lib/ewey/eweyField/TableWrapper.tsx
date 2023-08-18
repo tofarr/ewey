@@ -1,8 +1,4 @@
-import { ChangeEvent } from 'react';
-import { Validator } from '@cfworker/json-schema';
 import { useTranslation } from 'react-i18next';
-import { Variant } from '@mui/material/styles/createTypography';
-import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';

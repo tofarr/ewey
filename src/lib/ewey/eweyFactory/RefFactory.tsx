@@ -1,8 +1,6 @@
 import RefWrapper from '../eweyField/RefWrapper';
 import EweyFactory from './EweyFactory';
 import JsonSchema from '../eweyFactory/JsonSchema';
-import JsonSchemaComponentFactory from '../JsonSchemaComponentFactory';
-
 
 class RefFactory implements EweyFactory {
   priority: number = 50

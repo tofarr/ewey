@@ -15,7 +15,7 @@ enum UrlParamsMethod {
 }
 
 
-class UrlParamsOperation implements OpenApiOperation {
+export class UrlParamsOperation implements OpenApiOperation {
   operationId: string
   paramsSchema: JsonSchema
   resultSchema: JsonSchema
@@ -49,6 +49,9 @@ class UrlParamsOperation implements OpenApiOperation {
   }
 
   async invoke(params: JsonType, headers?: OpenApiHeaders) {
+    if (!params) {
+      params = {}
+    }
     validate(this.paramsValidator, params, 'invalid_params')
     const url = new URL(this.url)
     const queryStr = jsonObjToQueryStr(params)
