@@ -1,4 +1,8 @@
-import { schemaCompiler, AnySchemaObject, ValidateFunction } from "../../schemaCompiler";
+import {
+  schemaCompiler,
+  AnySchemaObject,
+  ValidateFunction,
+} from "../../schemaCompiler";
 import { JsonType } from "json-urley";
 import { createUrl } from "./OpenApi";
 import OpenApiHeaders from "./OpenApiHeaders";
@@ -59,7 +63,7 @@ export class PostBodyOperation implements OpenApiOperation {
       params = {};
     }
     if (this.paramsValidate && !this.paramsValidate(params)) {
-      throw new Error('invalid_params')
+      throw new Error("invalid_params");
     }
     const rawResponse = await fetch(this.url, {
       method: this.method,
@@ -72,7 +76,7 @@ export class PostBodyOperation implements OpenApiOperation {
     });
     const result = await rawResponse.json();
     if (this.resultValidate && !this.resultValidate(result)) {
-      throw new Error('invalid_result')
+      throw new Error("invalid_result");
     }
     return result;
   }

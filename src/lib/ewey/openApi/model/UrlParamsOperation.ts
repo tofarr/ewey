@@ -1,4 +1,8 @@
-import { schemaCompiler, AnySchemaObject, ValidateFunction } from "../../schemaCompiler";
+import {
+  schemaCompiler,
+  AnySchemaObject,
+  ValidateFunction,
+} from "../../schemaCompiler";
 import { jsonObjToQueryStr, JsonType } from "json-urley";
 import { createUrl } from "./OpenApi";
 import OpenApiHeaders from "./OpenApiHeaders";
@@ -54,7 +58,7 @@ export class UrlParamsOperation implements OpenApiOperation {
       params = {};
     }
     if (this.paramsValidate && !this.paramsValidate(params)) {
-      throw new Error('invalid_params')
+      throw new Error("invalid_params");
     }
     const url = new URL(this.url);
     const queryStr = jsonObjToQueryStr(params);
@@ -70,13 +74,16 @@ export class UrlParamsOperation implements OpenApiOperation {
     });
     const result = await rawResponse.json();
     if (this.resultValidate && !this.resultValidate(result)) {
-      throw new Error('invalid_result')
+      throw new Error("invalid_result");
     }
     return result;
   }
 }
 
-export const remapReferences = (formSchema: AnySchemaObject, apiSchema: any) => {
+export const remapReferences = (
+  formSchema: AnySchemaObject,
+  apiSchema: any,
+) => {
   formSchema = { ...formSchema, components: apiSchema.components };
   return formSchema;
 };

@@ -1,9 +1,11 @@
 import { useState, ChangeEvent } from "react";
-import { ValidateFunction } from "ajv"
+import { ValidateFunction } from "ajv";
 import TextField from "@mui/material/TextField";
 import EweyField from "./EweyField";
 
-const NumberFieldWrapper = (validate: ValidateFunction<number>): EweyField<string> => {
+const NumberFieldWrapper = (
+  validate: ValidateFunction<number>,
+): EweyField<string> => {
   const NumberFieldComponent: EweyField<string> = ({ value, onSetValue }) => {
     const [displayValue, setDisplayValue] = useState(
       value == null ? "" : value.toString(),

@@ -1,4 +1,8 @@
-import { schemaCompiler, AnySchemaObject, ValidateFunction } from "../schemaCompiler";
+import {
+  schemaCompiler,
+  AnySchemaObject,
+  ValidateFunction,
+} from "../schemaCompiler";
 
 import TextFieldWrapper from "../eweyField/TextFieldWrapper";
 import EweyFactory from "./EweyFactory";

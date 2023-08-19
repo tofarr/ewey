@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
 import { AlertColor } from "@mui/material/Alert";
+import { v4 as uuidv4 } from "uuid";
 
 export interface Message {
   timestamp: Date;
@@ -22,7 +23,7 @@ export class MessageBroker {
 
   addListener(callback: (message: Message) => void, id?: string) {
     if (!id) {
-      id = crypto.randomUUID();
+      id = uuidv4();
     }
     this.listeners.push({ id, callback });
     return id;

@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   createBrowserRouter,
@@ -19,15 +19,15 @@ const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
 const theme = createTheme({
   palette: {
-    mode: 'light',
+    mode: "light",
     primary: {
-      main: '#318529',
-      contrastText: '#ffffff',
+      main: "#318529",
+      contrastText: "#ffffff",
     },
     secondary: {
-      main: '#f50057',
+      main: "#f50057",
     },
-  }
+  },
 });
 
 function Root() {

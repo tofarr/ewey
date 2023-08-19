@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { ValidateFunction } from "ajv"
+import { ValidateFunction } from "ajv";
 import { Variant } from "@mui/material/styles/createTypography";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
