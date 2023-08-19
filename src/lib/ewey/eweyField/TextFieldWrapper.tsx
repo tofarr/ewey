@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { Validator } from "@cfworker/json-schema";
+import { ValidateFunction } from "ajv"
 import { Variant } from "@mui/material/styles/createTypography";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -7,17 +7,17 @@ import Typography from "@mui/material/Typography";
 import EweyField from "./EweyField";
 
 const TextFieldWrapper = (
-  validator: Validator,
+  validate: ValidateFunction<string>,
   multiline: boolean,
   type: string = "text",
   variant: Variant = "body2",
 ): EweyField<string> => {
   const TextFieldComponent: EweyField<string> = ({ value, onSetValue }) => {
-    const validationResult = validator.validate(value || null);
+    const validationResult = validate(value || null);
     if (onSetValue) {
       return (
         <TextField
-          error={!validationResult.valid}
+          error={!validationResult}
           fullWidth
           type={type}
           multiline={multiline}

@@ -1,8 +1,7 @@
-import { Validator } from "@cfworker/json-schema";
+import { schemaCompiler, AnySchemaObject, ValidateFunction } from "../schemaCompiler";
 
 import NumberFieldWrapper from "../eweyField/NumberFieldWrapper";
 import EweyFactory from "./EweyFactory";
-import JsonSchema from "./JsonSchema";
 
 const NUMBER_TYPES = ["integer", "number"];
 
@@ -10,7 +9,7 @@ class NumberFieldFactory implements EweyFactory {
   priority: number = 110;
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],
@@ -18,8 +17,8 @@ class NumberFieldFactory implements EweyFactory {
     if (!NUMBER_TYPES.includes(schema.type)) {
       return null;
     }
-    const validator = new Validator(schema);
-    const textFieldComponent = NumberFieldWrapper(validator);
+    const validate: ValidateFunction<number> = schemaCompiler.compile(schema);
+    const textFieldComponent = NumberFieldWrapper(validate);
     return textFieldComponent;
   }
 }

@@ -1,14 +1,13 @@
-import { Validator } from "@cfworker/json-schema";
+import { schemaCompiler, AnySchemaObject, ValidateFunction } from "../schemaCompiler";
 
 import TextFieldWrapper from "../eweyField/TextFieldWrapper";
 import EweyFactory from "./EweyFactory";
-import JsonSchema from "./JsonSchema";
 
 class TextFieldFactory implements EweyFactory {
   priority: number = 100;
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],
@@ -21,11 +20,11 @@ class TextFieldFactory implements EweyFactory {
       currentPath[currentPath.length - 1].toLowerCase().indexOf("password") >=
         0;
     const type = isPassword ? "password" : "text";
-    const validator = new Validator(schema);
+    const validate: ValidateFunction<string> = schemaCompiler.compile(schema);
     const maxLength = schema.maxLength;
     const multiline =
       !schema.format && !isPassword && (!maxLength || maxLength > 255);
-    const textFieldComponent = TextFieldWrapper(validator, multiline, type);
+    const textFieldComponent = TextFieldWrapper(validate, multiline, type);
     return textFieldComponent;
   }
 }

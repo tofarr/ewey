@@ -4,9 +4,11 @@ import KeyOffIcon from "@mui/icons-material/KeyOff";
 import LockIcon from "@mui/icons-material/Lock";
 import MenuIcon from "@mui/icons-material/Menu";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import RefreshIcon from '@mui/icons-material/Refresh';
 import Alert from "@mui/material/Alert";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Drawer from "@mui/material/Drawer";
@@ -246,7 +248,16 @@ const OperationElement = ({
       <Paper>
         <Box padding={2}>
           <Box pb={2}>
-            <Typography variant="h4">{keyToLabel(operationId)}</Typography>
+            <Grid container>
+              <Grid item xs>
+                <Typography variant="h4">{keyToLabel(operationId)}</Typography>
+              </Grid>
+              <Grid>
+                <Button>
+                  <RefreshIcon />
+                </Button>
+              </Grid>
+            </Grid>
           </Box>
           <OpenApiQuery operationId={operationId} />
         </Box>

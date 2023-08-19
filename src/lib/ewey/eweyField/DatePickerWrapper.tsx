@@ -1,6 +1,5 @@
-import EweyField from "./EweyField";
-import { Validator } from "@cfworker/json-schema";
 import { Fragment, useState } from "react";
+import { ValidateFunction } from "ajv"
 import dayjs, { Dayjs } from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -11,9 +10,10 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import ClearIcon from "@mui/icons-material/Clear";
+import EweyField from "./EweyField";
 
 const DatePickerWrapper = (
-  validator: Validator,
+  validate: ValidateFunction<string>,
   format: string,
 ): EweyField<string | null> => {
   const DatePickerComponent: EweyField<string | null> = ({
@@ -25,7 +25,7 @@ const DatePickerWrapper = (
     );
     const dateOnly = format === "date";
     const Picker = dateOnly ? DatePicker : DateTimePicker;
-    const validationResult = validator.validate(value || null);
+    const validationResult = validate(value || null);
 
     function handleChange(newValue?: Dayjs | null) {
       const dateStr: string | null = newValue
@@ -60,7 +60,7 @@ const DatePickerWrapper = (
                 value={displayValue}
                 onChange={handleChange}
                 renderInput={(params: any) => (
-                  <TextField {...params} error={!validationResult.valid} />
+                  <TextField {...params} error={!validationResult} />
                 )}
               />
             </Grid>

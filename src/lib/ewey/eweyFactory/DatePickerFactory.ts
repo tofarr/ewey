@@ -1,8 +1,6 @@
-import { Validator } from "@cfworker/json-schema";
-
+import { schemaCompiler, AnySchemaObject, ValidateFunction } from "../schemaCompiler";
 import DatePickerWrapper from "../eweyField/DatePickerWrapper";
 import EweyFactory from "./EweyFactory";
-import JsonSchema from "./JsonSchema";
 
 const FORMATS = ["date-time", "date"];
 
@@ -10,7 +8,7 @@ class DatePickerFactory implements EweyFactory {
   priority: number = 110;
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],
@@ -22,8 +20,8 @@ class DatePickerFactory implements EweyFactory {
     ) {
       return null;
     }
-    const validator = new Validator(schema);
-    const datePickerComponent = DatePickerWrapper(validator, schema.format);
+    const validate: ValidateFunction<string> = schemaCompiler.compile(schema);
+    const datePickerComponent = DatePickerWrapper(validate, schema.format);
     return datePickerComponent;
   }
 }

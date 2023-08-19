@@ -1,16 +1,16 @@
 import { useState, ChangeEvent } from "react";
-import { Validator } from "@cfworker/json-schema";
+import { ValidateFunction } from "ajv"
 import TextField from "@mui/material/TextField";
 import EweyField from "./EweyField";
 
-const NumberFieldWrapper = (validator: Validator): EweyField<string> => {
+const NumberFieldWrapper = (validate: ValidateFunction<number>): EweyField<string> => {
   const NumberFieldComponent: EweyField<string> = ({ value, onSetValue }) => {
     const [displayValue, setDisplayValue] = useState(
       value == null ? "" : value.toString(),
     );
-    const validationResult = validator.validate(value || null);
+    const validationResult = validate(value || null);
     const props: any = {
-      error: !validationResult.valid,
+      error: !validationResult,
       value: displayValue,
     };
     if (typeof value !== "string") {

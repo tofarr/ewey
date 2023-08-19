@@ -1,7 +1,5 @@
-import { Validator } from "@cfworker/json-schema";
-import { jsonObjToQueryStr } from "json-urley";
-import JsonSchema from "../../eweyFactory/JsonSchema";
-import JsonType from "../../eweyField/JsonType";
+import { schemaCompiler, AnySchemaObject, ValidateFunction } from "../../schemaCompiler";
+import { jsonObjToQueryStr, JsonType } from "json-urley";
 import { createUrl } from "./OpenApi";
 import OpenApiHeaders from "./OpenApiHeaders";
 import OpenApiOperationSchema from "./OpenApiOperationSchema";
@@ -16,19 +14,19 @@ enum UrlParamsMethod {
 
 export class UrlParamsOperation implements OpenApiOperation {
   operationId: string;
-  paramsSchema: JsonSchema;
-  resultSchema: JsonSchema;
+  paramsSchema: AnySchemaObject;
+  resultSchema: AnySchemaObject;
   requiresAuth: boolean;
   url: string;
   method: UrlParamsMethod;
-  paramsValidator: Validator | null;
-  resultValidator: Validator | null;
+  paramsValidate: ValidateFunction<unknown> | null;
+  resultValidate: ValidateFunction<unknown> | null;
   summary: string;
 
   constructor(
     operationId: string,
-    paramsSchema: JsonSchema,
-    resultSchema: JsonSchema,
+    paramsSchema: AnySchemaObject,
+    resultSchema: AnySchemaObject,
     requiresAuth: boolean,
     url: string,
     method: UrlParamsMethod,
@@ -43,11 +41,11 @@ export class UrlParamsOperation implements OpenApiOperation {
     this.url = url;
     this.method = method;
     this.summary = summary;
-    this.paramsValidator = validateParams
-      ? new Validator(this.paramsSchema)
+    this.paramsValidate = validateParams
+      ? schemaCompiler.compile(this.paramsSchema)
       : null;
-    this.resultValidator = validateResult
-      ? new Validator(this.resultSchema)
+    this.resultValidate = validateResult
+      ? schemaCompiler.compile(this.resultSchema)
       : null;
   }
 
@@ -55,7 +53,9 @@ export class UrlParamsOperation implements OpenApiOperation {
     if (!params) {
       params = {};
     }
-    validate(this.paramsValidator, params, "invalid_params");
+    if (this.paramsValidate && !this.paramsValidate(params)) {
+      throw new Error('invalid_params')
+    }
     const url = new URL(this.url);
     const queryStr = jsonObjToQueryStr(params);
     if (queryStr) {
@@ -69,25 +69,14 @@ export class UrlParamsOperation implements OpenApiOperation {
       },
     });
     const result = await rawResponse.json();
-    validate(this.resultValidator, result, "invalid_result");
+    if (this.resultValidate && !this.resultValidate(result)) {
+      throw new Error('invalid_result')
+    }
     return result;
   }
 }
 
-export const validate = (
-  validator: Validator | null,
-  value: JsonType,
-  errorMessage: string,
-) => {
-  if (validator) {
-    const validationResult = validator.validate(value);
-    if (!validationResult.valid) {
-      throw new Error(errorMessage);
-    }
-  }
-};
-
-export const remapReferences = (formSchema: JsonSchema, apiSchema: any) => {
+export const remapReferences = (formSchema: AnySchemaObject, apiSchema: any) => {
   formSchema = { ...formSchema, components: apiSchema.components };
   return formSchema;
 };
@@ -104,7 +93,7 @@ export const createParamsSchema = (
     }
     properties[param.name] = param.schema;
   }
-  let result = {
+  let result: AnySchemaObject = {
     type: "object",
     name: operationSchema.operationId,
     properties,

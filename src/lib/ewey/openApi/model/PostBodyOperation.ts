@@ -1,6 +1,5 @@
-import { Validator } from "@cfworker/json-schema";
-import JsonSchema from "../../eweyFactory/JsonSchema";
-import JsonType from "../../eweyField/JsonType";
+import { schemaCompiler, AnySchemaObject, ValidateFunction } from "../../schemaCompiler";
+import { JsonType } from "json-urley";
 import { createUrl } from "./OpenApi";
 import OpenApiHeaders from "./OpenApiHeaders";
 import OpenApiOperationSchema from "./OpenApiOperationSchema";
@@ -20,19 +19,19 @@ enum PostBodyMethod {
 
 export class PostBodyOperation implements OpenApiOperation {
   operationId: string;
-  paramsSchema: JsonSchema;
-  resultSchema: JsonSchema;
+  paramsSchema: AnySchemaObject;
+  resultSchema: AnySchemaObject;
   requiresAuth: boolean;
   url: string;
   method: PostBodyMethod;
   summary: string;
-  paramsValidator: Validator | null;
-  resultValidator: Validator | null;
+  paramsValidate: ValidateFunction<unknown> | null;
+  resultValidate: ValidateFunction<unknown> | null;
 
   constructor(
     operationId: string,
-    paramsSchema: JsonSchema,
-    resultSchema: JsonSchema,
+    paramsSchema: AnySchemaObject,
+    resultSchema: AnySchemaObject,
     requiresAuth: boolean,
     url: string,
     method: PostBodyMethod,
@@ -47,17 +46,20 @@ export class PostBodyOperation implements OpenApiOperation {
     this.url = url;
     this.method = method;
     this.summary = summary;
-    this.paramsValidator = validateParams
-      ? new Validator(this.paramsSchema)
+    this.paramsValidate = validateParams
+      ? schemaCompiler.compile(this.paramsSchema)
       : null;
-    this.resultValidator = validateResult
-      ? new Validator(this.resultSchema)
+    this.resultValidate = validateResult
+      ? schemaCompiler.compile(this.resultSchema)
       : null;
   }
 
   async invoke(params: JsonType, headers?: OpenApiHeaders) {
     if (!params) {
       params = {};
+    }
+    if (this.paramsValidate && !this.paramsValidate(params)) {
+      throw new Error('invalid_params')
     }
     const rawResponse = await fetch(this.url, {
       method: this.method,
@@ -68,8 +70,11 @@ export class PostBodyOperation implements OpenApiOperation {
       },
       body: JSON.stringify(params),
     });
-    const content = await rawResponse.json();
-    return content;
+    const result = await rawResponse.json();
+    if (this.resultValidate && !this.resultValidate(result)) {
+      throw new Error('invalid_result')
+    }
+    return result;
   }
 }
 

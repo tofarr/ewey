@@ -1,5 +1,5 @@
 import { FC, FormEvent, useEffect, useState } from "react";
-import { Validator } from "@cfworker/json-schema";
+import { schemaCompiler } from "../schemaCompiler";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -41,8 +41,8 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   const operation = openApi.getOperation(operationId);
   const headers = headersFromToken(useOAuthBearerToken()?.token);
   const [value, setValue] = useState<any>(initialValue || {});
-  const validator = new Validator(operation.paramsSchema);
-  const { valid } = validator.validate(value);
+  const validate = schemaCompiler.compile(operation.paramsSchema);
+  const valid = validate(value);
   const [FormComponent, setFormComponent] = useState<any>(null);
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
