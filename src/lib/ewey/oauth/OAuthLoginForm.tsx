@@ -1,10 +1,7 @@
 import { FC, FormEvent, useContext, useState } from "react";
-import { jsonObjToQueryStr } from "json-urley";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
 import {
   OAuthBearerTokenContext,
@@ -43,7 +40,7 @@ const OAuthLoginForm: FC<OAuthLoginFormProps> = ({ url }) => {
         method: "POST",
         body: formData,
       });
-      if (response.status != 200) {
+      if (response.status !== 200) {
         const content = await response.text();
         messageBroker.triggerError(content);
         return;

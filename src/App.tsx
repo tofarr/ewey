@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   createBrowserRouter,
@@ -16,6 +17,19 @@ const OPEN_API_URL = "http://localhost:8000/openapi.json";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#318529',
+      contrastText: '#ffffff',
+    },
+    secondary: {
+      main: '#f50057',
+    },
+  }
+});
+
 function Root() {
   return (
     <Routes>
@@ -29,13 +43,15 @@ function Root() {
 function App() {
   return (
     <div className="App">
-      <QueryClientProvider client={queryClient}>
-        <OAuthBearerTokenProvider storage={new Storage()}>
-          <MessageDisplayProvider>
-            <RouterProvider router={router} />
-          </MessageDisplayProvider>
-        </OAuthBearerTokenProvider>
-      </QueryClientProvider>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <OAuthBearerTokenProvider storage={new Storage()}>
+            <MessageDisplayProvider>
+              <RouterProvider router={router} />
+            </MessageDisplayProvider>
+          </OAuthBearerTokenProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </div>
   );
 }

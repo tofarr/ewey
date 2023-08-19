@@ -3,7 +3,8 @@ type JsonType =
   | number
   | string
   | JsonType[]
-  | { [key: string]: JsonType };
+  | { [key: string]: JsonType }
+  | null;
 
 export default JsonType;
 

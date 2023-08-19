@@ -1,3 +1,8 @@
+# Why don't you have any Jest Tests?
+
+It is currently incompatible with JsonSchema (Due to use of export statements)
+Maybe we can use a different JSON Schema library, or pass it through a webpack process?
+
 #TODOS:
 
 * Need to be able to generate for full openapi forms too

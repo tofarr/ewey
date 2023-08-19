@@ -33,7 +33,7 @@ const OAuthBearerTokenProvider: FC<OAuthBearerTokenProviderProps> = ({
     if (storage) {
       storage.store(token);
     }
-  }, [token]);
+  }, [token, storage]);
   return (
     <OAuthBearerTokenContext.Provider value={{ token, setToken }}>
       {children}
