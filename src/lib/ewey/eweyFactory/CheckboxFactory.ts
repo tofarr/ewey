@@ -4,7 +4,6 @@ import {
   ValidateFunction,
 } from "../schemaCompiler";
 import EweyFactory from "./EweyFactory";
-import JsonSchema from "./JsonSchema";
 import CheckboxWrapper from "../eweyField/CheckboxWrapper";
 
 

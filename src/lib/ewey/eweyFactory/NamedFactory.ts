@@ -1,5 +1,5 @@
 import EweyFactory from "./EweyFactory";
-import JsonSchema from "./JsonSchema";
+import { AnySchemaObject } from "../schemaCompiler";
 
 class NamedFactory implements EweyFactory {
   name: string;
@@ -13,7 +13,7 @@ class NamedFactory implements EweyFactory {
   }
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],

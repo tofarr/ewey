@@ -1,13 +1,13 @@
 import NullableFieldWrapper from "../eweyField/NullableFieldWrapper";
 import EweyFactory from "./EweyFactory";
-import JsonSchema from "./JsonSchema";
+import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
 
 class NullableFieldFactory implements EweyFactory {
   priority: number = 100;
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],

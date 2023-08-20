@@ -1,7 +1,7 @@
 import TableWrapper from "../eweyField/TableWrapper";
 import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
+import { AnySchemaObject } from "../schemaCompiler";
 import EweyFactory from "./EweyFactory";
-import JsonSchema from "./JsonSchema";
 
 class TableFactory implements EweyFactory {
   priority: number;
@@ -19,7 +19,7 @@ class TableFactory implements EweyFactory {
   }
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],
@@ -86,7 +86,7 @@ class TableFactory implements EweyFactory {
   }
 }
 
-function getTypes(schema: JsonSchema) {
+function getTypes(schema: AnySchemaObject) {
   if (schema.anyOf) {
     const result: string[] = [];
     for (const s of schema.anyOf) {

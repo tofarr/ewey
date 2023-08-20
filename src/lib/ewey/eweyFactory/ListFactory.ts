@@ -1,14 +1,14 @@
 import ListWrapper from "../eweyField/ListWrapper";
 import EweyFactory from "./EweyFactory";
+import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
-import JsonSchema from "./JsonSchema";
 
 class ListFactory implements EweyFactory {
   priority: number = 100;
   createItem?: () => any;
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],

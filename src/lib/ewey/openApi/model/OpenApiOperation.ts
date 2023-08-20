@@ -1,13 +1,13 @@
-import JsonSchema from "../../eweyFactory/JsonSchema";
 import JsonType from "../../eweyField/JsonType";
+import { AnySchemaObject } from "../../schemaCompiler";
 import OpenApiHeaders from "./OpenApiHeaders";
 import OpenApiOperationSchema from "./OpenApiOperationSchema";
 import OpenApiSchema from "./OpenApiSchema";
 
 export interface OpenApiOperation {
   operationId: string;
-  paramsSchema: JsonSchema;
-  resultSchema: JsonSchema;
+  paramsSchema: AnySchemaObject;
+  resultSchema: AnySchemaObject;
   requiresAuth: boolean;
   summary: string;
   invoke: (value: JsonType, headers?: OpenApiHeaders) => Promise<JsonType>;

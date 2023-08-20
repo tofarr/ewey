@@ -1,7 +1,7 @@
 import ReadOnlyWrapper from "../eweyField/ReadOnlyWrapper";
 import EweyField from "../eweyField/EweyField";
+import { AnySchemaObject } from "../schemaCompiler";
 import EweyFactory from "./EweyFactory";
-import JsonSchema from "./JsonSchema";
 
 class ReadOnlyFactory implements EweyFactory {
   factory: EweyFactory;
@@ -13,7 +13,7 @@ class ReadOnlyFactory implements EweyFactory {
   }
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],

@@ -1,12 +1,12 @@
 import RefWrapper from "../eweyField/RefWrapper";
+import { AnySchemaObject } from "../schemaCompiler";
 import EweyFactory from "./EweyFactory";
-import JsonSchema from "../eweyFactory/JsonSchema";
 
 class RefFactory implements EweyFactory {
   priority: number = 50;
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],

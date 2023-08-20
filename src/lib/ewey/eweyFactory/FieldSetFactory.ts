@@ -1,7 +1,7 @@
 import FieldSetWrapper from "../eweyField/FieldSetWrapper";
 import EweyFactory from "./EweyFactory";
+import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
-import JsonSchema from "./JsonSchema";
 
 class FieldSetFactory implements EweyFactory {
   inclusive: boolean = false;
@@ -22,7 +22,7 @@ class FieldSetFactory implements EweyFactory {
   }
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],

@@ -1,9 +1,9 @@
 import EweyFactory from "./eweyFactory/EweyFactory";
 import { FACTORIES } from "./eweyFactory";
-import JsonSchema from "./eweyFactory/JsonSchema";
+import { AnySchemaObject } from "./schemaCompiler";
 
 const JsonSchemaComponentFactory = (
-  schema: JsonSchema,
+  schema: AnySchemaObject,
   components?: any,
   currentPath?: string[],
   factories?: EweyFactory[],

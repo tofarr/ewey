@@ -29,7 +29,7 @@ import { useOpenApi } from "./OpenApiProvider";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { keyToLabel } from "../eweyField/FieldSetWrapper";
 import EweyFactory from "../eweyFactory/EweyFactory";
-import JsonSchema from "../eweyFactory/JsonSchema";
+import { AnySchemaObject } from "../schemaCompiler";
 import OpenApiContent from "./OpenApiContent";
 import OpenApiForm from "./OpenApiForm";
 import OpenApiProvider from "./OpenApiProvider";
@@ -187,7 +187,7 @@ const RouteError = ({ message }: RouteErrorProps) => {
 export interface OperationElementProps {
   operationId: string;
   requiresAuth: boolean;
-  paramsSchema: JsonSchema;
+  paramsSchema: AnySchemaObject;
   factories?: EweyFactory[];
 }
 
