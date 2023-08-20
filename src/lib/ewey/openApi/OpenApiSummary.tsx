@@ -245,8 +245,8 @@ const OperationElement = ({
     );
   }
 
-  function handleRefresh(){
-    queryClient.invalidateQueries([operationId], { exact: true })
+  function handleRefresh() {
+    queryClient.invalidateQueries([operationId], { exact: true });
   }
 
   function renderResults() {

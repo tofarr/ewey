@@ -47,9 +47,10 @@ interface RowProps {
 
 const Row = ({ columns, rowIndex, value, onSetValue }: RowProps) => {
   return (
-    <TableRow key={rowIndex}>
-      {columns.map((column) => (
+    <TableRow key={`tableRow/${rowIndex}`}>
+      {columns.map((column, columnIndex) => (
         <Cell
+          key={`tableCell/${rowIndex}/${columnIndex}`}
           column={column}
           value={value[rowIndex] as JsonObjectType}
           onSetValue={
@@ -73,16 +74,19 @@ const TableWrapper = (columns: Column[]): EweyField<JsonObjectType[]> => {
     return (
       <Table>
         <TableHead>
-          {columns.map((column) => (
-            <TableCell key={column.key}>
-              {t(column.key, keyToLabel(column.key))}
-            </TableCell>
-          ))}
+          <TableRow>
+            {columns.map((column) => (
+              <TableCell key={column.key}>
+                {t(column.key, keyToLabel(column.key))}
+              </TableCell>
+            ))}
+          </TableRow>
         </TableHead>
         <TableBody>
           {(value || []).map((v, index) => {
             return (
               <Row
+                key={`row${index}`}
                 columns={columns}
                 rowIndex={index}
                 value={value as JsonObjectType[]}

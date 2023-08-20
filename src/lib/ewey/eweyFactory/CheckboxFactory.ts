@@ -6,7 +6,6 @@ import {
 import EweyFactory from "./EweyFactory";
 import CheckboxWrapper from "../eweyField/CheckboxWrapper";
 
-
 class CheckboxFactory implements EweyFactory {
   priority: number = 100;
 

@@ -6,8 +6,13 @@ import { schemaCompiler, ValidateFunction } from "../schemaCompiler";
 
 test("renders Checkbox Field", () => {
   const checkboxFactory = new CheckboxFactory();
-  const MyCheckbox = checkboxFactory.create({type: "boolean"}, {}, [], []) as EweyField<boolean>
+  const MyCheckbox = checkboxFactory.create(
+    { type: "boolean" },
+    {},
+    [],
+    [],
+  ) as EweyField<boolean>;
   render(<MyCheckbox value={true} />);
-  const checkboxElement = screen.getByRole('checkbox', { checked: true })
+  const checkboxElement = screen.getByRole("checkbox", { checked: true });
   expect(checkboxElement).toBeInTheDocument();
 });

@@ -30,9 +30,15 @@ class TextFieldFactory implements EweyFactory {
       !schema.format && !isPassword && (!maxLength || maxLength > 255);
     const hasFocusField = components.hasFocusField;
     if (!hasFocusField) {
-      components.hasFocusField = true
+      components.hasFocusField = true;
     }
-    const textFieldComponent = TextFieldWrapper(validate, multiline, type, "body2", !hasFocusField);
+    const textFieldComponent = TextFieldWrapper(
+      validate,
+      multiline,
+      type,
+      "body2",
+      !hasFocusField,
+    );
     return textFieldComponent;
   }
 }
