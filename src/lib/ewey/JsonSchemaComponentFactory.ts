@@ -4,7 +4,7 @@ import JsonSchema from "./eweyFactory/JsonSchema";
 
 const JsonSchemaComponentFactory = (
   schema: JsonSchema,
-  components: any,
+  components?: any,
   currentPath?: string[],
   factories?: EweyFactory[],
 ) => {

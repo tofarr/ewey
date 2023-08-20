@@ -1,12 +1,18 @@
-import CheckboxWrapper from "../eweyField/CheckboxWrapper";
+import {
+  AnySchemaObject,
+  schemaCompiler,
+  ValidateFunction,
+} from "../schemaCompiler";
 import EweyFactory from "./EweyFactory";
 import JsonSchema from "./JsonSchema";
+import CheckboxWrapper from "../eweyField/CheckboxWrapper";
+
 
 class CheckboxFactory implements EweyFactory {
   priority: number = 100;
 
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],
@@ -14,7 +20,8 @@ class CheckboxFactory implements EweyFactory {
     if (schema?.type !== "boolean") {
       return null;
     }
-    return CheckboxWrapper(schema);
+    const validate: ValidateFunction<boolean> = schemaCompiler.compile(schema);
+    return CheckboxWrapper(validate);
   }
 }
 

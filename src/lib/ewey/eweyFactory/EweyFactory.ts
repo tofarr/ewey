@@ -1,10 +1,10 @@
+import { AnySchemaObject } from "../schemaCompiler";
 import EweyField from "../eweyField/EweyField";
-import JsonSchema from "./JsonSchema";
 
 interface EweyFactory {
   priority: number;
   create(
-    schema: JsonSchema,
+    schema: AnySchemaObject,
     components: any,
     currentPath: string[],
     factories: EweyFactory[],
