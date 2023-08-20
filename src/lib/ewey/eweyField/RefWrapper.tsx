@@ -8,17 +8,17 @@ const RefWrapper = (
   currentPath: string[],
   factories: EweyFactory[],
 ) => {
+  let JsonSchemaComponent: EweyField<any> | null = null;
   const RefComponent: EweyField<any> = ({ value, onSetValue }) => {
-    if (!value) {
-      return null;
-    }
     const schema = components[componentName];
-    const JsonSchemaComponent = JsonSchemaComponentFactory(
-      schema,
-      components,
-      currentPath,
-      factories,
-    );
+    if (!JsonSchemaComponent) {
+      JsonSchemaComponent = JsonSchemaComponentFactory(
+        schema,
+        components,
+        currentPath,
+        factories,
+      );
+    }
     return <JsonSchemaComponent value={value} onSetValue={onSetValue} />;
   };
   return RefComponent;

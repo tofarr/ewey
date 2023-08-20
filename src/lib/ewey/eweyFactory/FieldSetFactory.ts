@@ -7,15 +7,18 @@ class FieldSetFactory implements EweyFactory {
   inclusive: boolean = false;
   fieldNames?: string[];
   priority: number = 100;
+  alwaysFullWidth?: boolean;
 
   constructor(
     inclusive: boolean = false,
     fieldNames?: string[],
     priority: number = 100,
+    alwaysFullWidth?: boolean,
   ) {
     this.priority = priority;
     this.inclusive = inclusive;
     this.fieldNames = fieldNames;
+    this.alwaysFullWidth = alwaysFullWidth;
   }
 
   create(
@@ -40,7 +43,23 @@ class FieldSetFactory implements EweyFactory {
         currentPath.pop();
       }
     }
-    const fieldSetComponent = FieldSetWrapper(schema.name, componentsByKey);
+
+    let alwaysFullWidth = this.alwaysFullWidth;
+    if (alwaysFullWidth == null) {
+      alwaysFullWidth = false;
+      for (const key in componentsByKey) {
+        const subSchema = schema.properties[key];
+        if (!["boolean", "string", "number"].includes(subSchema.type)) {
+          alwaysFullWidth = true;
+          break;
+        }
+      }
+    }
+    const fieldSetComponent = FieldSetWrapper(
+      schema.name,
+      componentsByKey,
+      alwaysFullWidth,
+    );
     return fieldSetComponent;
   }
 

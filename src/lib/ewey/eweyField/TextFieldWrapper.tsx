@@ -17,6 +17,7 @@ const TextFieldWrapper = (
     if (onSetValue) {
       return (
         <TextField
+          key={"farticus"}
           error={!validationResult}
           fullWidth
           type={type}

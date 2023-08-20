@@ -4,8 +4,15 @@ import Grid from "@mui/material/Grid";
 import FormLabel from "@mui/material/FormLabel";
 import EweyField from "./EweyField";
 
-const FieldSetWrapper = (name: string, componentsByKey: any) => {
+const FieldSetWrapper = (
+  name: string,
+  componentsByKey: any,
+  alwaysFullWidth: boolean,
+) => {
   const FieldSetComponent: EweyField<any> = ({ value, onSetValue }) => {
+    if (value == null) {
+      value = {};
+    }
     const { t } = useTranslation();
 
     function renderField(key: string) {
@@ -20,13 +27,19 @@ const FieldSetWrapper = (name: string, componentsByKey: any) => {
         };
       }
       return (
-        <Box key={key} sx={{ paddingBottom: { xs: 1, md: 2 } }}>
+        <Box
+          key={key}
+          sx={{ paddingBottom: { xs: 1, md: alwaysFullWidth ? 1 : 2 } }}
+        >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={12} md={3}>
+            <Grid item xs={12} sm={12} md={alwaysFullWidth ? 12 : 3}>
               <Grid
                 container
                 sx={{
-                  justifyContent: { sm: "flex-start", md: "flex-end" },
+                  justifyContent: {
+                    sm: "flex-start",
+                    md: alwaysFullWidth ? "flex-start" : "flex-end",
+                  },
                 }}
               >
                 <Grid item>
@@ -36,7 +49,7 @@ const FieldSetWrapper = (name: string, componentsByKey: any) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} sm={12} md={9}>
+            <Grid item xs={12} sm={12} md={alwaysFullWidth ? 12 : 9}>
               <Component value={fieldValue} onSetValue={onSetFieldValue} />
             </Grid>
           </Grid>
