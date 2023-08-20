@@ -21,7 +21,7 @@ export interface OpenApiFormProps {
   onSuccess?: (result: any) => void;
   onError?: (error: any) => void;
   FormSubmitComponent?: FC<SubmitComponentProperties>;
-  displaySummary: boolean;
+  displaySummary?: boolean;
 }
 
 const OpenApiForm: FC<OpenApiFormProps> = ({

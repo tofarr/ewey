@@ -10,6 +10,10 @@ Ewey is built on top of:
 * [Material UI](https://mui.com/core/)
 * [React Query](https://tanstack.com/query/v3/).
 
+## Installation
+
+`npm install ewey --save`
+
 ## Example 1: A Simple Component based on a JSON Schema
 
 The example below demonstrates creating a component for displaying a user
@@ -164,58 +168,103 @@ export default App
 
 ## Example 3: Using OpenAPI
 
-TODO: Show the OpenAPIProvider, OpenAPIForm, and OpenAPIResults
+Frameworks like [Servey](https://github.com/tofarr/servey) produce OpenAPI
+specifications for your server side API. Ewey can then be used to rapidly create
+user interfaces for these APIs.
 
 
-#TODOS:
+### [OpenApiProvider](src/lib/ewey/openApi/OpenAPIProvider.tsx)
 
-* Add project to npmjs.org
-* Add code quality workflows for this project
-* See about adding this as a hosted package
+Loads an OpenAPI Schema and stores it in a react context for use by child
+components:
+```
+import { OpenApiProvider } from 'ewey';
 
-# Getting Started with Create React App
+<OpenAPIProvider url="/my-open-api/openapi.json">
+  ...
+</OpenAPIContext.Provider>
+```
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+You can also use the `OpenApiContext.Provider` to reference statically included
+schemas:
+```
+import { OpenApiContext } from 'ewey';
 
-## Available Scripts
+const myOpenAPISchema = ...
 
-In the project directory, you can run:
+<OpenAPIContext.Provider value={myOpenAPISchema}>
+  ...
+</OpenAPIContext.Provider>
+```
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### [OpenApiForm](src/lib/ewey/openApi/OpenAPIForm.tsx)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Creates a form for an operation within an OpenAPI schema. For example, if you
+have an OpenAPI server running on localhost:8000 which defines a `say_hello`
+operation, you can create a UI with:
 
-### `npm test`
+```
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { OpenApiProvider, OpenApiForm } from "./lib/ewey";
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+const queryClient = new QueryClient();
 
-### `npm run build`
+function App() {
+  return (
+    <div className="App">
+      <QueryClientProvider client={queryClient}>
+        <OpenApiProvider url="http://localhost:8000/openapi.json">
+          <OpenApiForm operationId="say_hello" onSuccess={alert}/>
+        </OpenApiProvider>
+      </QueryClientProvider>
+    </div>
+  )
+}
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+export default App;
+```
+![A form for executing an operation in OpenAPI](images/form6.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## [OpenApiQuery](src/lib/ewey/openApi/OpenAPIQuery.tsx)
 
-### `npm run eject`
+Similar to a form, but run a query using react query and display the results:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { OpenApiProvider, OpenApiQuery } from "./lib/ewey";
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+const queryClient = new QueryClient();
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+function App() {
+  return (
+    <div className="App">
+      <QueryClientProvider client={queryClient}>
+        <OpenApiProvider url="http://localhost:8000/openapi.json">
+          <OpenApiQuery operationId="list_users" />
+        </OpenApiProvider>
+      </QueryClientProvider>
+    </div>
+  )
+}
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+export default App;
+```
+![Displaying query results](images/results1.png)
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## [OpenApiSummary](src/lib/ewey/openApi/OpenAPISummary.tsx)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This is most likely to be useful as a development / debugging tool - Create a
+component which summarizes all operations available within an OpenAPI schema.
+
+It uses react-router-dom to put the current operation in the browser path:
+
+[App.tsx](src/App.tsx)
+
+(Examples pictured using the servey example app)
+
+![Summary Component](images/summary1.png)
+
+![Summary Menu](images/summary2.png)
