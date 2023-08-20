@@ -20,7 +20,7 @@ const OpenApiContent: FC<OpenApiContentProps> = ({
   useEffect(() => {
     const c = JsonSchemaComponentFactory(
       operation.resultSchema,
-      openApi.schema.components,
+      { ...openApi.schema.components },
       [],
       factories,
     );

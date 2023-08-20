@@ -1,4 +1,5 @@
 import { FC, Fragment, ReactElement, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import KeyIcon from "@mui/icons-material/Key";
 import KeyOffIcon from "@mui/icons-material/KeyOff";
 import LockIcon from "@mui/icons-material/Lock";
@@ -202,6 +203,7 @@ const OperationElement = ({
   const [result, setResult] = useState(null);
   const token = useOAuthBearerToken();
   const messageBroker = useMessageBroker();
+  const queryClient = useQueryClient();
 
   function renderAuth() {
     return <RouteError message="login_to_continue" />;
@@ -243,6 +245,10 @@ const OperationElement = ({
     );
   }
 
+  function handleRefresh(){
+    queryClient.invalidateQueries([operationId], { exact: true })
+  }
+
   function renderResults() {
     return (
       <Paper>
@@ -253,7 +259,7 @@ const OperationElement = ({
                 <Typography variant="h4">{keyToLabel(operationId)}</Typography>
               </Grid>
               <Grid>
-                <Button>
+                <Button onClick={handleRefresh}>
                   <RefreshIcon />
                 </Button>
               </Grid>

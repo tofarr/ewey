@@ -11,15 +11,16 @@ const TextFieldWrapper = (
   multiline: boolean,
   type: string = "text",
   variant: Variant = "body2",
+  autoFocus: boolean = false,
 ): EweyField<string> => {
   const TextFieldComponent: EweyField<string> = ({ value, onSetValue }) => {
     const validationResult = validate(value || null);
     if (onSetValue) {
       return (
         <TextField
-          key={"farticus"}
           error={!validationResult}
           fullWidth
+          autoFocus={autoFocus}
           type={type}
           multiline={multiline}
           value={value}

@@ -63,7 +63,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   useEffect(() => {
     const c = JsonSchemaComponentFactory(
       operation.paramsSchema,
-      openApi.schema.components,
+      { ...openApi.schema.components },
       [],
       factories,
     );
