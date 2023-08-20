@@ -166,23 +166,23 @@ export default App
 ![A custom component](images/form5.png)
 
 
-## Example 3: Using OpenAPI
+## Example 3: Using OpenApi
 
-Frameworks like [Servey](https://github.com/tofarr/servey) produce OpenAPI
+Frameworks like [Servey](https://github.com/tofarr/servey) produce OpenApi
 specifications for your server side API. Ewey can then be used to rapidly create
 user interfaces for these APIs.
 
 
-### [OpenApiProvider](src/lib/ewey/openApi/OpenAPIProvider.tsx)
+### [OpenApiProvider](src/lib/ewey/openApi/OpenApiProvider.tsx)
 
-Loads an OpenAPI Schema and stores it in a react context for use by child
+Loads an OpenApi Schema and stores it in a react context for use by child
 components:
 ```
 import { OpenApiProvider } from 'ewey';
 
-<OpenAPIProvider url="/my-open-api/openapi.json">
+<OpenApiProvider url="/my-open-api/openapi.json">
   ...
-</OpenAPIContext.Provider>
+</OpenApiContext.Provider>
 ```
 
 You can also use the `OpenApiContext.Provider` to reference statically included
@@ -190,18 +190,18 @@ schemas:
 ```
 import { OpenApiContext } from 'ewey';
 
-const myOpenAPISchema = ...
+const myOpenApiSchema = ...
 
-<OpenAPIContext.Provider value={myOpenAPISchema}>
+<OpenApiContext.Provider value={myOpenApiSchema}>
   ...
-</OpenAPIContext.Provider>
+</OpenApiContext.Provider>
 ```
 
 
-### [OpenApiForm](src/lib/ewey/openApi/OpenAPIForm.tsx)
+### [OpenApiForm](src/lib/ewey/openApi/OpenApiForm.tsx)
 
-Creates a form for an operation within an OpenAPI schema. For example, if you
-have an OpenAPI server running on localhost:8000 which defines a `say_hello`
+Creates a form for an operation within an OpenApi schema. For example, if you
+have an OpenApi server running on localhost:8000 which defines a `say_hello`
 operation, you can create a UI with:
 
 ```
@@ -224,10 +224,10 @@ function App() {
 
 export default App;
 ```
-![A form for executing an operation in OpenAPI](images/form6.png)
+![A form for executing an operation in OpenApi](images/form6.png)
 
 
-## [OpenApiQuery](src/lib/ewey/openApi/OpenAPIQuery.tsx)
+## [OpenApiQuery](src/lib/ewey/openApi/OpenApiQuery.tsx)
 
 Similar to a form, but run a query using react query and display the results:
 
@@ -254,10 +254,10 @@ export default App;
 ![Displaying query results](images/results1.png)
 
 
-## [OpenApiSummary](src/lib/ewey/openApi/OpenAPISummary.tsx)
+## [OpenApiSummary](src/lib/ewey/openApi/OpenApiSummary.tsx)
 
 This is most likely to be useful as a development / debugging tool - Create a
-component which summarizes all operations available within an OpenAPI schema.
+component which summarizes all operations available within an OpenApi schema.
 
 It uses react-router-dom to put the current operation in the browser path:
 
