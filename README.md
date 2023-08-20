@@ -1,9 +1,14 @@
 # Ewey - A DRY Approach to building User Interfaces
 
-Ewey (You-ee) is a component oriented user interface framework built on top of
-ReactJs, I18Next, Material UI and React Query. The goal is to use the
-information provided in JSON Schemas as the basis for a UI, with the ability
-to fine tune specific sections as required.
+Ewey (You-ee) is a component oriented user interface framework with the goal of
+using the information provided in JSON Schemas as the basis for a UI, with the
+ability to fine tune specific sections as required.
+
+Ewey is built on top of:
+* [ReactJs](https://react.dev/)
+* [I18Next](https://react.i18next.com/)
+* [Material UI](https://mui.com/core/)
+* [React Query](https://tanstack.com/query/v3/).
 
 ## Example 1: A Simple Component based on a JSON Schema
 
@@ -65,12 +70,12 @@ Omitting `onSetValue` yields a static display element instead of a form:
 Imagine the automatically produced component does not quite meet your needs -
 the `Member` checkbox should be a select dropdown with values 'Yes' / 'No'.
 Internally, Ewey uses a collection of
-[Factory Objects](src/lib/ewey/EweyFactory.ts) to produce Components based
+[Factory Objects](src/lib/ewey/eweyFactory/EweyFactory.ts) to produce Components based
 on schemas. Factories are placed in an array sorted by descending priority.
 The `create` method is called for each factory against a schema / subschema,
 which will either return a component or null. Once a component is created,
 it is returned. [The default factories are specified
-here](src/lib/ewey/index.ts).
+here](src/lib/ewey/eweyFactory/index.ts).
 
 So to customize our field, we need a factory with a higher priority than the
 default ones that will produce a component for the circumstances we require:
