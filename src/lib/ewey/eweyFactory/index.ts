@@ -1,6 +1,7 @@
 import EweyFactory from "../eweyFactory/EweyFactory";
 import CheckboxFactory from "./CheckboxFactory";
 import DatePickerFactory from "./DatePickerFactory";
+import SelectFieldFactory from "./SelectFieldFactory";
 import FieldSetFactory from "./FieldSetFactory";
 import ListFactory from "./ListFactory";
 import NullableFieldFactory from "./NullableFieldFactory";
@@ -18,5 +19,6 @@ export const FACTORIES: EweyFactory[] = [
   new NullableFieldFactory(),
   new NumberFieldFactory(),
   new RefFactory(),
+  new SelectFieldFactory(),
   new TextFieldFactory(),
 ];

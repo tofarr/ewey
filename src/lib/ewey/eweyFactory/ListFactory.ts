@@ -24,8 +24,8 @@ class ListFactory implements EweyFactory {
       factories,
     );
     currentPath.pop();
-    const listCompponent = ListWrapper(component, this.createItem);
-    return listCompponent;
+    const listComponent = ListWrapper(component, this.createItem);
+    return listComponent;
   }
 }
 

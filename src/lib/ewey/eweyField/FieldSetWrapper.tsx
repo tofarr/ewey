@@ -68,10 +68,16 @@ const FieldSetWrapper = (
 };
 
 export function keyToLabel(key: string) {
-  return key
-    .split("_")
-    .map((p) => p[0].toUpperCase() + p.substr(1))
-    .join(" ");
+  try{
+    return key
+      .split("_")
+      .filter(p => !!p)
+      .map((p) => p[0].toUpperCase() + p.substr(1))
+      .join(" ");
+  }catch (e) {
+    console.log(key, e)
+    debugger
+  }
 }
 
 export default FieldSetWrapper;

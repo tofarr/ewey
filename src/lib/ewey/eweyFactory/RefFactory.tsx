@@ -11,7 +11,6 @@ class RefFactory implements EweyFactory {
     currentPath: string[],
     factories: EweyFactory[],
   ) {
-    console.log("Well dang...");
     if (!schema || !schema["$ref"]) {
       return null;
     }
