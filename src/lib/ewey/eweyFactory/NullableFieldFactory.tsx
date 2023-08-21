@@ -2,6 +2,7 @@ import NullableFieldWrapper from "../eweyField/NullableFieldWrapper";
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
+import { newCreateDefaultFnForSchema } from "./ListFactory";
 
 class NullableFieldFactory implements EweyFactory {
   priority: number = 100;
@@ -30,7 +31,8 @@ class NullableFieldFactory implements EweyFactory {
       currentPath,
       factories,
     );
-    return NullableFieldWrapper(wrappedField);
+    const createItem = newCreateDefaultFnForSchema(wrappedSchema)
+    return NullableFieldWrapper(wrappedField, createItem);
   }
 }
 

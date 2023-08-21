@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import EweyField from "./EweyField";
 
@@ -8,6 +9,7 @@ const FieldSetWrapper = (
   name: string,
   componentsByKey: any,
   alwaysFullWidth: boolean,
+  labelFields: string[],
 ) => {
   const FieldSetComponent: EweyField<any> = ({ value, onSetValue }) => {
     if (value == null) {
@@ -16,16 +18,26 @@ const FieldSetWrapper = (
     const { t } = useTranslation();
 
     function renderField(key: string) {
-      const Component = componentsByKey[key];
-      const fieldValue = value[key];
-      let onSetFieldValue = null;
-      if (onSetValue) {
-        onSetFieldValue = (newFieldValue: any) => {
-          const newValue = { ...value };
-          newValue[key] = newFieldValue;
-          onSetValue(newValue);
-        };
+
+      if (labelFields.includes(key)) {
+        return (
+          <Box
+            key={key}
+            sx={{ paddingBottom: 1}}
+          >
+            <Grid container>
+              <Grid item xs={alwaysFullWidth ? false : 3}>
+              </Grid>
+              <Grid item xs={12} sm={12} md={alwaysFullWidth ? 12 : 9}>
+                <FormControlLabel
+                  control={renderFieldInner(key)}
+                  label={t(key, keyToLabel(key))} />
+              </Grid>
+            </Grid>
+          </Box>
+        )
       }
+
       return (
         <Box
           key={key}
@@ -50,11 +62,30 @@ const FieldSetWrapper = (
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={alwaysFullWidth ? 12 : 9}>
-              <Component value={fieldValue} onSetValue={onSetFieldValue} />
+              {renderFieldInner(key)}
             </Grid>
           </Grid>
         </Box>
       );
+    }
+
+    function renderFieldInner(key: string) {
+      const Component = componentsByKey[key];
+      const fieldValue = value[key];
+      let onSetFieldValue = null;
+      if (onSetValue) {
+        onSetFieldValue = (newFieldValue: any) => {
+          const newValue = { ...value };
+          newValue[key] = newFieldValue;
+          onSetValue(newValue);
+        };
+      }
+      return <Component value={fieldValue} onSetValue={onSetFieldValue} />
+    }
+
+    const keys = Object.keys(componentsByKey);
+    if(keys.length === 1){
+      return renderFieldInner(keys[0])
     }
 
     return (

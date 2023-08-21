@@ -1,4 +1,5 @@
 import { ValidateFunction } from "ajv";
+import Box from "@mui/material/Box";
 import Checkbox, { CheckboxProps } from "@mui/material/Checkbox";
 import EweyField from "./EweyField";
 
@@ -13,7 +14,11 @@ const CheckboxWrapper = (validate: ValidateFunction<boolean>) => {
     if (!validate(!!value)) {
       props.color = "error";
     }
-    return <Checkbox {...props} />;
+    return (
+      <Box pt={0.5}>
+        <Checkbox {...props} />
+      </Box>
+    );
   };
   return CheckboxField;
 };

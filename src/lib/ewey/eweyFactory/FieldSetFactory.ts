@@ -8,17 +8,20 @@ class FieldSetFactory implements EweyFactory {
   fieldNames?: string[];
   priority: number = 100;
   alwaysFullWidth?: boolean;
+  labelFields?: string[]
 
   constructor(
     inclusive: boolean = false,
     fieldNames?: string[],
     priority: number = 100,
     alwaysFullWidth?: boolean,
+    labelFields?: string[]
   ) {
     this.priority = priority;
     this.inclusive = inclusive;
     this.fieldNames = fieldNames;
     this.alwaysFullWidth = alwaysFullWidth;
+    this.labelFields = labelFields;
   }
 
   create(
@@ -30,6 +33,7 @@ class FieldSetFactory implements EweyFactory {
     if (!schema || schema.type !== "object") {
       return null;
     }
+
     const componentsByKey: any = {};
     for (const key in schema.properties) {
       if (this.includeField(key)) {
@@ -47,18 +51,33 @@ class FieldSetFactory implements EweyFactory {
     let alwaysFullWidth = this.alwaysFullWidth;
     if (alwaysFullWidth == null) {
       alwaysFullWidth = false;
-      for (const key in componentsByKey) {
-        const subSchema = schema.properties[key];
-        if (!["boolean", "string", "number"].includes(subSchema.type)) {
-          alwaysFullWidth = true;
-          break;
+      if (Object.keys(componentsByKey).length !== 1){
+        for (const key in componentsByKey) {
+          const subSchema = schema.properties[key];
+          if (!["boolean", "string", "number"].includes(subSchema.type)) {
+            alwaysFullWidth = true;
+            break;
+          }
         }
       }
     }
+
+    let labelFields = this.labelFields
+    if (!labelFields){
+      labelFields = []
+      for (const key in componentsByKey) {
+        const subSchema = schema.properties[key];
+        if (subSchema.type === "boolean") {
+          labelFields.push(key)
+        }
+      }
+    }
+
     const fieldSetComponent = FieldSetWrapper(
       schema.name,
       componentsByKey,
       alwaysFullWidth,
+      labelFields,
     );
     return fieldSetComponent;
   }

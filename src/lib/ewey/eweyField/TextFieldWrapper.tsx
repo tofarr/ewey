@@ -14,7 +14,7 @@ const TextFieldWrapper = (
   autoFocus: boolean = false,
 ): EweyField<string> => {
   const TextFieldComponent: EweyField<string> = ({ value, onSetValue }) => {
-    const validationResult = validate(value || null);
+    const validationResult = validate(value);
     if (onSetValue) {
       return (
         <TextField
