@@ -48,19 +48,7 @@ class FieldSetFactory implements EweyFactory {
       }
     }
 
-    let alwaysFullWidth = this.alwaysFullWidth;
-    if (alwaysFullWidth == null) {
-      alwaysFullWidth = false;
-      if (Object.keys(componentsByKey).length !== 1){
-        for (const key in componentsByKey) {
-          const subSchema = schema.properties[key];
-          if (!["boolean", "string", "number"].includes(subSchema.type)) {
-            alwaysFullWidth = true;
-            break;
-          }
-        }
-      }
-    }
+    const alwaysFullWidth = hasComplexChildren(schema)
 
     let labelFields = this.labelFields
     if (!labelFields){
@@ -88,6 +76,34 @@ class FieldSetFactory implements EweyFactory {
     }
     return this.fieldNames.includes(key) === this.inclusive;
   }
+}
+
+export const hasComplexChildren = (schema: AnySchemaObject) => {
+  for (const key in schema.properties) {
+    const subSchema = schema.properties[key]
+    if (isComplex(subSchema)) {
+      return true
+    }
+  }
+  return false
+}
+
+export const isComplex = (schema: AnySchemaObject) => {
+  if (schema.enum) {
+    return false
+  }
+  if (["boolean", "string", "number", "integer", "null"].includes(schema.type)) {
+    return false
+  }
+  if (schema.anyOf) {
+    for (const subSchema of schema.anyOf) {
+      if (isComplex(subSchema)) {
+        return true
+      }
+    }
+    return false
+  }
+  return true
 }
 
 export default FieldSetFactory;

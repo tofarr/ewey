@@ -10,6 +10,7 @@ export const LoadingComponent = () => {
         justifyContent="center"
         alignItems="center"
         padding={3}
+        height="100vh"
       >
         <CircularProgress />
       </Box>
