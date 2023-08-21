@@ -31,7 +31,7 @@ class NullableFieldFactory implements EweyFactory {
       currentPath,
       factories,
     );
-    const createItem = newCreateDefaultFnForSchema(wrappedSchema)
+    const createItem = newCreateDefaultFnForSchema(wrappedSchema, components)
     return NullableFieldWrapper(wrappedField, createItem);
   }
 }

@@ -18,7 +18,7 @@ const NullableFieldWrapper = (
       <Grid container spacing={1}>
         <Grid item>
           {(value == null) ?
-            <Box display="flex" justifyContent="flex-end" pt={1}>
+            <Box display="flex" justifyContent="flex-end" pt={2}>
               <Typography>{t('no_value', keyToLabel('no_value'))}</Typography>
             </Box>
             :
@@ -36,7 +36,7 @@ const NullableFieldWrapper = (
         )}
         {value == null && onSetValue && createItem && (
           <Grid>
-            <Box display="flex" justifyContent="flex-end" padding={1}>
+            <Box display="flex" justifyContent="flex-end" pt={2}>
               <Button onClick={() => onSetValue(createItem())}>
                 <AddIcon />
               </Button>

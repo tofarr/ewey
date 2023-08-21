@@ -66,6 +66,7 @@ class FieldSetFactory implements EweyFactory {
       componentsByKey,
       alwaysFullWidth,
       labelFields,
+      schema.required,
     );
     return fieldSetComponent;
   }

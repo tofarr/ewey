@@ -10,6 +10,7 @@ const FieldSetWrapper = (
   componentsByKey: any,
   alwaysFullWidth: boolean,
   labelFields: string[],
+  requiredFieldNames: string[],
 ) => {
   const FieldSetComponent: EweyField<any> = ({ value, onSetValue }) => {
     if (value == null) {
@@ -29,9 +30,11 @@ const FieldSetWrapper = (
               <Grid item xs={alwaysFullWidth ? false : 3}>
               </Grid>
               <Grid item xs={12} sm={12} md={alwaysFullWidth ? 12 : 9}>
-                <FormControlLabel
-                  control={renderFieldInner(key)}
-                  label={t(key, keyToLabel(key))} />
+                <Box pl={2}>
+                  <FormControlLabel
+                    control={renderFieldInner(key)}
+                    label={t(key, keyToLabel(key))} />
+                </Box>
               </Grid>
             </Grid>
           </Box>
@@ -80,7 +83,9 @@ const FieldSetWrapper = (
           onSetValue(newValue);
         };
       }
-      return <Component value={fieldValue} onSetValue={onSetFieldValue} />
+      return (
+        <Component value={fieldValue} onSetValue={onSetFieldValue} />
+      )
     }
 
     const keys = Object.keys(componentsByKey);

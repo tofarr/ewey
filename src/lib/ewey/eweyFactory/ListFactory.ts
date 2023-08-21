@@ -26,16 +26,20 @@ class ListFactory implements EweyFactory {
     );
     currentPath.pop();
 
-    const createItem = newCreateDefaultFnForSchema(schema.items)
+    const createItem = newCreateDefaultFnForSchema(schema.items, components)
     const listComponent = ListWrapper(component, this.createItem);
     return listComponent;
   }
 }
 
 
-export const newCreateDefaultFnForSchema = (schema: AnySchemaObject) => {
+export const newCreateDefaultFnForSchema = (schema: AnySchemaObject, components: any): (() => any) | undefined => {
   if (schema.default) {
     return () => schema.default
+  }
+  if (schema["$ref"]) {
+    const componentName = schema["$ref"].substring(13);
+    return newCreateDefaultFnForSchema(components[componentName], components)
   }
   if (schema.enum) {
     return () => schema.enum[0]
@@ -43,7 +47,7 @@ export const newCreateDefaultFnForSchema = (schema: AnySchemaObject) => {
   if (schema.type === 'boolean') {
     return () => false
   }
-  if (schema.type === 'number') {
+  if (["number", "integer"].includes(schema.type)) {
     return () => 0
   }
   if (schema.type === 'null') {
