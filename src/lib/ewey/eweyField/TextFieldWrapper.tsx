@@ -28,7 +28,7 @@ const TextFieldWrapper = (
             onSetValue(event.target.value)
           }
           sx={{
-            // maxWidth: 'md'
+            maxWidth: 'md'
           }}
         />
       );

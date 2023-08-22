@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import ListWrapper from "../eweyField/ListWrapper";
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
@@ -27,7 +26,7 @@ class ListFactory implements EweyFactory {
     currentPath.pop();
 
     const createItem = newCreateDefaultFnForSchema(schema.items, components)
-    const listComponent = ListWrapper(component, this.createItem);
+    const listComponent = ListWrapper(component, createItem);
     return listComponent;
   }
 }
@@ -54,14 +53,24 @@ export const newCreateDefaultFnForSchema = (schema: AnySchemaObject, components:
     return () => null
   }
   if (schema.type === 'string') {
-    if (!schema.format) {
-      return () => ''
-    }
     if (schema.format === 'date-time') {
       return () => new Date().toISOString()
     }
-    if (schema.format === 'uuid') {
-      return uuidv4
+    return () => ''
+  }
+  if (schema.type === 'object') {
+    return () => {
+      const result: any = {}
+      const required = schema.required || []
+      for (const key in schema.properties) {
+        if (required.includes(key)) {
+          const fn = newCreateDefaultFnForSchema(schema.properties[key], components)
+          if (fn !== undefined) {
+            result[key] = fn()
+          }
+        }
+      }
+      return result
     }
   }
   return undefined

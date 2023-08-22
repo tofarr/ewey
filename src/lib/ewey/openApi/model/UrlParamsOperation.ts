@@ -103,22 +103,51 @@ export const createParamsSchema = (
   operationSchema: OpenApiOperationSchema,
   apiSchema: OpenApiSchema,
 ) => {
-  const properties: any = {};
-  const required: string[] = [];
-  for (const param of operationSchema.parameters || []) {
-    if (param.required) {
-      required.push(param.name);
-    }
-    properties[param.name] = param.schema;
-  }
-  let result: AnySchemaObject = {
+  let schema: AnySchemaObject = {
     type: "object",
     name: operationSchema.operationId,
-    properties,
-    required,
-  };
-  result = remapReferences(result, apiSchema);
-  return result;
+    properties: {},
+    additionalProperties: false
+  }
+  for (const param of operationSchema.parameters || []) {
+    appendParam(param, schema)
+  }
+  schema = remapReferences(schema, apiSchema);
+  return schema;
+};
+
+const appendParam = (
+  param: any,
+  schema: AnySchemaObject
+) => {
+  const required = param.required || false
+  const parts = param.name.split('.')
+
+  for (let index = 0; index < parts.length; index++) {
+    const key = parts[index]
+    let property = schema.properties[key];
+    if (required) {
+      if (!schema.required){
+        schema.required = []
+      }
+      if (!schema.required.includes(key)) {
+        schema.required.push(key)
+      }
+    }
+    if (index < parts.length - 1) {
+      if(!property) {
+        property = schema.properties[key] = {
+          type: "object",
+          name: key,
+          properties: {},
+          additionalProperties: false
+        }
+      }
+      schema = schema.properties[key]
+    } else {
+      schema.properties[key] = param.schema
+    }
+  }
 };
 
 export const createResultSchema = (

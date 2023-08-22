@@ -1,79 +1,114 @@
+import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import EweyField from "./EweyField";
 
 const FieldSetWrapper = (
   name: string,
-  componentsByKey: any,
+  fieldsByKey: any,
   alwaysFullWidth: boolean,
   labelFields: string[],
   requiredFieldNames: string[],
+  defaultValueFactories: any
 ) => {
   const FieldSetComponent: EweyField<any> = ({ value, onSetValue }) => {
-    if (value == null) {
-      value = {};
+    if (!value){
+      value = {}
     }
     const { t } = useTranslation();
+    const fieldKeys = Object.keys(fieldsByKey)
+    const existingKeys = Object.keys(value);
 
-    function renderField(key: string) {
+    function handleAddDefault(key: string) {
+      const newValue = { ...value };
+      newValue[key] = defaultValueFactories[key]();
+      (onSetValue as any)(newValue)
+    }
 
-      if (labelFields.includes(key)) {
-        return (
-          <Box
-            key={key}
-            sx={{ paddingBottom: 1}}
-          >
-            <Grid container>
-              <Grid item xs={alwaysFullWidth ? false : 3}>
-              </Grid>
-              <Grid item xs={12} sm={12} md={alwaysFullWidth ? 12 : 9}>
-                <Box pl={2}>
-                  <FormControlLabel
-                    control={renderFieldInner(key)}
-                    label={t(key, keyToLabel(key))} />
-                </Box>
+    function renderFieldRow(key: string) {
+      return (
+        <Grid container alignItems="center">
+          <Grid item xs={12} md={alwaysFullWidth ? 12 : 3} pr={2}>
+            <Grid
+              container
+              pr={2}
+              sx={{
+                justifyContent: {
+                  xs: "flex-start",
+                  md: alwaysFullWidth ? "flex-start" : "flex-end"
+                }
+              }}
+            >
+              <Grid item>
+                <FormLabel>{t(key, keyToLabel(key))}</FormLabel>
               </Grid>
             </Grid>
-          </Box>
+          </Grid>
+          <Grid item xs={12} md={alwaysFullWidth ? 12 : 9}>
+            {renderNonRequiredField(key)}
+          </Grid>
+        </Grid>
+      )
+    }
+
+    function renderFieldLabelRow(key: string) {
+      return (
+        <Grid container>
+          <Grid item xs={alwaysFullWidth ? false : 3} md={3}></Grid>
+          <Grid item xs>
+            <FormControlLabel
+              control={renderNonRequiredField(key)}
+              label={t(key, keyToLabel(key))} />
+          </Grid>
+        </Grid>
+      )
+    }
+
+    function renderNonRequiredField(key: string) {
+      if (requiredFieldNames.includes(key)){
+        return renderField(key);
+      }
+
+      if (!existingKeys.includes(key)) {
+        return (
+          <Button
+            variant="outlined"
+            disabled={!defaultValueFactories[key] || !onSetValue}
+            onClick={() => handleAddDefault(key)}
+            endIcon={<AddIcon />}
+          >
+            {t('empty', keyToLabel('empty'))}
+          </Button>
         )
       }
 
       return (
-        <Box
-          key={key}
-          sx={{ paddingBottom: { xs: 1, md: alwaysFullWidth ? 1 : 2 } }}
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={12} md={alwaysFullWidth ? 12 : 3}>
-              <Grid
-                container
-                sx={{
-                  justifyContent: {
-                    sm: "flex-start",
-                    md: alwaysFullWidth ? "flex-start" : "flex-end",
-                  },
-                }}
-              >
-                <Grid item>
-                  <Box pt={2}>
-                    <FormLabel>{t(key, keyToLabel(key))}</FormLabel>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm={12} md={alwaysFullWidth ? 12 : 9}>
-              {renderFieldInner(key)}
-            </Grid>
+        <Grid container spacing={1} alignItems="center">
+          {onSetValue && <Grid item>
+            <Button onClick={() => {
+              const newValue = { ...value }
+              delete newValue[key]
+              onSetValue(newValue)
+            }}>
+              <DeleteIcon />
+            </Button>
+          </Grid>}
+          <Grid xs item>
+            {renderField(key)}
           </Grid>
-        </Box>
-      );
+        </Grid>
+      )
     }
 
-    function renderFieldInner(key: string) {
-      const Component = componentsByKey[key];
+    function renderField(key: string) {
+      const Component = fieldsByKey[key];
       const fieldValue = value[key];
       let onSetFieldValue = null;
       if (onSetValue) {
@@ -88,16 +123,21 @@ const FieldSetWrapper = (
       )
     }
 
-    const keys = Object.keys(componentsByKey);
-    if(keys.length === 1){
-      return renderFieldInner(keys[0])
+    if(fieldKeys.length === 1){
+      return renderField(fieldKeys[0])
     }
 
     return (
-      <Box p={1} textAlign="left">
-        {Object.keys(componentsByKey).map(renderField)}
-      </Box>
-    );
+      <Grid container spacing={1} alignItems="center">
+        {fieldKeys.map(key => (
+          <Grid item key={key} xs={12}>
+            <Grid container alignItems="center">
+              {labelFields.includes(key) && existingKeys.includes(key) ? renderFieldLabelRow(key) : renderFieldRow(key)}
+            </Grid>
+          </Grid>
+        ))}
+      </Grid>
+    )
   };
 
   return FieldSetComponent;

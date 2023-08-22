@@ -14,37 +14,38 @@ const NullableFieldWrapper = (
 ) => {
   const NullableComponent: EweyField<any> = ({ value, onSetValue }) => {
     const { t } = useTranslation();
-    return (
-      <Grid container spacing={1}>
-        <Grid item>
-          {(value == null) ?
-            <Box display="flex" justifyContent="flex-end" pt={2}>
-              <Typography>{t('no_value', keyToLabel('no_value'))}</Typography>
-            </Box>
-            :
+
+    function handleClick() {
+      if (onSetValue && createItem) {
+        onSetValue(createItem())
+      }
+    }
+
+    if (value != null) {
+      return (
+        <Grid container spacing={1} alignItems="center">
+          {onSetValue && <Grid item>
+            <Button onClick={() => onSetValue(null)}>
+              <DeleteIcon />
+            </Button>
+          </Grid>}
+          <Grid xs item>
             <Component value={value} onSetValue={onSetValue} />
-          }
+          </Grid>
         </Grid>
-        {value != null && onSetValue && (
-          <Grid>
-            <Box display="flex" justifyContent="flex-end" pt={2}>
-              <Button onClick={() => onSetValue(null)}>
-                <DeleteIcon />
-              </Button>
-            </Box>
-          </Grid>
-        )}
-        {value == null && onSetValue && createItem && (
-          <Grid>
-            <Box display="flex" justifyContent="flex-end" pt={2}>
-              <Button onClick={() => onSetValue(createItem())}>
-                <AddIcon />
-              </Button>
-            </Box>
-          </Grid>
-        )}
-      </Grid>
-    );
+      )
+    }
+
+    return (
+      <Button
+        variant="outlined"
+        disabled={!createItem}
+        onClick={handleClick}
+        endIcon={<AddIcon />}
+      >
+        {t('empty', keyToLabel('empty'))}
+      </Button>
+    )
   };
   return NullableComponent;
 };

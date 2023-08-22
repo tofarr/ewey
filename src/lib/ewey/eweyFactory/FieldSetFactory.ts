@@ -2,26 +2,24 @@ import FieldSetWrapper from "../eweyField/FieldSetWrapper";
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
+import { newCreateDefaultFnForSchema } from "./ListFactory";
 
 class FieldSetFactory implements EweyFactory {
   inclusive: boolean = false;
   fieldNames?: string[];
   priority: number = 100;
   alwaysFullWidth?: boolean;
-  labelFields?: string[]
 
   constructor(
     inclusive: boolean = false,
     fieldNames?: string[],
     priority: number = 100,
     alwaysFullWidth?: boolean,
-    labelFields?: string[]
   ) {
     this.priority = priority;
     this.inclusive = inclusive;
     this.fieldNames = fieldNames;
     this.alwaysFullWidth = alwaysFullWidth;
-    this.labelFields = labelFields;
   }
 
   create(
@@ -34,39 +32,52 @@ class FieldSetFactory implements EweyFactory {
       return null;
     }
 
-    const componentsByKey: any = {};
+    const required = schema.required || []
+    const schemasByKey: any = {}
+    const defaultValueFactories: any = {}
+    const labelFields = []
+    const fieldsByKey: any = {}
     for (const key in schema.properties) {
-      if (this.includeField(key)) {
-        currentPath.push(key);
-        componentsByKey[key] = JsonSchemaComponentFactory(
-          schema.properties[key],
-          components,
-          currentPath,
-          factories,
-        );
-        currentPath.pop();
+      if (!this.includeField(key)) {
+        continue
       }
+      let subSchema = schema.properties[key]
+      if (!required.includes(key)){
+        if (subSchema?.anyOf?.length === 2) {
+          if (subSchema.anyOf[0].type === "null") {
+            subSchema = subSchema.anyOf[1]
+          } else if (subSchema.anyOf[1].type === "null") {
+            subSchema = subSchema.anyOf[0]
+          }
+        }
+      }
+      schemasByKey[key] = subSchema
+      const factory = newCreateDefaultFnForSchema(subSchema, components)
+      if (factory) {
+        defaultValueFactories[key] = factory
+      }
+      if (subSchema.type === "boolean") {
+        labelFields.push(key)
+      }
+      currentPath.push(key);
+      fieldsByKey[key] = JsonSchemaComponentFactory(
+        subSchema,
+        components,
+        currentPath,
+        factories,
+      );
+      currentPath.pop();
     }
 
     const alwaysFullWidth = hasComplexChildren(schema)
 
-    let labelFields = this.labelFields
-    if (!labelFields){
-      labelFields = []
-      for (const key in componentsByKey) {
-        const subSchema = schema.properties[key];
-        if (subSchema.type === "boolean") {
-          labelFields.push(key)
-        }
-      }
-    }
-
     const fieldSetComponent = FieldSetWrapper(
       schema.name,
-      componentsByKey,
+      fieldsByKey,
       alwaysFullWidth,
       labelFields,
-      schema.required,
+      schema.required || [],
+      defaultValueFactories,
     );
     return fieldSetComponent;
   }
