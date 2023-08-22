@@ -51,7 +51,12 @@ const FieldSetWrapper = (
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} md={alwaysFullWidth ? 12 : 9}>
+          <Grid
+            item
+            xs={12}
+            md={alwaysFullWidth ? 12 : 9}
+            lg={alwaysFullWidth ? 12 : 6}
+          >
             {renderNonRequiredField(key)}
           </Grid>
         </Grid>
@@ -91,6 +96,9 @@ const FieldSetWrapper = (
 
       return (
         <Grid container spacing={1} alignItems="stretch">
+          <Grid item xs>
+            {renderField(key)}
+          </Grid>
           {onSetValue && <Grid item>
             <Box pt={1}>
               <Button onClick={() => {
@@ -102,10 +110,6 @@ const FieldSetWrapper = (
               </Button>
             </Box>
           </Grid>}
-          <Grid xs item>
-            {renderField(key)}
-          </Grid>
-
         </Grid>
       )
     }

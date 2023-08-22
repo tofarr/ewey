@@ -2,7 +2,7 @@ import EweyFactory from "./eweyFactory/EweyFactory";
 import { FACTORIES } from "./eweyFactory";
 import { AnySchemaObject } from "./schemaCompiler";
 
-const JsonSchemaComponentFactory = (
+const JsonSchemaFieldFactory = (
   schema: AnySchemaObject,
   components?: any,
   currentPath?: string[],
@@ -30,4 +30,4 @@ const JsonSchemaComponentFactory = (
   throw new Error("no_factory");
 };
 
-export default JsonSchemaComponentFactory;
+export default JsonSchemaFieldFactory;

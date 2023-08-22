@@ -1,7 +1,7 @@
 import FieldSetWrapper from "../eweyField/FieldSetWrapper";
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
-import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
+import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { newCreateDefaultFnForSchema } from "./ListFactory";
 
 class FieldSetFactory implements EweyFactory {
@@ -60,7 +60,7 @@ class FieldSetFactory implements EweyFactory {
         labelFields.push(key)
       }
       currentPath.push(key);
-      fieldsByKey[key] = JsonSchemaComponentFactory(
+      fieldsByKey[key] = JsonSchemaFieldFactory(
         subSchema,
         components,
         currentPath,

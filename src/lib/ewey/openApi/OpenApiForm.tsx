@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useOpenApi } from "./OpenApiProvider";
 import { keyToLabel } from "../eweyField/FieldSetWrapper";
 import EweyFactory from "../eweyFactory/EweyFactory";
-import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
+import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import SubmitComponent, {
   SubmitComponentProperties,
 } from "../component/SubmitComponent";
@@ -61,7 +61,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
     },
   });
   useEffect(() => {
-    const c = JsonSchemaComponentFactory(
+    const c = JsonSchemaFieldFactory(
       operation.paramsSchema,
       { ...openApi.schema.components },
       [],

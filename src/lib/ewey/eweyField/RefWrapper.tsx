@@ -1,4 +1,4 @@
-import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
+import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import EweyField from "./EweyField";
 import EweyFactory from "../eweyFactory/EweyFactory";
 
@@ -12,7 +12,7 @@ const RefWrapper = (
   const RefComponent: EweyField<any> = ({ value, onSetValue }) => {
     const schema = components[componentName];
     if (!JsonSchemaComponent) {
-      JsonSchemaComponent = JsonSchemaComponentFactory(
+      JsonSchemaComponent = JsonSchemaFieldFactory(
         schema,
         components,
         currentPath,

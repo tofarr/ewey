@@ -27,9 +27,6 @@ const TextFieldWrapper = (
           onChange={(event: ChangeEvent<HTMLInputElement>) =>
             onSetValue(event.target.value)
           }
-          sx={{
-            maxWidth: 'md'
-          }}
         />
       );
     }

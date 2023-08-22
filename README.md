@@ -21,7 +21,7 @@ from a JSON schema:
 
 ```
 import { useState } from "react"
-import { JsonSchemaComponentFactory } from "ewey";
+import { JsonSchemaFieldFactory } from "ewey";
 
 const myJsonSchema = {
   name: "User",
@@ -34,7 +34,7 @@ const myJsonSchema = {
   }
 };
 
-const MyComponent = JsonSchemaComponentFactory(myJsonSchema);
+const MyComponent = JsonSchemaFieldFactory(myJsonSchema);
 
 function App() {
   const [user, setUser] = useState({
@@ -89,7 +89,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { JsonSchemaComponentFactory } from "./lib/ewey";
+import { JsonSchemaFieldFactory } from "./lib/ewey";
 import EweyFactory from "./lib/ewey/eweyFactory/EweyFactory";
 import { FACTORIES } from "./lib/ewey/eweyFactory";
 import { AnySchemaObject } from "./lib/ewey/schemaCompiler";
@@ -142,7 +142,7 @@ class MyFactory implements EweyFactory {
 
 // When creating our component, we include our custom factory
 const myFactories = [...FACTORIES, new MyFactory()]
-const MyComponent = JsonSchemaComponentFactory(myJsonSchema, {}, [], myFactories);
+const MyComponent = JsonSchemaFieldFactory(myJsonSchema, {}, [], myFactories);
 
 function App() {
   const [user, setUser] = useState({

@@ -1,7 +1,7 @@
 import ListWrapper from "../eweyField/ListWrapper";
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
-import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
+import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 
 class ListFactory implements EweyFactory {
   priority: number = 100;
@@ -17,7 +17,7 @@ class ListFactory implements EweyFactory {
       return null;
     }
     currentPath.push("items");
-    const component = JsonSchemaComponentFactory(
+    const component = JsonSchemaFieldFactory(
       schema.items,
       components,
       currentPath,

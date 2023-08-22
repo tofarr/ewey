@@ -45,9 +45,9 @@ const DatePickerWrapper = (
       }
       const date = new Date(value);
       if (dateOnly) {
-        return <Typography>{date.toLocaleDateString()}</Typography>;
+        return <Typography variant="body2">{date.toLocaleDateString()}</Typography>;
       }
-      return <Typography>{date.toLocaleString()}</Typography>;
+      return <Typography variant="body2">{date.toLocaleString()}</Typography>;
     }
 
     return (

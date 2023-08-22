@@ -1,5 +1,5 @@
 import TableWrapper from "../eweyField/TableWrapper";
-import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
+import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import EweyFactory from "./EweyFactory";
 
@@ -53,7 +53,7 @@ class TableFactory implements EweyFactory {
           currentPath.push(key);
           columns.push({
             key,
-            Field: JsonSchemaComponentFactory(
+            Field: JsonSchemaFieldFactory(
               properties[key],
               components,
               currentPath,
@@ -72,7 +72,7 @@ class TableFactory implements EweyFactory {
         currentPath.push(key);
         columns.push({
           key,
-          Field: JsonSchemaComponentFactory(
+          Field: JsonSchemaFieldFactory(
             properties[key],
             components,
             currentPath,

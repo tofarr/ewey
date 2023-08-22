@@ -1,7 +1,7 @@
 import NullableFieldWrapper from "../eweyField/NullableFieldWrapper";
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
-import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
+import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { newCreateDefaultFnForSchema } from "./ListFactory";
 
 class NullableFieldFactory implements EweyFactory {
@@ -25,7 +25,7 @@ class NullableFieldFactory implements EweyFactory {
     } else {
       return null;
     }
-    const wrappedField = JsonSchemaComponentFactory(
+    const wrappedField = JsonSchemaFieldFactory(
       wrappedSchema,
       components,
       currentPath,

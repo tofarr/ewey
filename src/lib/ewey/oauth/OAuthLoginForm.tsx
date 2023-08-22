@@ -2,7 +2,7 @@ import { FC, FormEvent, useContext, useState } from "react";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import JsonSchemaComponentFactory from "../JsonSchemaComponentFactory";
+import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import {
   OAuthBearerTokenContext,
   BearerToken,
@@ -13,7 +13,7 @@ interface OAuthLoginFormProps {
   url: string;
 }
 
-const FormComponent = JsonSchemaComponentFactory(
+const FormComponent = JsonSchemaFieldFactory(
   {
     type: "object",
     name: "Login",
@@ -21,6 +21,7 @@ const FormComponent = JsonSchemaComponentFactory(
       username: { type: "string", maxLength: 255 },
       password: { type: "string", maxLength: 255 },
     },
+    required: ['username', 'password']
   },
   {},
 );
