@@ -69,7 +69,7 @@ class FieldSetFactory implements EweyFactory {
       currentPath.pop();
     }
 
-    const alwaysFullWidth = hasComplexChildren(schema)
+    const alwaysFullWidth = hasComplexChildren(schema, components)
 
     const fieldSetComponent = FieldSetWrapper(
       schema.name,
@@ -90,17 +90,17 @@ class FieldSetFactory implements EweyFactory {
   }
 }
 
-export const hasComplexChildren = (schema: AnySchemaObject) => {
+export const hasComplexChildren = (schema: AnySchemaObject, components: any) => {
   for (const key in schema.properties) {
     const subSchema = schema.properties[key]
-    if (isComplex(subSchema)) {
+    if (isComplex(subSchema, components)) {
       return true
     }
   }
   return false
 }
 
-export const isComplex = (schema: AnySchemaObject) => {
+export const isComplex = (schema: AnySchemaObject, components: any): boolean => {
   if (schema.enum) {
     return false
   }
@@ -109,11 +109,18 @@ export const isComplex = (schema: AnySchemaObject) => {
   }
   if (schema.anyOf) {
     for (const subSchema of schema.anyOf) {
-      if (isComplex(subSchema)) {
+      if (isComplex(subSchema, components)) {
         return true
       }
     }
     return false
+  }
+  if (schema.type == "object" && Object.keys(schema.properties).length === 1) {
+    return isComplex(schema.properties[Object.keys(schema.properties)[0]], components)
+  }
+  if (schema["$ref"]){
+    const componentName = schema["$ref"].substring(13);
+    return isComplex(components[componentName], components)
   }
   return true
 }

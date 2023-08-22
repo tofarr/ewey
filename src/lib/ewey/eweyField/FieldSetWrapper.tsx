@@ -90,19 +90,22 @@ const FieldSetWrapper = (
       }
 
       return (
-        <Grid container spacing={1} alignItems="center">
+        <Grid container spacing={1} alignItems="stretch">
           {onSetValue && <Grid item>
-            <Button onClick={() => {
-              const newValue = { ...value }
-              delete newValue[key]
-              onSetValue(newValue)
-            }}>
-              <DeleteIcon />
-            </Button>
+            <Box pt={1}>
+              <Button onClick={() => {
+                const newValue = { ...value }
+                delete newValue[key]
+                onSetValue(newValue)
+              }}>
+                <DeleteIcon />
+              </Button>
+            </Box>
           </Grid>}
           <Grid xs item>
             {renderField(key)}
           </Grid>
+
         </Grid>
       )
     }
@@ -144,16 +147,11 @@ const FieldSetWrapper = (
 };
 
 export function keyToLabel(key: string) {
-  try{
-    return key
-      .split("_")
-      .filter(p => !!p)
-      .map((p) => p[0].toUpperCase() + p.substr(1))
-      .join(" ");
-  }catch (e) {
-    console.log(key, e)
-    debugger
-  }
+  return key
+    .split("_")
+    .filter(p => !!p)
+    .map((p) => p[0].toUpperCase() + p.substr(1))
+    .join(" ");
 }
 
 export default FieldSetWrapper;
