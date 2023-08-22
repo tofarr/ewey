@@ -213,6 +213,7 @@ const OperationElement = ({
     return (
       <Fragment>
         <OpenApiForm
+          key={operationId}
           operationId={operationId}
           initialValue={{}}
           displaySummary

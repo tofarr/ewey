@@ -3,6 +3,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
+import { EweyLayoutHint, EweyLayoutHintProvider } from "../EweyLayoutHint";
 import {
   OAuthBearerTokenContext,
   BearerToken,
@@ -56,7 +57,9 @@ const OAuthLoginForm: FC<OAuthLoginFormProps> = ({ url }) => {
   return (
     <form onSubmit={handleLogin}>
       <Box pt={2} pr={4} pb={2} pl={4}>
-        <FormComponent value={login} onSetValue={setLogin} />
+        <EweyLayoutHintProvider hint={EweyLayoutHint.LABELS_ALWAYS_ABOVE}>
+          <FormComponent value={login} onSetValue={setLogin} />
+        </EweyLayoutHintProvider>
       </Box>
       <Box display="flex" justifyContent="flex-end" pr={4} pb={2} pl={4}>
         <Button type="submit" variant="contained">

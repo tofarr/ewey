@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
+import { EweyLayoutHint, useEweyLayoutHint } from "../EweyLayoutHint";
 import EweyField from "./EweyField";
 
 const FieldSetWrapper = (
@@ -25,6 +26,8 @@ const FieldSetWrapper = (
     const { t } = useTranslation();
     const fieldKeys = Object.keys(fieldsByKey)
     const existingKeys = Object.keys(value);
+    const eweyLayoutHint = useEweyLayoutHint()
+    const labelsAlwaysAbove = alwaysFullWidth || eweyLayoutHint === 'labelsAlwaysAbove';
 
     function handleAddDefault(key: string) {
       const newValue = { ...value };
@@ -35,14 +38,14 @@ const FieldSetWrapper = (
     function renderFieldRow(key: string) {
       return (
         <Grid container alignItems="center">
-          <Grid item xs={12} md={alwaysFullWidth ? 12 : 3} pr={2}>
+          <Grid item xs={12} md={labelsAlwaysAbove ? 12 : 3} pr={2}>
             <Grid
               container
               pr={2}
               sx={{
                 justifyContent: {
                   xs: "flex-start",
-                  md: alwaysFullWidth ? "flex-start" : "flex-end"
+                  md: labelsAlwaysAbove ? "flex-start" : "flex-end"
                 }
               }}
             >
@@ -54,8 +57,8 @@ const FieldSetWrapper = (
           <Grid
             item
             xs={12}
-            md={alwaysFullWidth ? 12 : 9}
-            lg={alwaysFullWidth ? 12 : 6}
+            md={labelsAlwaysAbove ? 12 : 9}
+            lg={labelsAlwaysAbove ? 12 : 6}
           >
             {renderNonRequiredField(key)}
           </Grid>
@@ -66,7 +69,7 @@ const FieldSetWrapper = (
     function renderFieldLabelRow(key: string) {
       return (
         <Grid container>
-          <Grid item xs={alwaysFullWidth ? false : 3} md={3}></Grid>
+          <Grid item xs={labelsAlwaysAbove ? false : 3} md={3}></Grid>
           <Grid item xs>
             <FormControlLabel
               control={renderNonRequiredField(key)}

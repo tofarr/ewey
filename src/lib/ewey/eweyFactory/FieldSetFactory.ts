@@ -8,18 +8,15 @@ class FieldSetFactory implements EweyFactory {
   inclusive: boolean = false;
   fieldNames?: string[];
   priority: number = 100;
-  alwaysFullWidth?: boolean;
 
   constructor(
     inclusive: boolean = false,
     fieldNames?: string[],
-    priority: number = 100,
-    alwaysFullWidth?: boolean,
+    priority: number = 100
   ) {
     this.priority = priority;
     this.inclusive = inclusive;
     this.fieldNames = fieldNames;
-    this.alwaysFullWidth = alwaysFullWidth;
   }
 
   create(
