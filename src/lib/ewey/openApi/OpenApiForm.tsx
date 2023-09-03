@@ -1,18 +1,15 @@
-import { FC, FormEvent, useEffect, useState } from "react";
-import { schemaCompiler } from "../schemaCompiler";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import { useOpenApi } from "./OpenApiProvider";
 import EweyFactory from "../eweyFactory/EweyFactory";
-import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
-import SubmitComponent, {
+import {
   SubmitComponentProperties,
 } from "../component/SubmitComponent";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
-import { getLabel } from "../label";
+import { CancelComponentProperties } from "../component/CancelComponent";
+import EweyForm from "../EweyForm";
+import { JsonType } from "json-urley";
 
 export interface OpenApiFormProps {
   operationId: string;
@@ -20,7 +17,9 @@ export interface OpenApiFormProps {
   initialValue?: any;
   onSuccess?: (result: any) => void;
   onError?: (error: any) => void;
-  FormSubmitComponent?: FC<SubmitComponentProperties>;
+  onCancel?: () => void;
+  submitComponent?: FC<SubmitComponentProperties>;
+  cancelComponent?: FC<CancelComponentProperties>;
   displaySummary?: boolean;
 }
 
@@ -30,20 +29,16 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   initialValue,
   onSuccess,
   onError,
-  FormSubmitComponent,
+  onCancel,
+  submitComponent,
+  cancelComponent,
   displaySummary,
 }) => {
-  if (!FormSubmitComponent) {
-    FormSubmitComponent = SubmitComponent;
-  }
   const { t } = useTranslation();
   const openApi = useOpenApi();
   const operation = openApi.getOperation(operationId);
   const headers = headersFromToken(useOAuthBearerToken()?.token);
-  const [value, setValue] = useState<any>(initialValue || {});
-  const validate = schemaCompiler.compile(operation.paramsSchema);
-  const valid = validate(value) as boolean;
-  const [FormComponent, setFormComponent] = useState<any>(null);
+  const [value, setValue] = useState<any>(initialValue);
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
       try {
@@ -60,58 +55,25 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
       }
     },
   });
-  useEffect(() => {
-    const c = JsonSchemaFieldFactory(
-      operation.paramsSchema,
-      { ...openApi.schema.components },
-      [],
-      factories,
-    );
-    setFormComponent(() => c);
-  }, [
-    operationId,
-    operation.paramsSchema,
-    openApi.schema.components,
-    factories,
-  ]);
-
-  function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-    handleInvoke();
-  }
-
-  function handleInvoke() {
-    if (isLoading || !valid) {
-      return;
-    }
-    mutate();
-  }
-
-  if (!FormComponent) {
-    return null;
+  
+  function handleSetValue(value?: JsonType) {
+    setValue(value)
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Paper>
-        <Box padding={2} marginBottom={2}>
-          <Typography variant="h4">
-            {getLabel(operationId, t)}
-          </Typography>
-          {displaySummary && operation.summary && (
-            <Box pt={1} pb={1}>
-              <Typography variant="body2">{operation.summary}</Typography>
-            </Box>
-          )}
-          <FormComponent value={value} onSetValue={setValue} />
-        </Box>
-        <FormSubmitComponent
-          submitting={isLoading}
-          valid={valid}
-          onSubmit={handleInvoke}
-        />
-      </Paper>
-    </form>
+    <EweyForm
+      schema={operation.paramsSchema}
+      initialValue={initialValue}
+      onSetValue={handleSetValue}
+      isLoading={isLoading}
+      onSubmit={() => mutate()}
+      onCancel={onCancel}
+      factories={factories}
+      submitComponent={submitComponent}
+      cancelComponent={cancelComponent}
+      labelKey={operationId}
+      summary={displaySummary ? operation.summary : null}
+    />
   );
 };
 

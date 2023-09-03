@@ -13,6 +13,7 @@ import { getLabel } from "./label";
 import { JsonType } from "json-urley";
 import CancelComponent, { CancelComponentProperties } from "./component/CancelComponent";
 import EweyField from "./eweyField/EweyField";
+import { newCreateDefaultFnForSchema } from "./eweyFactory/ListFactory";
 
 export interface EweyFormProps {
   schema: AnySchemaObject;
@@ -25,7 +26,12 @@ export interface EweyFormProps {
   submitComponent?: FC<SubmitComponentProperties>;
   cancelComponent?: FC<CancelComponentProperties>;
   labelKey?: string;
-  summary?: string;
+  summary?: string | null;
+}
+
+interface EweyFormState {
+  component: EweyField<JsonType>
+  validate: ValidateFunction
 }
 
 const EweyForm: FC<EweyFormProps> = ({
@@ -45,19 +51,20 @@ const EweyForm: FC<EweyFormProps> = ({
   const FormCancelComponent = cancelComponent || CancelComponent;
   const { t } = useTranslation();
   const [value, setValue] = useState<JsonType | undefined>(initialValue);
-  const [FormComponent, setFormComponent] = useState<EweyField<JsonType> | null>(null)
-  const [validate, setValidate] = useState<ValidateFunction | null>(null);
- 
+  const [formState, setFormState] = useState<EweyFormState | null>(null)
+  const valid = formState ? formState.validate(value) : false;
+  
   useEffect(() => {
-    const c = JsonSchemaFieldFactory(
-      schema,
-      { ...schema.components },
-      [],
-      factories,
-    );
-    const v = schemaCompiler.compile(schema);
-    setFormComponent(c);
-    setValidate(v);
+    const newFormState = {
+      component: JsonSchemaFieldFactory(
+        schema,
+        { ...schema.components },
+        [],
+        factories,
+      ),
+      validate: schemaCompiler.compile(schema)
+    }
+    setFormState(newFormState)
   }, [
     schema,
     factories,
@@ -65,7 +72,7 @@ const EweyForm: FC<EweyFormProps> = ({
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (onSubmit) {
+    if (onSubmit && valid && !isLoading) {
       onSubmit(value);
     }
   }
@@ -77,7 +84,7 @@ const EweyForm: FC<EweyFormProps> = ({
     }
   }
 
-  if (!FormComponent || !validate) {
+  if (!formState) {
     return null;
   }
 
@@ -95,14 +102,14 @@ const EweyForm: FC<EweyFormProps> = ({
               <Typography variant="body2">{summary}</Typography>
             </Box>
           )}
-          <FormComponent value={value} onSetValue={handleSetValue} />
+          <formState.component value={value} onSetValue={handleSetValue} />
         </Box>
         {onCancel && (
           <FormCancelComponent onCancel={onCancel} />
         )}
         <FormSubmitComponent
           submitting={isLoading}
-          valid={validate(value)}
+          valid={formState.validate(value)}
           onSubmit={() => onSubmit(value)}
         />
       </Paper>
