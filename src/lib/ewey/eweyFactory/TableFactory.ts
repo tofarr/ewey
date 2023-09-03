@@ -1,6 +1,7 @@
 import TableWrapper from "../eweyField/TableWrapper";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { AnySchemaObject } from "../schemaCompiler";
+import { ComponentSchemas } from "./ComponentSchemas";
 import EweyFactory from "./EweyFactory";
 
 class TableFactory implements EweyFactory {
@@ -20,7 +21,7 @@ class TableFactory implements EweyFactory {
 
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
   ) {
@@ -65,7 +66,7 @@ class TableFactory implements EweyFactory {
       }
     } else {
       for (const key in properties) {
-        const types = getTypes(properties[key]);
+        const types = getTypes(properties[key], components);
         if (types.includes("object") || types.includes("array")) {
           return null;
         }
@@ -86,11 +87,11 @@ class TableFactory implements EweyFactory {
   }
 }
 
-function getTypes(schema: AnySchemaObject) {
+function getTypes(schema: AnySchemaObject, components: ComponentSchemas) {
   if (schema.anyOf) {
     const result: string[] = [];
     for (const s of schema.anyOf) {
-      result.push.apply(result, getTypes(s));
+      result.push.apply(result, getTypes(s, components));
     }
     return result;
   }

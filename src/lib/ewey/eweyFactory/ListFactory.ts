@@ -2,6 +2,7 @@ import ListWrapper from "../eweyField/ListWrapper";
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
+import { ComponentSchemas } from "./ComponentSchemas";
 
 class ListFactory implements EweyFactory {
   priority: number = 100;
@@ -9,7 +10,7 @@ class ListFactory implements EweyFactory {
 
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
   ) {

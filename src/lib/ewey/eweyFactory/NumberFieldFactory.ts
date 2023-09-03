@@ -6,6 +6,7 @@ import {
 
 import NumberFieldWrapper from "../eweyField/NumberFieldWrapper";
 import EweyFactory from "./EweyFactory";
+import { ComponentSchemas } from "./ComponentSchemas";
 
 const NUMBER_TYPES = ["integer", "number"];
 
@@ -14,7 +15,7 @@ class NumberFieldFactory implements EweyFactory {
 
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
   ) {

@@ -1,5 +1,6 @@
 import RefWrapper from "../eweyField/RefWrapper";
 import { AnySchemaObject } from "../schemaCompiler";
+import { ComponentSchemas } from "./ComponentSchemas";
 import EweyFactory from "./EweyFactory";
 
 class RefFactory implements EweyFactory {
@@ -7,7 +8,7 @@ class RefFactory implements EweyFactory {
 
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
   ) {

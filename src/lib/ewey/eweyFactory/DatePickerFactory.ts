@@ -5,6 +5,7 @@ import {
 } from "../schemaCompiler";
 import DatePickerWrapper from "../eweyField/DatePickerWrapper";
 import EweyFactory from "./EweyFactory";
+import { ComponentSchemas } from "./ComponentSchemas";
 
 const FORMATS = ["date-time", "date"];
 
@@ -13,7 +14,7 @@ class DatePickerFactory implements EweyFactory {
 
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
   ) {

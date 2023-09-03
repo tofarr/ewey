@@ -6,13 +6,14 @@ import {
 
 import TextFieldWrapper from "../eweyField/TextFieldWrapper";
 import EweyFactory from "./EweyFactory";
+import { ComponentSchemas } from "./ComponentSchemas";
 
 class TextFieldFactory implements EweyFactory {
   priority: number = 100;
 
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
   ) {
@@ -28,16 +29,11 @@ class TextFieldFactory implements EweyFactory {
     const maxLength = schema.maxLength;
     const multiline =
       !schema.format && !isPassword && (!maxLength || maxLength > 255);
-    const hasFocusField = components.hasFocusField;
-    if (!hasFocusField) {
-      components.hasFocusField = true;
-    }
     const textFieldComponent = TextFieldWrapper(
       validate,
       multiline,
       type,
       "body2",
-      !hasFocusField,
     );
     return textFieldComponent;
   }

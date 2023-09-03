@@ -94,6 +94,7 @@ import EweyFactory from "./lib/ewey/eweyFactory/EweyFactory";
 import { FACTORIES } from "./lib/ewey/eweyFactory";
 import { AnySchemaObject } from "./lib/ewey/schemaCompiler";
 import EweyProps from "./lib/ewey/eweyField/EweyProps";
+import { Components } from "./lib/eweyFactory/Components";
 
 const myJsonSchema = {
   name: "User",
@@ -129,7 +130,7 @@ class MyFactory implements EweyFactory {
 
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: Components,
     currentPath: string[],
     factories: EweyFactory[],
   ) {

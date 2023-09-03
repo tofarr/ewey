@@ -1,12 +1,13 @@
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject, schemaCompiler, ValidateFunction } from "../schemaCompiler";
 import SelectFieldWrapper from "../eweyField/SelectFieldWrapper";
+import { ComponentSchemas } from "./ComponentSchemas";
 
 class SelectFieldFactory implements EweyFactory {
   priority: number = 100;
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
   ) {

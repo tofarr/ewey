@@ -5,13 +5,14 @@ import {
 } from "../schemaCompiler";
 import EweyFactory from "./EweyFactory";
 import CheckboxWrapper from "../eweyField/CheckboxWrapper";
+import { ComponentSchemas } from "./ComponentSchemas";
 
 class CheckboxFactory implements EweyFactory {
   priority: number = 100;
 
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
   ) {

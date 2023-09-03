@@ -1,5 +1,6 @@
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
+import { ComponentSchemas } from "./ComponentSchemas";
 
 class NamedFactory implements EweyFactory {
   name: string;
@@ -14,7 +15,7 @@ class NamedFactory implements EweyFactory {
 
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
   ) {

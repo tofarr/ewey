@@ -3,6 +3,7 @@ import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { newCreateDefaultFnForSchema } from "./ListFactory";
+import { ComponentSchemas } from "./ComponentSchemas";
 
 class FieldSetFactory implements EweyFactory {
   inclusive: boolean = false;
@@ -21,7 +22,7 @@ class FieldSetFactory implements EweyFactory {
 
   create(
     schema: AnySchemaObject,
-    components: any,
+    components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
   ) {
