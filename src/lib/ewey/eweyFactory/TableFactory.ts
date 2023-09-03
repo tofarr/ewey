@@ -1,7 +1,7 @@
 import TableWrapper from "../eweyField/TableWrapper";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { AnySchemaObject } from "../schemaCompiler";
-import { ComponentSchemas } from "./ComponentSchemas";
+import { ComponentSchemas } from "../ComponentSchemas";
 import EweyFactory from "./EweyFactory";
 
 class TableFactory implements EweyFactory {
@@ -87,13 +87,21 @@ class TableFactory implements EweyFactory {
   }
 }
 
-function getTypes(schema: AnySchemaObject, components: ComponentSchemas) {
+function getTypes(schema: AnySchemaObject, components: ComponentSchemas): string[] {
   if (schema.anyOf) {
     const result: string[] = [];
     for (const s of schema.anyOf) {
       result.push.apply(result, getTypes(s, components));
     }
     return result;
+  }
+  if (schema['$ref']) {
+    const componentName = schema["$ref"].substring(13);
+    const referencedSchema = components[componentName];
+    return getTypes(referencedSchema, components);
+  }
+  if(schema.enum){
+    return ["string"];
   }
   return [schema.type.toLowerCase()];
 }

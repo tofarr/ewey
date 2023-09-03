@@ -6,7 +6,7 @@ import {
 
 import NumberFieldWrapper from "../eweyField/NumberFieldWrapper";
 import EweyFactory from "./EweyFactory";
-import { ComponentSchemas } from "./ComponentSchemas";
+import { ComponentSchemas } from "../ComponentSchemas";
 
 const NUMBER_TYPES = ["integer", "number"];
 

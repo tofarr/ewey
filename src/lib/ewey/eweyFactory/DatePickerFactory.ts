@@ -5,7 +5,7 @@ import {
 } from "../schemaCompiler";
 import DatePickerWrapper from "../eweyField/DatePickerWrapper";
 import EweyFactory from "./EweyFactory";
-import { ComponentSchemas } from "./ComponentSchemas";
+import { ComponentSchemas } from "../ComponentSchemas";
 
 const FORMATS = ["date-time", "date"];
 

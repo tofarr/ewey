@@ -3,7 +3,7 @@ import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { newCreateDefaultFnForSchema } from "./ListFactory";
-import { ComponentSchemas } from "./ComponentSchemas";
+import { ComponentSchemas, resolveRef } from "../ComponentSchemas";
 
 class FieldSetFactory implements EweyFactory {
   inclusive: boolean = false;
@@ -88,7 +88,7 @@ class FieldSetFactory implements EweyFactory {
   }
 }
 
-export const hasComplexChildren = (schema: AnySchemaObject, components: any) => {
+export const hasComplexChildren = (schema: AnySchemaObject, components: ComponentSchemas) => {
   for (const key in schema.properties) {
     const subSchema = schema.properties[key]
     if (isComplex(subSchema, components)) {
@@ -98,7 +98,8 @@ export const hasComplexChildren = (schema: AnySchemaObject, components: any) => 
   return false
 }
 
-export const isComplex = (schema: AnySchemaObject, components: any): boolean => {
+export const isComplex = (schema: AnySchemaObject, components: ComponentSchemas): boolean => {
+  schema = resolveRef(schema, components)
   if (schema.enum) {
     return false
   }
@@ -115,10 +116,6 @@ export const isComplex = (schema: AnySchemaObject, components: any): boolean => 
   }
   if (schema.type == "object" && Object.keys(schema.properties).length === 1) {
     return isComplex(schema.properties[Object.keys(schema.properties)[0]], components)
-  }
-  if (schema["$ref"]){
-    const componentName = schema["$ref"].substring(13);
-    return isComplex(components[componentName], components)
   }
   return true
 }

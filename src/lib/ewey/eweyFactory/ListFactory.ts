@@ -2,7 +2,7 @@ import ListWrapper from "../eweyField/ListWrapper";
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
-import { ComponentSchemas } from "./ComponentSchemas";
+import { ComponentSchemas, resolveRef } from "../ComponentSchemas";
 
 class ListFactory implements EweyFactory {
   priority: number = 100;
@@ -33,13 +33,13 @@ class ListFactory implements EweyFactory {
 }
 
 
-export const newCreateDefaultFnForSchema = (schema: AnySchemaObject, components: any): (() => any) | undefined => {
+export const newCreateDefaultFnForSchema = (schema: AnySchemaObject, components: ComponentSchemas): (() => any) | undefined => {
   if (schema.default) {
     return () => schema.default
   }
   if (schema["$ref"]) {
-    const componentName = schema["$ref"].substring(13);
-    return newCreateDefaultFnForSchema(components[componentName], components)
+    const referencedSchema = resolveRef(schema, components)
+    return newCreateDefaultFnForSchema(referencedSchema, components)
   }
   if (schema.enum) {
     return () => schema.enum[0]

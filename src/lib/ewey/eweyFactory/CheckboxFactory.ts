@@ -5,7 +5,7 @@ import {
 } from "../schemaCompiler";
 import EweyFactory from "./EweyFactory";
 import CheckboxWrapper from "../eweyField/CheckboxWrapper";
-import { ComponentSchemas } from "./ComponentSchemas";
+import { ComponentSchemas } from "../ComponentSchemas";
 
 class CheckboxFactory implements EweyFactory {
   priority: number = 100;

@@ -6,7 +6,7 @@ import {
 
 import TextFieldWrapper from "../eweyField/TextFieldWrapper";
 import EweyFactory from "./EweyFactory";
-import { ComponentSchemas } from "./ComponentSchemas";
+import { ComponentSchemas } from "../ComponentSchemas";
 
 class TextFieldFactory implements EweyFactory {
   priority: number = 100;

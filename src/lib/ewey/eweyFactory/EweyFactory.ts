@@ -1,6 +1,6 @@
 import { AnySchemaObject } from "../schemaCompiler";
 import EweyField from "../eweyField/EweyField";
-import { ComponentSchemas } from "./ComponentSchemas";
+import { ComponentSchemas } from "../ComponentSchemas";
 
 interface EweyFactory {
   priority: number;

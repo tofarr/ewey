@@ -1,7 +1,7 @@
 import EweyFactory from "./EweyFactory";
 import { AnySchemaObject, schemaCompiler, ValidateFunction } from "../schemaCompiler";
 import SelectFieldWrapper from "../eweyField/SelectFieldWrapper";
-import { ComponentSchemas } from "./ComponentSchemas";
+import { ComponentSchemas } from "../ComponentSchemas";
 
 class SelectFieldFactory implements EweyFactory {
   priority: number = 100;

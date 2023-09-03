@@ -162,6 +162,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ children }) => {
         <Dialog
           open={loginDialogOpen && !token.token}
           onClose={() => setLoginDialogOpen(false)}
+          disableRestoreFocus
         >
           <DialogContent>
             <Typography variant="h4">

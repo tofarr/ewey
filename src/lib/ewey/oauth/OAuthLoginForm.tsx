@@ -9,6 +9,7 @@ import {
   BearerToken,
 } from "./OAuthBearerTokenProvider";
 import { useMessageBroker } from "../message/MessageBrokerContext";
+import AutoFocusProvider from "../AutoFocusProvider";
 
 interface OAuthLoginFormProps {
   url: string;
@@ -58,7 +59,9 @@ const OAuthLoginForm: FC<OAuthLoginFormProps> = ({ url }) => {
     <form onSubmit={handleLogin}>
       <Box pt={2} pr={4} pb={2} pl={4}>
         <EweyLayoutHintProvider hint={EweyLayoutHint.LABELS_ALWAYS_ABOVE}>
-          <FormComponent value={login} onSetValue={setLogin} />
+          <AutoFocusProvider autoFocusPath={["username"]}>
+            <FormComponent value={login} onSetValue={setLogin} />
+          </AutoFocusProvider>
         </EweyLayoutHintProvider>
       </Box>
       <Box display="flex" justifyContent="flex-end" pr={4} pb={2} pl={4}>

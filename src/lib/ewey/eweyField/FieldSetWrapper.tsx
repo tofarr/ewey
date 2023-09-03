@@ -19,7 +19,7 @@ const FieldSetWrapper = (
   requiredFieldNames: string[],
   defaultValueFactories: any
 ) => {
-  const FieldSetComponent: EweyField<any> = ({ value, onSetValue }) => {
+  const FieldSetComponent: EweyField<any> = ({ path, value, onSetValue }) => {
     if (!value){
       value = {}
     }
@@ -128,8 +128,9 @@ const FieldSetWrapper = (
           onSetValue(newValue);
         };
       }
+      const fieldPath = [...(path || []), key]
       return (
-        <Component value={fieldValue} onSetValue={onSetFieldValue} />
+        <Component path={fieldPath} value={fieldValue} onSetValue={onSetFieldValue} />
       )
     }
 

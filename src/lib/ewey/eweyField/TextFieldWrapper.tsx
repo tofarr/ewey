@@ -5,17 +5,19 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import EweyField from "./EweyField";
+import { useIsAutoFocused } from "../AutoFocusProvider";
 
 const TextFieldWrapper = (
   validate: ValidateFunction<string>,
   multiline: boolean,
   type: string = "text",
-  variant: Variant = "body2",
-  autoFocus: boolean = false,
+  variant: Variant = "body2"
 ): EweyField<string> => {
-  const TextFieldComponent: EweyField<string> = ({ value, onSetValue }) => {
+  const TextFieldComponent: EweyField<string> = ({ path, value, onSetValue }) => {
     const validationResult = validate(value);
+    const autoFocus = useIsAutoFocused(path);
     if (onSetValue) {
+      console.log(autoFocus)
       return (
         <TextField
           error={!validationResult}

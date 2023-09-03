@@ -3,7 +3,7 @@ import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { newCreateDefaultFnForSchema } from "./ListFactory";
-import { ComponentSchemas } from "./ComponentSchemas";
+import { ComponentSchemas } from "../ComponentSchemas";
 
 class NullableFieldFactory implements EweyFactory {
   priority: number = 100;
