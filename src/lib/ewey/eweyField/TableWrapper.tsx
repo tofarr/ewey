@@ -6,7 +6,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import EweyField from "./EweyField";
 import JsonType, { JsonObjectType } from "./JsonType";
-import { keyToLabel } from "./FieldSetWrapper";
+import { getLabel } from "../label";
 
 export interface Column {
   key: string;
@@ -77,7 +77,7 @@ const TableWrapper = (columns: Column[]): EweyField<JsonObjectType[]> => {
           <TableRow>
             {columns.map((column) => (
               <TableCell key={column.key}>
-                {t(column.key, keyToLabel(column.key))}
+                {getLabel(column.key, t)}
               </TableCell>
             ))}
           </TableRow>

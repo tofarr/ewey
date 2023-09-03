@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -8,8 +7,9 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import { EweyLayoutHint, useEweyLayoutHint } from "../EweyLayoutHint";
+import { useEweyLayoutHint } from "../EweyLayoutHint";
 import EweyField from "./EweyField";
+import { getLabel } from "../label";
 
 const FieldSetWrapper = (
   name: string,
@@ -50,7 +50,7 @@ const FieldSetWrapper = (
               }}
             >
               <Grid item>
-                <FormLabel>{t(key, keyToLabel(key))}</FormLabel>
+                <FormLabel>{getLabel(key, t)}</FormLabel>
               </Grid>
             </Grid>
           </Grid>
@@ -73,7 +73,7 @@ const FieldSetWrapper = (
           <Grid item xs>
             <FormControlLabel
               control={renderNonRequiredField(key)}
-              label={t(key, keyToLabel(key))} />
+              label={getLabel(key, t)} />
           </Grid>
         </Grid>
       )
@@ -92,7 +92,7 @@ const FieldSetWrapper = (
             onClick={() => handleAddDefault(key)}
             endIcon={<AddIcon />}
           >
-            {t('empty', keyToLabel('empty'))}
+            {getLabel('empty', t)}
           </Button>
         )
       }
@@ -152,13 +152,5 @@ const FieldSetWrapper = (
 
   return FieldSetComponent;
 };
-
-export function keyToLabel(key: string) {
-  return key
-    .split("_")
-    .filter(p => !!p)
-    .map((p) => p[0].toUpperCase() + p.substr(1))
-    .join(" ");
-}
 
 export default FieldSetWrapper;

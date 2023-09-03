@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { keyToLabel } from "../eweyField/FieldSetWrapper";
+import { getLabel } from "../label";
 
 const NullableFieldWrapper = (
   Component: EweyField<any>,
@@ -43,7 +43,7 @@ const NullableFieldWrapper = (
         onClick={handleClick}
         endIcon={<AddIcon />}
       >
-        {t('empty', keyToLabel('empty'))}
+        {getLabel('empty', t)}
       </Button>
     )
   };

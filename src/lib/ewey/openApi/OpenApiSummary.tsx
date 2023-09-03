@@ -28,13 +28,13 @@ import { useMessageBroker } from "../message/MessageBrokerContext";
 import { OpenApiOperation } from "./model/OpenApiOperation";
 import { useOpenApi } from "./OpenApiProvider";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
-import { keyToLabel } from "../eweyField/FieldSetWrapper";
 import EweyFactory from "../eweyFactory/EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import OpenApiContent from "./OpenApiContent";
 import OpenApiForm from "./OpenApiForm";
 import OpenApiProvider from "./OpenApiProvider";
 import OpenApiQuery from "./OpenApiQuery";
+import { getLabel } from "../label";
 
 export const openApiSummaryRoute = (prefix: string, url: string) => {
   return (
@@ -101,7 +101,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ children }) => {
         <ListItemIcon>
           {requiresAuth ? <LockIcon /> : <PlayArrowIcon />}
         </ListItemIcon>
-        <ListItemText primary={keyToLabel(operationId)} />
+        <ListItemText primary={getLabel(operationId, t)} />
       </MenuItem>
     );
 
@@ -165,7 +165,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ children }) => {
         >
           <DialogContent>
             <Typography variant="h4">
-              {t("login", keyToLabel("login"))}
+              {getLabel("login", t)}
             </Typography>
             <OAuthLoginForm url={openApi.loginUrl} />
           </DialogContent>
@@ -182,7 +182,7 @@ interface RouteErrorProps {
 
 const RouteError = ({ message }: RouteErrorProps) => {
   const { t } = useTranslation();
-  return <Alert severity="error">{t(message, keyToLabel(message))}</Alert>;
+  return <Alert severity="error">{getLabel(message, t)}</Alert>;
 };
 
 export interface OperationElementProps {
@@ -232,7 +232,7 @@ const OperationElement = ({
           <DialogContent>
             <Box pb={2}>
               <Typography variant="h4">
-                {t(operationId, keyToLabel(operationId))}
+                {getLabel(operationId, t)}
               </Typography>
             </Box>
             <OpenApiContent
@@ -257,7 +257,7 @@ const OperationElement = ({
           <Box pb={2}>
             <Grid container>
               <Grid item xs>
-                <Typography variant="h4">{keyToLabel(operationId)}</Typography>
+                <Typography variant="h4">{getLabel(operationId, t)}</Typography>
               </Grid>
               <Grid>
                 <Button onClick={handleRefresh}>

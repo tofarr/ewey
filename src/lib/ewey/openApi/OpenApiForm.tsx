@@ -6,13 +6,13 @@ import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import { useOpenApi } from "./OpenApiProvider";
-import { keyToLabel } from "../eweyField/FieldSetWrapper";
 import EweyFactory from "../eweyFactory/EweyFactory";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import SubmitComponent, {
   SubmitComponentProperties,
 } from "../component/SubmitComponent";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
+import { getLabel } from "../label";
 
 export interface OpenApiFormProps {
   operationId: string;
@@ -96,7 +96,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
       <Paper>
         <Box padding={2} marginBottom={2}>
           <Typography variant="h4">
-            {t(operationId, keyToLabel(operationId))}
+            {getLabel(operationId, t)}
           </Typography>
           {displaySummary && operation.summary && (
             <Box pt={1} pb={1}>

@@ -4,7 +4,7 @@ import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectProps, SelectChangeEvent } from "@mui/material/Select";
 import EweyField from "./EweyField";
-import { keyToLabel } from "./FieldSetWrapper";
+import { getLabel } from "../label";
 
 const SelectFieldWrapper = (validate: ValidateFunction<string>, values: string[]) => {
   const SelectField: EweyField<string> = ({ value, onSetValue }) => {
@@ -19,7 +19,7 @@ const SelectFieldWrapper = (validate: ValidateFunction<string>, values: string[]
     return (
       <FormControl style={{width: "100%"}}>
         <Select {...props}>
-          {values.map(v => <MenuItem key={v} value={v}>{t(v, keyToLabel(v))}</MenuItem>)}
+          {values.map(v => <MenuItem key={v} value={v}>{getLabel(v, t)}</MenuItem>)}
         </Select>
       </FormControl>
     );
