@@ -10,11 +10,14 @@ import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { CancelComponentProps } from "../component/CancelComponent";
 import EweyForm from "../EweyForm";
 import { JsonType } from "json-urley";
+import { newCreateDefaultFnForSchema } from "../eweyFactory/ListFactory";
+import { JsonObjectType } from "../eweyField/JsonType";
 
 export interface OpenApiFormProps {
   operationId: string;
   factories?: EweyFactory[];
-  initialValue?: any;
+  value?: JsonType;
+  onSetValue?: (value: JsonType) => void;
   onSuccess?: (result: any) => void;
   onError?: (error: any) => void;
   onCancel?: () => void;
@@ -26,7 +29,8 @@ export interface OpenApiFormProps {
 const OpenApiForm: FC<OpenApiFormProps> = ({
   operationId,
   factories,
-  initialValue,
+  value,
+  onSetValue,
   onSuccess,
   onError,
   onCancel,
@@ -38,11 +42,13 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   const openApi = useOpenApi();
   const operation = openApi.getOperation(operationId);
   const headers = headersFromToken(useOAuthBearerToken()?.token);
-  const [value, setValue] = useState<any>(initialValue);
+  const disconnected = typeof value === "undefined" && typeof onSetValue === "undefined";
+  const [internalValue, setInternalValue] = useState<JsonType>(createDefaultValue());
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
       try {
-        const result = await operation.invoke(value, headers);
+        const params = (disconnected ? internalValue : value) as JsonObjectType;
+        const result = await operation.invoke(params, headers);
         if (onSuccess) {
           onSuccess(result);
         }
@@ -55,15 +61,30 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
       }
     },
   });
+
+
+  function createDefaultValue(): JsonType {
+    if (value != null) {
+      return value;
+    }
+    const defaultFactory = newCreateDefaultFnForSchema(operation.paramsSchema, operation.paramsSchema.components || {});
+    const result = defaultFactory ? defaultFactory() : null;
+    return result;
+  }
+
   
-  function handleSetValue(value?: JsonType) {
-    setValue(value)
+  function handleSetValue(newValue: JsonType) {
+    if (!disconnected && onSetValue) {
+      onSetValue(newValue)
+    } else {
+      setInternalValue(newValue)
+    }
   }
 
   return (
     <EweyForm
       schema={operation.paramsSchema}
-      value={initialValue}
+      value={disconnected ? internalValue : value}
       onSetValue={handleSetValue}
       isLoading={isLoading}
       onSubmit={() => mutate()}

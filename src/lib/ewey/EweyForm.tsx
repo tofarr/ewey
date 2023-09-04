@@ -24,8 +24,8 @@ interface EweyFormProps {
   schema: AnySchemaObject;
   isLoading: boolean;
   value?: JsonType;
-  onSetValue?: (value?: JsonType) => void;
-  onSubmit: (value?: JsonType) => void;
+  onSetValue?: (value: JsonType) => void;
+  onSubmit: (value: JsonType) => void;
   onCancel?: () => void;
   factories?: EweyFactory[];
   submitComponent?: FC<SubmitComponentProps>;
@@ -93,7 +93,6 @@ function DisconnectedEweyForm({
   })
 }
 
-
 function EweyFormInternal({
   schema,
   value,
@@ -132,7 +131,7 @@ function EweyFormInternal({
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (onSubmit && valid && !isLoading) {
-      onSubmit(value);
+      onSubmit(value == null ? null : value);
     }
   }
 
@@ -154,7 +153,7 @@ function EweyFormInternal({
               <Typography variant="body2">{summary}</Typography>
             </Box>
           )}
-          <formState.component value={value} onSetValue={onSetValue} />
+          <formState.component value={value == null ? null : value} onSetValue={onSetValue} />
         </Box>
         {onCancel && (
           <FormCancelComponent onCancel={onCancel} />
@@ -162,7 +161,7 @@ function EweyFormInternal({
         <FormSubmitComponent
           submitting={isLoading}
           valid={formState.validate(value)}
-          onSubmit={() => onSubmit(value)}
+          onSubmit={() => onSubmit(value == null ? null : value)}
         />
       </Paper>
     </form>

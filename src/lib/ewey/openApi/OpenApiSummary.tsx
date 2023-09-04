@@ -216,7 +216,6 @@ const OperationElement = ({
         <OpenApiForm
           key={operationId}
           operationId={operationId}
-          initialValue={{}}
           displaySummary
           onSuccess={(r) => {
             setResult(r);
