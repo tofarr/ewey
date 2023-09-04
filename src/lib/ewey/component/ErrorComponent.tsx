@@ -4,11 +4,11 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
-export interface ErrorComponentProperties {
+export interface ErrorComponentProps {
   message?: string;
 }
 
-const ErrorComponent: FC<ErrorComponentProperties> = ({ message }) => {
+const ErrorComponent: FC<ErrorComponentProps> = ({ message }) => {
   return (
     <Paper>
       <Grid

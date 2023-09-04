@@ -4,10 +4,10 @@ import { useMutation } from "@tanstack/react-query";
 import { useOpenApi } from "./OpenApiProvider";
 import EweyFactory from "../eweyFactory/EweyFactory";
 import {
-  SubmitComponentProperties,
+  SubmitComponentProps,
 } from "../component/SubmitComponent";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
-import { CancelComponentProperties } from "../component/CancelComponent";
+import { CancelComponentProps } from "../component/CancelComponent";
 import EweyForm from "../EweyForm";
 import { JsonType } from "json-urley";
 
@@ -18,8 +18,8 @@ export interface OpenApiFormProps {
   onSuccess?: (result: any) => void;
   onError?: (error: any) => void;
   onCancel?: () => void;
-  submitComponent?: FC<SubmitComponentProperties>;
-  cancelComponent?: FC<CancelComponentProperties>;
+  submitComponent?: FC<SubmitComponentProps>;
+  cancelComponent?: FC<CancelComponentProps>;
   displaySummary?: boolean;
 }
 
@@ -63,7 +63,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   return (
     <EweyForm
       schema={operation.paramsSchema}
-      initialValue={initialValue}
+      value={initialValue}
       onSetValue={handleSetValue}
       isLoading={isLoading}
       onSubmit={() => mutate()}

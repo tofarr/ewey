@@ -7,36 +7,43 @@ import { useTranslation } from "react-i18next";
 import EweyFactory from "./eweyFactory/EweyFactory";
 import JsonSchemaFieldFactory from "./JsonSchemaFieldFactory";
 import SubmitComponent, {
-  SubmitComponentProperties,
+  SubmitComponentProps,
 } from "./component/SubmitComponent";
 import { getLabel } from "./label";
 import { JsonType } from "json-urley";
-import CancelComponent, { CancelComponentProperties } from "./component/CancelComponent";
+import CancelComponent, { CancelComponentProps } from "./component/CancelComponent";
 import EweyField from "./eweyField/EweyField";
 import { newCreateDefaultFnForSchema } from "./eweyFactory/ListFactory";
-
-export interface EweyFormProps {
-  schema: AnySchemaObject;
-  initialValue?: JsonType;
-  onSetValue?: (value?: JsonType) => void;
-  isLoading: boolean;
-  onSubmit: (value?: JsonType) => void;
-  onCancel?: () => void;
-  factories?: EweyFactory[];
-  submitComponent?: FC<SubmitComponentProperties>;
-  cancelComponent?: FC<CancelComponentProperties>;
-  labelKey?: string;
-  summary?: string | null;
-}
 
 interface EweyFormState {
   component: EweyField<JsonType>
   validate: ValidateFunction
 }
 
-const EweyForm: FC<EweyFormProps> = ({
+interface EweyFormProps {
+  schema: AnySchemaObject;
+  isLoading: boolean;
+  value?: JsonType;
+  onSetValue?: (value?: JsonType) => void;
+  onSubmit: (value?: JsonType) => void;
+  onCancel?: () => void;
+  factories?: EweyFactory[];
+  submitComponent?: FC<SubmitComponentProps>;
+  cancelComponent?: FC<CancelComponentProps>;
+  labelKey?: string;
+  summary?: string | null;
+}
+
+const EweyForm = (props: EweyFormProps) => {
+  if (typeof props.value === "undefined" && typeof props.onSetValue === "undefined") {
+    return <DisconnectedEweyForm {...props} />
+  }
+  return <EweyFormInternal {...props} />
+};
+
+function DisconnectedEweyForm({
   schema,
-  initialValue,
+  value,
   onSetValue,
   isLoading,
   onSubmit,
@@ -46,11 +53,63 @@ const EweyForm: FC<EweyFormProps> = ({
   cancelComponent,
   labelKey,
   summary,
-}) => {
+}: EweyFormProps) {
+  const [internalValue, setInternalValue] = useState(createDefaultValue());
+
+  function createDefaultValue(): JsonType {
+    if (internalValue) {
+      return internalValue
+    }
+    if (value != null) {
+      return value;
+    }
+    const defaultFactory = newCreateDefaultFnForSchema(schema, schema.components || {});
+    const result = defaultFactory ? defaultFactory() : null;
+    return result;
+  }
+
+  function handleSetValue(newValue?: JsonType){
+    if (newValue == null) {
+      newValue = null;
+    }
+    setInternalValue(newValue);
+    if (onSetValue) {
+      onSetValue(newValue);
+    }
+  }
+
+  return EweyFormInternal({
+    schema,
+    value,
+    onSetValue: handleSetValue,
+    isLoading,
+    onSubmit,
+    onCancel,
+    factories,
+    submitComponent,
+    cancelComponent,
+    labelKey,
+    summary,
+  })
+}
+
+
+function EweyFormInternal({
+  schema,
+  value,
+  onSetValue,
+  isLoading,
+  onSubmit,
+  onCancel,
+  factories,
+  submitComponent,
+  cancelComponent,
+  labelKey,
+  summary,
+}: EweyFormProps) {
   const FormSubmitComponent = submitComponent || SubmitComponent;
   const FormCancelComponent = cancelComponent || CancelComponent;
   const { t } = useTranslation();
-  const [value, setValue] = useState<JsonType | undefined>(initialValue);
   const [formState, setFormState] = useState<EweyFormState | null>(null)
   const valid = formState ? formState.validate(value) : false;
   
@@ -77,13 +136,6 @@ const EweyForm: FC<EweyFormProps> = ({
     }
   }
 
-  function handleSetValue(value?: JsonType) {
-    setValue(value);
-    if (onSetValue) {
-      onSetValue(value);
-    }
-  }
-
   if (!formState) {
     return null;
   }
@@ -102,7 +154,7 @@ const EweyForm: FC<EweyFormProps> = ({
               <Typography variant="body2">{summary}</Typography>
             </Box>
           )}
-          <formState.component value={value} onSetValue={handleSetValue} />
+          <formState.component value={value} onSetValue={onSetValue} />
         </Box>
         {onCancel && (
           <FormCancelComponent onCancel={onCancel} />
@@ -115,6 +167,6 @@ const EweyForm: FC<EweyFormProps> = ({
       </Paper>
     </form>
   );
-};
+}
 
 export default EweyForm;

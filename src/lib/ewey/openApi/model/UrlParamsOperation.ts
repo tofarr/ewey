@@ -107,7 +107,7 @@ export const createParamsSchema = (
     type: "object",
     name: operationSchema.operationId,
     properties: {},
-    additionalProperties: false
+    additionalProps: false
   }
   for (const param of operationSchema.parameters || []) {
     appendParam(param, schema)
@@ -140,7 +140,7 @@ const appendParam = (
           type: "object",
           name: key,
           properties: {},
-          additionalProperties: false
+          additionalProps: false
         }
       }
       schema = schema.properties[key]

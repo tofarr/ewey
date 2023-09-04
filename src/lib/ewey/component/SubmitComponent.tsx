@@ -4,13 +4,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Box from "@mui/material/Box";
 
-export interface SubmitComponentProperties {
+export interface SubmitComponentProps {
   valid: boolean;
   submitting: boolean;
   onSubmit: () => void;
 }
 
-const SubmitComponent: FC<SubmitComponentProperties> = ({
+const SubmitComponent: FC<SubmitComponentProps> = ({
   valid,
   submitting,
   onSubmit,

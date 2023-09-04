@@ -2,19 +2,19 @@ import { FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import OpenApiSchema from "./model/OpenApiSchema";
 import ErrorComponent, {
-  ErrorComponentProperties,
+  ErrorComponentProps,
 } from "../component/ErrorComponent";
 import LoadingComponent from "../component/LoadingComponent";
 
-export interface OpenApiSchemaLoaderChildProperties {
+export interface OpenApiSchemaLoaderChildProps {
   schema: OpenApiSchema;
 }
 
-export interface OpenApiSchemaLoaderProperties {
+export interface OpenApiSchemaLoaderProps {
   url: string;
-  children: FC<OpenApiSchemaLoaderChildProperties>;
+  children: FC<OpenApiSchemaLoaderChildProps>;
   loadingComponent?: FC;
-  errorComponent?: FC<ErrorComponentProperties>;
+  errorComponent?: FC<ErrorComponentProps>;
 }
 
 export const sanitizeOpenApiSchema = (schema: OpenApiSchema, url: string) => {
@@ -36,7 +36,7 @@ export const sanitizeOpenApiSchema = (schema: OpenApiSchema, url: string) => {
   return schema;
 };
 
-const OpenApiSchemaLoader: FC<OpenApiSchemaLoaderProperties> = ({
+const OpenApiSchemaLoader: FC<OpenApiSchemaLoaderProps> = ({
   url,
   children,
   loadingComponent,
@@ -54,7 +54,7 @@ const OpenApiSchemaLoader: FC<OpenApiSchemaLoaderProperties> = ({
   });
 
   if (error) {
-    return (errorComponent as FC<ErrorComponentProperties>)({});
+    return (errorComponent as FC<ErrorComponentProps>)({});
   }
   if (data) {
     const sanitized = sanitizeOpenApiSchema(data, url);

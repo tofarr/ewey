@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import EweyFactory from "../eweyFactory/EweyFactory";
 import LoadingComponent from "../component/LoadingComponent";
 import ErrorComponent, {
-  ErrorComponentProperties,
+  ErrorComponentProps,
 } from "../component/ErrorComponent";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { useOpenApi } from "./OpenApiProvider";
@@ -17,7 +17,7 @@ export interface OpenApiQueryProps {
   onSuccess?: (result: any) => void;
   onError?: (error: any) => void;
   ResultsLoadingComponent?: FC;
-  ResultsErrorComponent?: FC<ErrorComponentProperties>;
+  ResultsErrorComponent?: FC<ErrorComponentProps>;
 }
 
 const OpenApiQuery: FC<OpenApiQueryProps> = ({

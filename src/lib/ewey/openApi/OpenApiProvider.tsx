@@ -3,18 +3,18 @@ import { FC, ReactElement } from "react";
 import OpenApiSchema from "./model/OpenApiSchema";
 import { OpenApi, createOpenApi } from "./model/OpenApi";
 import OpenApiSchemaLoader from "./OpenApiSchemaLoader";
-import { ErrorComponentProperties } from "../component/ErrorComponent";
+import { ErrorComponentProps } from "../component/ErrorComponent";
 
 export const OpenApiContext = createContext<OpenApiSchema>(null);
 
-export interface OpenApiProviderProperties {
+export interface OpenApiProviderProps {
   url: string;
   children: ReactElement | ReactElement[];
   loadingComponent?: FC;
-  errorComponent?: FC<ErrorComponentProperties>;
+  errorComponent?: FC<ErrorComponentProps>;
 }
 
-const OpenApiProvider: FC<OpenApiProviderProperties> = ({
+const OpenApiProvider: FC<OpenApiProviderProps> = ({
   url,
   children,
   loadingComponent,
