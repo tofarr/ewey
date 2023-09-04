@@ -10,7 +10,7 @@ import SubmitComponent, {
   SubmitComponentProps,
 } from "./component/SubmitComponent";
 import { getLabel } from "./label";
-import { JsonType } from "json-urley";
+import JsonType from "./eweyField/JsonType";
 import CancelComponent, { CancelComponentProps } from "./component/CancelComponent";
 import EweyField from "./eweyField/EweyField";
 import { newCreateDefaultFnForSchema } from "./eweyFactory/ListFactory";

@@ -9,7 +9,7 @@ import {
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { CancelComponentProps } from "../component/CancelComponent";
 import EweyForm from "../EweyForm";
-import { JsonType } from "json-urley";
+import JsonType from "../eweyField/JsonType";
 import { newCreateDefaultFnForSchema } from "../eweyFactory/ListFactory";
 import { JsonObjectType } from "../eweyField/JsonType";
 

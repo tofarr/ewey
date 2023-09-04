@@ -7,10 +7,11 @@ import {
   RouterProvider,
   Routes,
 } from "react-router-dom";
-import { MessageDisplayProvider, openApiSummaryRoute } from "./lib/ewey";
+import { MessageDisplayProvider } from "./lib/ewey";
 import OAuthBearerTokenProvider, {
   Storage,
 } from "./lib/ewey/oauth/OAuthBearerTokenProvider";
+import { crudSummaryRoute } from "./lib/ewey/crud/CrudSummary";
 
 const queryClient = new QueryClient();
 const OPEN_API_URL = "http://localhost:8000/openapi.json";
@@ -33,7 +34,7 @@ const theme = createTheme({
 function Root() {
   return (
     <Routes>
-      {openApiSummaryRoute("api", OPEN_API_URL)}
+      {crudSummaryRoute("api", OPEN_API_URL)}
       <Route path="/" element={<Navigate to="api" />} />
       <Route path="*" element={<Navigate to="api" />} />
     </Routes>

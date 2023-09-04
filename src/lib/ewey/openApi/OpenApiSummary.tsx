@@ -18,23 +18,19 @@ import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
-import Paper from "@mui/material/Paper";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
 import { Link, Navigate, Route, useParams } from "react-router-dom";
 import OAuthLoginForm from "../oauth/OAuthLoginForm";
-import { useMessageBroker } from "../message/MessageBrokerContext";
 import { OpenApiOperation } from "./model/OpenApiOperation";
 import { useOpenApi } from "./OpenApiProvider";
-import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
+import { BearerToken, useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import EweyFactory from "../eweyFactory/EweyFactory";
-import { AnySchemaObject } from "../schemaCompiler";
-import OpenApiContent from "./OpenApiContent";
-import OpenApiForm from "./OpenApiForm";
 import OpenApiProvider from "./OpenApiProvider";
-import OpenApiQuery from "./OpenApiQuery";
 import { getLabel } from "../label";
+import OpenApiOperationForm from "./OpenApiOperationForm";
+import { OpenApi } from "./model/OpenApi";
 
 export const openApiSummaryRoute = (prefix: string, url: string) => {
   return (
@@ -49,21 +45,35 @@ export const openApiSummaryRoute = (prefix: string, url: string) => {
   );
 };
 
-export interface OpenApiSummaryProps {
-  factories?: EweyFactory[];
+export interface SummaryOperation {
+  key: string
+  icon: () => ReactElement
+  disabled: boolean
+  component: () => ReactElement
+  categoryKey?: string
 }
 
-const OpenApiSummary = ({ factories }: OpenApiSummaryProps) => {
+export interface OpenApiSummaryProps {
+  factories?: EweyFactory[];
+  operationFactory?: (openApi: OpenApi, token?: BearerToken, factories?: EweyFactory[]) => SummaryOperation[]
+}
+
+const OpenApiSummary = ({ factories, operationFactory }: OpenApiSummaryProps) => {
   const openApi = useOpenApi();
+  const token = useOAuthBearerToken();
+  if (!operationFactory) {
+    operationFactory = defaultOperationFactory
+  }
+  const operations = operationFactory(openApi, token, factories)
   const { op } = useParams();
   if (!op) {
-    return <Navigate to={openApi.operations[0].operationId} />;
+    return <Navigate to={operations[0].key} />;
   }
-  const operation = openApi.operations.find((o) => o.operationId === op);
+  const operation = operations.find(o => o.key === op)
   return (
-    <SummaryLayout>
+    <SummaryLayout operations={operations} op={op}>
       {operation ? (
-        <OperationElement factories={factories} {...operation} />
+        operation.component()
       ) : (
         <RouteError message="not_found" />
       )}
@@ -71,11 +81,28 @@ const OpenApiSummary = ({ factories }: OpenApiSummaryProps) => {
   );
 };
 
-interface SummaryLayoutProps {
+export function defaultOperationFactory(openApi: OpenApi, token?: BearerToken, factories?: EweyFactory[]): SummaryOperation[] {
+  return openApi.operations.map(operation => summaryOperation(operation, token, factories))
+}
+
+export function summaryOperation(operation: OpenApiOperation, token?: BearerToken, factories?: EweyFactory[]): SummaryOperation {
+  return {
+    key: operation.operationId,
+    icon: () => operation.requiresAuth ? <LockIcon /> : <PlayArrowIcon />,
+    disabled: operation.requiresAuth && !token?.token,
+    component: () => (
+      <OpenApiOperationForm factories={factories} {...operation} />
+    )
+  }
+}
+
+export interface SummaryLayoutProps {
+  operations: SummaryOperation[]
+  op: string
   children: ReactElement | ReactElement[];
 }
 
-const SummaryLayout: FC<SummaryLayoutProps> = ({ children }) => {
+const SummaryLayout: FC<SummaryLayoutProps> = ({ operations, op, children }) => {
   const { t } = useTranslation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
@@ -91,24 +118,20 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ children }) => {
     token.setToken("");
   }
 
-  function renderOperationMenuItem({
-    operationId,
-    requiresAuth,
-  }: OpenApiOperation) {
-    const disabled = requiresAuth && !token.token;
+  function renderOperationMenuItem({ key, disabled, icon }: SummaryOperation) {
     let menuItem = (
-      <MenuItem key={operationId} disabled={disabled}>
+      <MenuItem key={key} disabled={disabled}>
         <ListItemIcon>
-          {requiresAuth ? <LockIcon /> : <PlayArrowIcon />}
+          {icon()}
         </ListItemIcon>
-        <ListItemText primary={getLabel(operationId, t)} />
+        <ListItemText primary={getLabel(key, t)} />
       </MenuItem>
     );
 
     return (
       <Link
-        key={operationId}
-        to={`../${operationId}`}
+        key={key}
+        to={`../${key}`}
         relative="path"
         style={{ color: "inherit", textDecoration: "inherit" }}
         onClick={() => setDrawerOpen(false)}
@@ -156,7 +179,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ children }) => {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       >
-        {openApi.operations.map(renderOperationMenuItem)}
+        {operations.map(renderOperationMenuItem)}
       </Drawer>
       {openApi.loginUrl && (
         <Dialog
@@ -184,103 +207,6 @@ interface RouteErrorProps {
 const RouteError = ({ message }: RouteErrorProps) => {
   const { t } = useTranslation();
   return <Alert severity="error">{getLabel(message, t)}</Alert>;
-};
-
-export interface OperationElementProps {
-  operationId: string;
-  requiresAuth: boolean;
-  paramsSchema: AnySchemaObject;
-  factories?: EweyFactory[];
-}
-
-const OperationElement = ({
-  operationId,
-  requiresAuth,
-  paramsSchema,
-  factories,
-}: OperationElementProps) => {
-  const { t } = useTranslation();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [result, setResult] = useState(null);
-  const token = useOAuthBearerToken();
-  const messageBroker = useMessageBroker();
-  const queryClient = useQueryClient();
-
-  function renderAuth() {
-    return <RouteError message="login_to_continue" />;
-  }
-
-  function renderForm() {
-    return (
-      <Fragment>
-        <OpenApiForm
-          key={operationId}
-          operationId={operationId}
-          displaySummary
-          onSuccess={(r) => {
-            setResult(r);
-            setDialogOpen(true);
-          }}
-          onError={(error) => messageBroker.triggerError(error)}
-        />
-        <Dialog
-          open={dialogOpen}
-          onClose={() => setDialogOpen(false)}
-          fullWidth
-          maxWidth="lg"
-        >
-          <DialogContent>
-            <Box pb={2}>
-              <Typography variant="h4">
-                {getLabel(operationId, t)}
-              </Typography>
-            </Box>
-            <OpenApiContent
-              operationId={operationId}
-              value={result}
-              factories={factories}
-            />
-          </DialogContent>
-        </Dialog>
-      </Fragment>
-    );
-  }
-
-  function handleRefresh() {
-    queryClient.invalidateQueries([operationId], { exact: true });
-  }
-
-  function renderResults() {
-    return (
-      <Paper>
-        <Box padding={2}>
-          <Box pb={2}>
-            <Grid container>
-              <Grid item xs>
-                <Typography variant="h4">{getLabel(operationId, t)}</Typography>
-              </Grid>
-              <Grid>
-                <Button onClick={handleRefresh}>
-                  <RefreshIcon />
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-          <OpenApiQuery operationId={operationId} />
-        </Box>
-      </Paper>
-    );
-  }
-
-  if (requiresAuth && !token.token) {
-    return renderAuth();
-  }
-
-  if (!Object.keys(paramsSchema.properties).length) {
-    return renderResults();
-  }
-
-  return renderForm();
 };
 
 export default OpenApiSummary;

@@ -3,7 +3,7 @@ import {
   AnySchemaObject,
   ValidateFunction,
 } from "../../schemaCompiler";
-import { JsonType } from "json-urley";
+import JsonType from "../../eweyField/JsonType";
 import { createUrl } from "./OpenApi";
 import OpenApiHeaders from "./OpenApiHeaders";
 import OpenApiOperationSchema from "./OpenApiOperationSchema";

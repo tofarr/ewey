@@ -3,7 +3,7 @@ import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { ComponentSchemas, resolveRef } from "../ComponentSchemas";
-import { JsonType } from "json-urley";
+import JsonType from "../eweyField/JsonType";
 
 class ListFactory implements EweyFactory {
   priority: number = 100;
