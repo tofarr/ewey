@@ -1,35 +1,26 @@
-import Grid from "@mui/material/Grid"
+import { useState } from "react"
+import Box from "@mui/material/Box"
+import CrudHeader from "./CrudHeader"
+import Paper from "@mui/material/Paper"
+import OpenApiQuery from "../openApi/OpenApiQuery"
+import { JsonObjType } from "json-urley"
+import { CrudParams } from "./CrudParams"
 
 export interface CrudSearchProps {
-  store: string
+  store: string,
+  limit?: number
 }
 
-const CrudSearch = ({ store }: CrudSearchProps) => {
-
-  function renderHeader() {
-    return (
-      <div>Header</div>
-    )
-  }
-
-  function renderResults() {
-    return (
-      <div>Results</div>
-    )
-  }
-
-  function renderFooter() {
-    return (
-      <div>Footer</div>
-    )
-  }
+const CrudSearch = ({ store, limit }: CrudSearchProps) => {
+  const [params, setParams] = useState<CrudParams>({limit: limit || 5})
 
   return (
-    <Grid container>
-      <Grid item>{renderHeader()}</Grid>
-      <Grid item>{renderResults()}</Grid>
-      <Grid item>{renderFooter()}</Grid>
-    </Grid>
+    <Paper>
+      <Box padding={1}>
+        <CrudHeader key="header" store={store} params={params} onSetParams={setParams} />
+        <OpenApiQuery operationId={`${store}_search`} params={params} />
+      </Box>
+    </Paper>
   )
 }
 

@@ -5,37 +5,38 @@ import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectProps, SelectChangeEvent } from "@mui/material/Select";
 
-const PAGE_SIZES = [5, 10, 20, 50, 100]
+const LIMITS = [5, 10, 20, 50, 100]
 
 export interface CrudPaginatorProps {
-  pageKey: string | null;
-  nextPageKey: string | null;
+  pageKey?: string | null;
+  nextPageKey?: string | null;
   onSetPageKey: (pageKey: string | null) => void;
-  pageSizes?: number[];
-  pageSize: number;
-  onSetPageSize: (pageSize: number) => void;
+  limits?: number[];
+  limit?: number | null;
+  onSetLimit: (limit: number) => void;
 }
 
 const CrudPaginator = ({
   pageKey,
   nextPageKey,
   onSetPageKey,
-  pageSizes,
-  pageSize,
-  onSetPageSize,
+  limits,
+  limit,
+  onSetLimit,
 }: CrudPaginatorProps) => {
-  if (!pageSizes) {
-    pageSizes = PAGE_SIZES;
+  if (!limits) {
+    limits = LIMITS;
   }
-  if (!pageSize) {
-    pageSize = PAGE_SIZES[0];
+  if (!limit) {
+    limit = LIMITS[0];
   }
 
   return (
-    <Grid container>
+    <Grid container alignItems="center" spacing={1}>
       <Grid item>
         <Button
-          disabled={!!pageKey}
+          disabled={!pageKey}
+          variant="outlined"
           onClick={() => onSetPageKey(null)}
         >
           <KeyboardDoubleArrowLeftIcon />
@@ -43,18 +44,19 @@ const CrudPaginator = ({
       </Grid>
       <Grid item>
         <Select 
-          value={pageSize.toString()} 
-          onChange={(event: SelectChangeEvent) => onSetPageSize(parseInt(event.target.value))}
+          value={limit.toString()} 
+          onChange={(event: SelectChangeEvent) => onSetLimit(parseInt(event.target.value))}
         >
-          {pageSizes.map(p => <MenuItem key={p} value={p}>{p}</MenuItem>)}
+          {limits.map(p => <MenuItem key={p} value={p}>{p}</MenuItem>)}
         </Select>
       </Grid>
       <Grid item>
         <Button
-          disabled={!!nextPageKey}
-          onClick={() => onSetPageKey(nextPageKey)}
+          disabled={!nextPageKey}
+          variant="outlined"
+          onClick={() => onSetPageKey(nextPageKey as string)}
         >
-          <KeyboardDoubleArrowLeftIcon />
+          <KeyboardArrowRightIcon />
         </Button>
       </Grid>
     </Grid>

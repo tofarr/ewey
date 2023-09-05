@@ -31,6 +31,7 @@ import OpenApiProvider from "./OpenApiProvider";
 import { getLabel } from "../label";
 import OpenApiOperationForm from "./OpenApiOperationForm";
 import { OpenApi } from "./model/OpenApi";
+import Paper from "@mui/material/Paper";
 
 export const openApiSummaryRoute = (prefix: string, url: string) => {
   return (
@@ -195,7 +196,11 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations, op, children }) => 
           </DialogContent>
         </Dialog>
       )}
-      {children}
+      <Box pt={1} pb={1}>
+        <Paper>
+          {children}
+        </Paper>
+      </Box>
     </Fragment>
   );
 };

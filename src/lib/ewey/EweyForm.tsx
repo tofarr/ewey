@@ -1,7 +1,6 @@
 import { FC, FormEvent, useEffect, useState } from "react";
 import { AnySchemaObject, ValidateFunction, schemaCompiler } from "./schemaCompiler";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
 import EweyFactory from "./eweyFactory/EweyFactory";
@@ -22,7 +21,7 @@ interface EweyFormState {
 
 interface EweyFormProps {
   schema: AnySchemaObject;
-  isLoading: boolean;
+  isLoading?: boolean;
   value?: JsonType;
   onSetValue?: (value: JsonType) => void;
   onSubmit: (value: JsonType) => void;
@@ -141,29 +140,27 @@ function EweyFormInternal({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Paper>
-        <Box padding={2} marginBottom={2}>
-          {labelKey && (
-            <Typography variant="h4">
-              {getLabel(labelKey, t)}
-            </Typography>
-          )}
-          {summary && (
-            <Box pt={1} pb={1}>
-              <Typography variant="body2">{summary}</Typography>
-            </Box>
-          )}
-          <formState.component value={value == null ? null : value} onSetValue={onSetValue} />
-        </Box>
-        {onCancel && (
-          <FormCancelComponent onCancel={onCancel} />
+      <Box padding={2} marginBottom={2}>
+        {labelKey && (
+          <Typography variant="h4">
+            {getLabel(labelKey, t)}
+          </Typography>
         )}
-        <FormSubmitComponent
-          submitting={isLoading}
-          valid={formState.validate(value)}
-          onSubmit={() => onSubmit(value == null ? null : value)}
-        />
-      </Paper>
+        {summary && (
+          <Box pt={1} pb={1}>
+            <Typography variant="body2">{summary}</Typography>
+          </Box>
+        )}
+        <formState.component value={value == null ? null : value} onSetValue={onSetValue} />
+      </Box>
+      {onCancel && (
+        <FormCancelComponent onCancel={onCancel} />
+      )}
+      <FormSubmitComponent
+        submitting={!!isLoading}
+        valid={formState.validate(value)}
+        onSubmit={() => onSubmit(value == null ? null : value)}
+      />
     </form>
   );
 }

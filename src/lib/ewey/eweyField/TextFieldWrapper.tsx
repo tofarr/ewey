@@ -17,7 +17,6 @@ const TextFieldWrapper = (
     const validationResult = validate(value);
     const autoFocus = useIsAutoFocused(path);
     if (onSetValue) {
-      console.log(autoFocus)
       return (
         <TextField
           error={!validationResult}

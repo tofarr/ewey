@@ -53,7 +53,7 @@ export function crudSummaryFactory(openApi: OpenApi, token?: BearerToken, factor
       key: store,
       icon: () => <StorageIcon />,
       disabled: false,
-      component: () => (<CrudSearch store={store} />),
+      component: () => ( <CrudSearch store={store} /> ),
       categoryKey: 'stores'
     })
   }

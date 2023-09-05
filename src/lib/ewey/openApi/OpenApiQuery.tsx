@@ -43,7 +43,7 @@ const OpenApiQuery: FC<OpenApiQueryProps> = ({
     error,
     data: value,
   } = useQuery({
-    queryKey: [operation.operationId],
+    queryKey: [operation.operationId, params, headers],
     queryFn: () => operation.invoke(params, headers),
   });
 

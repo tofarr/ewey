@@ -8,23 +8,32 @@ import { CrudParams } from "./CrudParams";
 import { useQuery } from "@tanstack/react-query";
 import { headersFromToken } from "../openApi/OpenApiForm";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
-import JsonType from "../eweyField/JsonType";
+import JsonType, { JsonObjectType } from "../eweyField/JsonType";
+import { useOpenApi } from "../openApi/OpenApiProvider";
 
 export interface CrudCountProps {
-  operation: OpenApiOperation
+  store: string
   params: CrudParams
 }
 
-const CrudCount = ({ operation, params }: CrudCountProps) => {
+const CrudCount = ({ store, params }: CrudCountProps) => {
   const { t } = useTranslation();
   const headers = headersFromToken(useOAuthBearerToken()?.token);
+  const openApi = useOpenApi();
+  const operation = openApi.getOperation(`${store}_count`)
   const {
     isLoading,
     error,
     data: count,
   } = useQuery({
-    queryKey: [operation.operationId],
-    queryFn: () => operation.invoke(params as JsonType, headers),
+    queryKey: [operation.operationId, params],
+    queryFn: () => {
+      const countParams: JsonObjectType = {}
+      if (params.search_filter) {
+        countParams.search_filter = params.search_filter
+      }
+      return operation.invoke(countParams, headers)
+    },
   });
 
   function renderLabel() {
