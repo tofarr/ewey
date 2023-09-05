@@ -1,8 +1,6 @@
 import { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import { useOpenApi } from "./OpenApiProvider";
-import EweyFactory from "../eweyFactory/EweyFactory";
 import {
   SubmitComponentProps,
 } from "../component/SubmitComponent";
@@ -15,7 +13,6 @@ import { JsonObjectType } from "../eweyField/JsonType";
 
 export interface OpenApiFormProps {
   operationId: string;
-  factories?: EweyFactory[];
   value?: JsonType;
   onSetValue?: (value: JsonType) => void;
   onSuccess?: (result: any) => void;
@@ -28,7 +25,6 @@ export interface OpenApiFormProps {
 
 const OpenApiForm: FC<OpenApiFormProps> = ({
   operationId,
-  factories,
   value,
   onSetValue,
   onSuccess,
@@ -38,7 +34,6 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   cancelComponent,
   displaySummary,
 }) => {
-  const { t } = useTranslation();
   const openApi = useOpenApi();
   const operation = openApi.getOperation(operationId);
   const headers = headersFromToken(useOAuthBearerToken()?.token);
@@ -89,7 +84,6 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
       isLoading={isLoading}
       onSubmit={() => mutate()}
       onCancel={onCancel}
-      factories={factories}
       submitComponent={submitComponent}
       cancelComponent={cancelComponent}
       labelKey={operationId}

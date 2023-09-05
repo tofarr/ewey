@@ -70,7 +70,6 @@ class FieldSetFactory implements EweyFactory {
     const alwaysFullWidth = hasComplexChildren(schema, components)
 
     const fieldSetComponent = FieldSetWrapper(
-      schema.name,
       fieldsByKey,
       alwaysFullWidth,
       labelFields,
@@ -114,7 +113,7 @@ export const isComplex = (schema: AnySchemaObject, components: ComponentSchemas)
     }
     return false
   }
-  if (schema.type == "object" && Object.keys(schema.properties).length === 1) {
+  if (schema.type === "object" && Object.keys(schema.properties).length === 1) {
     return isComplex(schema.properties[Object.keys(schema.properties)[0]], components)
   }
   return true

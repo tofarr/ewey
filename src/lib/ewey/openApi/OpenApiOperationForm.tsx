@@ -17,7 +17,7 @@ import { useMessageBroker } from "../message/MessageBrokerContext";
 import OpenApiForm from "./OpenApiForm";
 import { getLabel } from "../label";
 import OpenApiContent from "./OpenApiContent";
-import OpenApiQuery from "./OpenApiQuery";
+import OpenApiQueryContent from "./OpenApiQueryContent";
 
 
 export interface OpenApiOperationFormProps {
@@ -100,7 +100,7 @@ export const OpenApiOperationForm = ({
               </Grid>
             </Grid>
           </Box>
-          <OpenApiQuery operationId={operationId} />
+          <OpenApiQueryContent operationId={operationId} />
         </Box>
       </Paper>
     );

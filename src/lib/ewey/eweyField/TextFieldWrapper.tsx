@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import EweyField from "./EweyField";
-import { useIsAutoFocused } from "../AutoFocusProvider";
+import { useIsAutoFocused } from "../providers/AutoFocusProvider";
 
 const TextFieldWrapper = (
   validate: ValidateFunction<string>,

@@ -3,13 +3,13 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
-import { EweyLayoutHint, EweyLayoutHintProvider } from "../EweyLayoutHint";
+import { EweyLayoutHint, EweyLayoutHintProvider } from "../providers/EweyLayoutHint";
 import {
   OAuthBearerTokenContext,
   BearerToken,
 } from "./OAuthBearerTokenProvider";
 import { useMessageBroker } from "../message/MessageBrokerContext";
-import AutoFocusProvider from "../AutoFocusProvider";
+import AutoFocusProvider from "../providers/AutoFocusProvider";
 
 interface OAuthLoginFormProps {
   url: string;

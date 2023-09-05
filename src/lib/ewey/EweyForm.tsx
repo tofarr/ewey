@@ -3,7 +3,6 @@ import { AnySchemaObject, ValidateFunction, schemaCompiler } from "./schemaCompi
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
-import EweyFactory from "./eweyFactory/EweyFactory";
 import JsonSchemaFieldFactory from "./JsonSchemaFieldFactory";
 import SubmitComponent, {
   SubmitComponentProps,
@@ -13,6 +12,7 @@ import JsonType from "./eweyField/JsonType";
 import CancelComponent, { CancelComponentProps } from "./component/CancelComponent";
 import EweyField from "./eweyField/EweyField";
 import { newCreateDefaultFnForSchema } from "./eweyFactory/ListFactory";
+import { useEweyFactories } from "./providers/EweyFactoryProvider";
 
 interface EweyFormState {
   component: EweyField<JsonType>
@@ -26,7 +26,6 @@ interface EweyFormProps {
   onSetValue?: (value: JsonType) => void;
   onSubmit: (value: JsonType) => void;
   onCancel?: () => void;
-  factories?: EweyFactory[];
   submitComponent?: FC<SubmitComponentProps>;
   cancelComponent?: FC<CancelComponentProps>;
   labelKey?: string;
@@ -47,7 +46,6 @@ function DisconnectedEweyForm({
   isLoading,
   onSubmit,
   onCancel,
-  factories,
   submitComponent,
   cancelComponent,
   labelKey,
@@ -84,7 +82,6 @@ function DisconnectedEweyForm({
     isLoading,
     onSubmit,
     onCancel,
-    factories,
     submitComponent,
     cancelComponent,
     labelKey,
@@ -99,7 +96,6 @@ function EweyFormInternal({
   isLoading,
   onSubmit,
   onCancel,
-  factories,
   submitComponent,
   cancelComponent,
   labelKey,
@@ -110,6 +106,7 @@ function EweyFormInternal({
   const { t } = useTranslation();
   const [formState, setFormState] = useState<EweyFormState | null>(null)
   const valid = formState ? formState.validate(value) : false;
+  const factories = useEweyFactories()
   
   useEffect(() => {
     const newFormState = {

@@ -4,15 +4,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import { useEweyLayoutHint } from "../EweyLayoutHint";
+import { useEweyLayoutHint } from "../providers/EweyLayoutHint";
 import EweyField from "./EweyField";
 import { getLabel } from "../label";
 
 const FieldSetWrapper = (
-  name: string,
   fieldsByKey: any,
   alwaysFullWidth: boolean,
   labelFields: string[],

@@ -1,34 +1,24 @@
-import { FC } from "react";
+import { ReactElement } from "react";
 import { useQuery } from "@tanstack/react-query";
-import EweyFactory from "../eweyFactory/EweyFactory";
 import LoadingComponent from "../component/LoadingComponent";
-import ErrorComponent, {
-  ErrorComponentProps,
-} from "../component/ErrorComponent";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { useOpenApi } from "./OpenApiProvider";
-import OpenApiContent from "./OpenApiContent";
 import { headersFromToken } from "./OpenApiForm";
+import { OpenApiQueryContentProps } from "./OpenApiQueryContent";
+import JsonType from "../eweyField/JsonType";
+import ErrorComponent from "../component/ErrorComponent";
 
-export interface OpenApiQueryProps {
-  operationId: string;
-  factories?: EweyFactory[];
-  params?: any;
-  onSuccess?: (result: any) => void;
-  onError?: (error: any) => void;
-  ResultsLoadingComponent?: FC;
-  ResultsErrorComponent?: FC<ErrorComponentProps>;
+export interface OpenApiQueryProps extends OpenApiQueryContentProps {
+  children: (value: JsonType) => ReactElement
 }
 
-const OpenApiQuery: FC<OpenApiQueryProps> = ({
+const OpenApiQuery = ({
   operationId,
-  factories,
   params,
-  onSuccess,
-  onError,
   ResultsLoadingComponent,
   ResultsErrorComponent,
-}) => {
+  children,
+}: OpenApiQueryProps) => {
   if (!ResultsLoadingComponent) {
     ResultsLoadingComponent = LoadingComponent;
   }
@@ -55,13 +45,7 @@ const OpenApiQuery: FC<OpenApiQueryProps> = ({
     return <ResultsErrorComponent />;
   }
 
-  return (
-    <OpenApiContent
-      operationId={operationId}
-      factories={factories}
-      value={value}
-    />
-  );
+  return children(value as JsonType)
 };
 
 export default OpenApiQuery;

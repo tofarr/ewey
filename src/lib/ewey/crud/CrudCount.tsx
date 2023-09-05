@@ -2,13 +2,12 @@ import Typography from "@mui/material/Typography";
 import ErrorIcon from "@mui/icons-material/Error";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
-import { getLabel, keyToLabel } from "../label";
-import { OpenApiOperation } from "../openApi/model/OpenApiOperation";
+import { getLabel } from "../label";
 import { CrudParams } from "./CrudParams";
 import { useQuery } from "@tanstack/react-query";
 import { headersFromToken } from "../openApi/OpenApiForm";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
-import JsonType, { JsonObjectType } from "../eweyField/JsonType";
+import { JsonObjectType } from "../eweyField/JsonType";
 import { useOpenApi } from "../openApi/OpenApiProvider";
 
 export interface CrudCountProps {
