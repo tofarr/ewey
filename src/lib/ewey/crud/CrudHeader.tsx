@@ -12,7 +12,6 @@ export interface CrudHeaderProps {
 }
 
 const CrudHeader = ({ store, nextPageKey, params, onSetParams }: CrudHeaderProps) => {
-  console.log("TRACE:CrudHeader")
 
   function handleSetPageKey(pageKey: string | null) {
     const newParams = { ...params }
