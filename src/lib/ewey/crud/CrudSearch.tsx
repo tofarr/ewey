@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import Box from "@mui/material/Box"
 import CrudHeader from "./CrudHeader"
@@ -12,7 +12,8 @@ import { ComponentSchemas } from "../ComponentSchemas"
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory"
 import FieldSetWrapper from "../eweyField/FieldSetWrapper"
 import { EweyFactoryProvider, useEweyFactories } from "../providers/EweyFactoryProvider"
-import OpenApiQueryContent from "../openApi/OpenApiQueryContent"
+import OpenApiQuery from "../openApi/OpenApiQuery"
+import OpenApiContent from "../openApi/OpenApiContent"
 
 export interface CrudSearchProps {
   store: string,
@@ -21,7 +22,13 @@ export interface CrudSearchProps {
 
 const CrudSearch = ({ store, limit }: CrudSearchProps) => {
   const [queryParams, setQueryParams] = useSearchParams();
-  const [params, setParams] = useState<CrudParams>(queryParamsToJsonObj(queryParams))
+  const [params, setParams] = useState<CrudParams>(() => {
+    const initialParams: JsonObjectType = queryParamsToJsonObj(queryParams)
+    if (initialParams.limit == null) {
+      initialParams.limit = limit || 5
+    }
+    return initialParams
+  })
   const factories = useEweyFactories()
 
   function handleSetParams(newParams: CrudParams){
@@ -33,9 +40,20 @@ const CrudSearch = ({ store, limit }: CrudSearchProps) => {
   return (
     <Paper>
       <Box padding={1}>
-        <CrudHeader key="header" store={store} params={params} onSetParams={handleSetParams} />
         <EweyFactoryProvider factories={[...factories,  new ResultSetFactory()]}>
-          <OpenApiQueryContent operationId={`${store}_search`} params={params} />
+          <OpenApiQuery operationId={`${store}_search`} params={params}>
+            {(resultSet) => (
+              <Fragment>
+                <CrudHeader 
+                  store={store} 
+                  params={params} 
+                  onSetParams={handleSetParams} 
+                  nextPageKey={(resultSet as JsonObjectType).next_page_key as string}
+                />
+                <OpenApiContent operationId={`${store}_search`} value={resultSet} />
+              </Fragment>
+            )}
+          </OpenApiQuery>
         </EweyFactoryProvider>
       </Box>
     </Paper>

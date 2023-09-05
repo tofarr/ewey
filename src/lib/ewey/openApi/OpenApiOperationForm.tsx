@@ -10,7 +10,6 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
-import EweyFactory from "../eweyFactory/EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { useMessageBroker } from "../message/MessageBrokerContext";
@@ -24,14 +23,12 @@ export interface OpenApiOperationFormProps {
   operationId: string;
   requiresAuth: boolean;
   paramsSchema: AnySchemaObject;
-  factories?: EweyFactory[];
 }
 
 export const OpenApiOperationForm = ({
   operationId,
   requiresAuth,
   paramsSchema,
-  factories,
 }: OpenApiOperationFormProps) => {
   const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -69,11 +66,7 @@ export const OpenApiOperationForm = ({
                 {getLabel(operationId, t)}
               </Typography>
             </Box>
-            <OpenApiContent
-              operationId={operationId}
-              value={result}
-              factories={factories}
-            />
+            <OpenApiContent operationId={operationId} value={result} />
           </DialogContent>
         </Dialog>
       </Fragment>

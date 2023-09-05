@@ -24,7 +24,9 @@ const CrudHeader = ({ store, nextPageKey, params, onSetParams }: CrudHeaderProps
   }
 
   function handleSetLimit(limit: number) {
-    onSetParams({ ...params, limit })
+    const newParams = { ...params, limit }
+    delete newParams.page_key
+    onSetParams(newParams)
   }
 
   return (

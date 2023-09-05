@@ -4,7 +4,6 @@ import OpenApiProvider from "../openApi/OpenApiProvider";
 import OpenApiSummary, { SummaryOperation, summaryOperation } from "../openApi/OpenApiSummary";
 import { OpenApi } from "../openApi/model/OpenApi";
 import { BearerToken } from "../oauth/OAuthBearerTokenProvider";
-import EweyFactory from "../eweyFactory/EweyFactory";
 import CrudSearch from './CrudSearch';
 
 const OPERATIONS = ['create', 'read', 'update', 'delete', 'search', 'count', "read_batch", "edit_batch"]
@@ -22,7 +21,7 @@ export const crudSummaryRoute = (prefix: string, url: string) => {
   );
 };
 
-export function crudSummaryFactory(openApi: OpenApi, token?: BearerToken, factories?: EweyFactory[]): SummaryOperation[] {
+export function crudSummaryFactory(openApi: OpenApi, token?: BearerToken): SummaryOperation[] {
   const operationsById: any = {}
   const stores: string[] = []
   for (const operation of openApi.operations) {
@@ -43,7 +42,7 @@ export function crudSummaryFactory(openApi: OpenApi, token?: BearerToken, factor
   
   const result = Object.keys(nonStoreOperations).map(key => {
     const operation = nonStoreOperations[key]
-    const op = summaryOperation(operation, token, factories)
+    const op = summaryOperation(operation, token)
     op.categoryKey = "operations"
     return op
   })

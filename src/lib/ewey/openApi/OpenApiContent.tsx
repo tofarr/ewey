@@ -1,22 +1,21 @@
 import { FC, useEffect, useState } from "react";
-import EweyFactory from "../eweyFactory/EweyFactory";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { useOpenApi } from "./OpenApiProvider";
+import { useEweyFactories } from "../providers/EweyFactoryProvider";
 
 export interface OpenApiContentProps {
   operationId: string;
-  factories?: EweyFactory[];
   value?: any;
 }
 
 const OpenApiContent: FC<OpenApiContentProps> = ({
   operationId,
-  factories,
   value,
 }) => {
   const openApi = useOpenApi();
   const operation = openApi.getOperation(operationId);
   const [ResultsComponent, setResultsComponent] = useState<any>(null);
+  const factories = useEweyFactories();
   useEffect(() => {
     const c = JsonSchemaFieldFactory(
       operation.resultSchema,

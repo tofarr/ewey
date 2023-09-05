@@ -23,7 +23,6 @@ import OAuthLoginForm from "../oauth/OAuthLoginForm";
 import { OpenApiOperation } from "./model/OpenApiOperation";
 import { useOpenApi } from "./OpenApiProvider";
 import { BearerToken, useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
-import EweyFactory from "../eweyFactory/EweyFactory";
 import OpenApiProvider from "./OpenApiProvider";
 import { getLabel } from "../label";
 import OpenApiOperationForm from "./OpenApiOperationForm";
@@ -52,17 +51,16 @@ export interface SummaryOperation {
 }
 
 export interface OpenApiSummaryProps {
-  factories?: EweyFactory[];
-  operationFactory?: (openApi: OpenApi, token?: BearerToken, factories?: EweyFactory[]) => SummaryOperation[]
+  operationFactory?: (openApi: OpenApi, token?: BearerToken) => SummaryOperation[]
 }
 
-const OpenApiSummary = ({ factories, operationFactory }: OpenApiSummaryProps) => {
+const OpenApiSummary = ({ operationFactory }: OpenApiSummaryProps) => {
   const openApi = useOpenApi();
   const token = useOAuthBearerToken();
   if (!operationFactory) {
     operationFactory = defaultOperationFactory
   }
-  const operations = operationFactory(openApi, token, factories)
+  const operations = operationFactory(openApi, token)
   const { op } = useParams();
   if (!op) {
     return <Navigate to={operations[0].key} />;
@@ -79,17 +77,17 @@ const OpenApiSummary = ({ factories, operationFactory }: OpenApiSummaryProps) =>
   );
 };
 
-export function defaultOperationFactory(openApi: OpenApi, token?: BearerToken, factories?: EweyFactory[]): SummaryOperation[] {
-  return openApi.operations.map(operation => summaryOperation(operation, token, factories))
+export function defaultOperationFactory(openApi: OpenApi, token?: BearerToken): SummaryOperation[] {
+  return openApi.operations.map(operation => summaryOperation(operation, token))
 }
 
-export function summaryOperation(operation: OpenApiOperation, token?: BearerToken, factories?: EweyFactory[]): SummaryOperation {
+export function summaryOperation(operation: OpenApiOperation, token?: BearerToken): SummaryOperation {
   return {
     key: operation.operationId,
     icon: () => operation.requiresAuth ? <LockIcon /> : <PlayArrowIcon />,
     disabled: operation.requiresAuth && !token?.token,
     component: () => (
-      <OpenApiOperationForm factories={factories} {...operation} />
+      <OpenApiOperationForm {...operation} />
     )
   }
 }
