@@ -3,7 +3,6 @@ import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import { ComponentSchemas } from "../ComponentSchemas";
 import EweyFactory from "./EweyFactory";
-import { ReactElement } from "react";
 import EweyField from "../eweyField/EweyField";
 
 class TableFactory implements EweyFactory {
@@ -89,13 +88,7 @@ class TableFactory implements EweyFactory {
       }
     }
 
-    if (this.actionField) {
-      columns.push({
-        key: '',
-        Field: this.actionField
-      })
-    }
-    return TableWrapper(columns);
+    return TableWrapper(columns, this.actionField);
   }
 }
 

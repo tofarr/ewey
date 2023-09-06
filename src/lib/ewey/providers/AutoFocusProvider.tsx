@@ -1,4 +1,4 @@
-import { ReactElement, createContext, useContext, useState } from "react";
+import { ReactElement, createContext, useContext } from "react";
 
 export interface AutoFocusProviderProps {
   autoFocusPath: string[];

@@ -1,5 +1,5 @@
 import EditIcon from '@mui/icons-material/Edit';
-import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
 import EweyField from "../eweyField/EweyField"
 import { OpenApiOperation } from "../openApi/model/OpenApiOperation"
 import Grid from '@mui/material/Grid';
@@ -10,20 +10,22 @@ export const crudActionsWrapper = (
   searchOperationName: string,
   updateOperation?: OpenApiOperation,
   deleteOperation?: OpenApiOperation,
-  keyExtractor?: (item: JsonObjectType) => string,
+  keyFactory?: (item: JsonObjectType) => string,
 ) => {
-  if(keyExtractor == null){
-    keyExtractor = (item: JsonObjectType) => item?.id as string
+  if(keyFactory == null){
+    keyFactory = (item: JsonObjectType) => {
+      return item?.id as string
+    }
   }
-  const CrudActionsField: EweyField<any> = ({ path, value, onSetValue }) => {
-    const itemKey = (keyExtractor as ((item: JsonObjectType) => string))(value);
+  const CrudActionsField: EweyField<any> = ({ value }) => {
+    const itemKey = (keyFactory as ((item: JsonObjectType) => string))(value);
     return (
-      <Grid container>
+      <Grid container direction="row" width={150} spacing={1}>
         {updateOperation && 
           <Grid item>
-            <Button onClick={() => alert('edit')}>
+            <IconButton onClick={() => alert('edit')}>
               <EditIcon />
-            </Button>
+            </IconButton>
           </Grid>
         }
         {deleteOperation &&

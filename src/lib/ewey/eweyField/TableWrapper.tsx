@@ -15,14 +15,16 @@ export interface Column {
 
 interface CellProps {
   column: Column;
+  path: string[]
   value: JsonObjectType;
-  onSetValue?: ((value: JsonObjectType) => void) | null;
+  onSetValue?: ((value: JsonObjectType) => void);
 }
 
-const Cell = ({ column, value, onSetValue }: CellProps) => {
+const Cell = ({ column, path, value, onSetValue }: CellProps) => {
   return (
     <TableCell key={column.key}>
       <column.Field
+        path={path}
         value={value[column.key]}
         onSetValue={
           onSetValue
@@ -39,47 +41,65 @@ const Cell = ({ column, value, onSetValue }: CellProps) => {
 };
 
 interface RowProps {
+  path: string[];
   columns: Column[];
   rowIndex: number;
   value: JsonObjectType[];
   onSetValue: ((value: JsonObjectType[]) => void) | null;
+  ActionField?: EweyField<JsonObjectType> | null
 }
 
-const Row = ({ columns, rowIndex, value, onSetValue }: RowProps) => {
+const Row = ({ path, columns, rowIndex, value, onSetValue, ActionField }: RowProps) => {
+  const rowValue = value[rowIndex] as JsonObjectType
+
+  const handleSetRowValue = onSetValue ? (newValue: JsonObjectType) => {
+    const newValues = value.slice();
+    newValues[rowIndex] = newValue;
+    onSetValue(newValues);
+  } : undefined
+  
+  const cells = columns.map((column, columnIndex) => (
+    <Cell
+      key={`tableCell/${rowIndex}/${columnIndex}`}
+      path={[...path, rowIndex.toString(), column.key]}
+      column={column}
+      value={rowValue}
+      onSetValue={handleSetRowValue}
+    />
+  ))
+  if (ActionField) {
+    cells.push(
+      <TableCell key={`actions/${rowIndex}`}>
+        <ActionField value={rowValue} onSetValue={handleSetRowValue} />
+      </TableCell>
+    )
+  }
   return (
     <TableRow key={`tableRow/${rowIndex}`}>
-      {columns.map((column, columnIndex) => (
-        <Cell
-          key={`tableCell/${rowIndex}/${columnIndex}`}
-          column={column}
-          value={value[rowIndex] as JsonObjectType}
-          onSetValue={
-            onSetValue
-              ? (newValue: JsonObjectType) => {
-                  const newValues = value.slice();
-                  newValues[rowIndex] = newValue;
-                  onSetValue(newValues);
-                }
-              : null
-          }
-        />
-      ))}
+      {cells}
     </TableRow>
   );
 };
 
-const TableWrapper = (columns: Column[]): EweyField<JsonObjectType[]> => {
-  const TableField: EweyField<JsonObjectType[]> = ({ value, onSetValue }) => {
+const TableWrapper = (columns: Column[], actionField?: EweyField<JsonObjectType> | null): EweyField<JsonObjectType[]> => {
+  const TableField: EweyField<JsonObjectType[]> = ({ path, value, onSetValue }) => {
     const { t } = useTranslation();
+    if(path == null){
+      path = [];
+    }
+    const headCells = columns.map((column) => (
+      <TableCell key={column.key}>
+        {getLabel(column.key, t)}
+      </TableCell>
+    ))
+    if (actionField){
+      headCells.push(<TableCell key="/actions"></TableCell>);
+    }
     return (
       <Table>
         <TableHead>
           <TableRow>
-            {columns.map((column) => (
-              <TableCell key={column.key}>
-                {getLabel(column.key, t)}
-              </TableCell>
-            ))}
+            {headCells}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -87,12 +107,14 @@ const TableWrapper = (columns: Column[]): EweyField<JsonObjectType[]> => {
             return (
               <Row
                 key={`row${index}`}
+                path={path as string[]}
                 columns={columns}
                 rowIndex={index}
                 value={value as JsonObjectType[]}
                 onSetValue={
                   onSetValue as ((value: JsonObjectType[]) => void) | null
                 }
+                ActionField={actionField}
               />
             );
           })}

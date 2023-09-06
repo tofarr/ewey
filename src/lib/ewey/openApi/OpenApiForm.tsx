@@ -10,6 +10,7 @@ import EweyForm from "../EweyForm";
 import JsonType from "../eweyField/JsonType";
 import { newCreateDefaultFnForSchema } from "../eweyFactory/ListFactory";
 import { JsonObjectType } from "../eweyField/JsonType";
+import { headersFromToken } from "../openApi/headers";
 
 export interface OpenApiFormProps {
   operationId: string;
@@ -89,14 +90,6 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
       summary={displaySummary ? operation.summary : null}
     />
   );
-};
-
-export const headersFromToken = (token: string) => {
-  const result: { [key: string]: string } = {};
-  if (token) {
-    result["Authorization"] = `Bearer ${token}`;
-  }
-  return result;
 };
 
 export default OpenApiForm;

@@ -1,8 +1,8 @@
 import { FC } from "react";
-import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Box from "@mui/material/Box";
+import Fab from "@mui/material/Fab";
 
 export interface SubmitComponentProps {
   valid: boolean;
@@ -17,13 +17,13 @@ const SubmitComponent: FC<SubmitComponentProps> = ({
 }) => {
   return (
     <Box display="flex" justifyContent="flex-end" padding={2}>
-      <Button
+      <Fab
+        color="primary"
         onClick={onSubmit}
-        variant="contained"
         disabled={submitting || !valid}
       >
         {submitting ? <CircularProgress size={24} /> : <PlayArrowIcon />}
-      </Button>
+      </Fab>
     </Box>
   );
 };

@@ -1,9 +1,10 @@
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import IconButton from '@mui/material/IconButton';
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+
 
 const LIMITS = [5, 10, 20, 50, 100]
 
@@ -34,13 +35,12 @@ const CrudPaginator = ({
   return (
     <Grid container alignItems="center" spacing={1}>
       <Grid item>
-        <Button
+        <IconButton
           disabled={!pageKey}
-          variant="outlined"
           onClick={() => onSetPageKey(null)}
         >
           <KeyboardDoubleArrowLeftIcon />
-        </Button>
+        </IconButton>
       </Grid>
       <Grid item>
         <Select 
@@ -51,13 +51,12 @@ const CrudPaginator = ({
         </Select>
       </Grid>
       <Grid item>
-        <Button
+        <IconButton
           disabled={!nextPageKey}
-          variant="outlined"
           onClick={() => onSetPageKey(nextPageKey as string)}
         >
           <KeyboardArrowRightIcon />
-        </Button>
+        </IconButton>
       </Grid>
     </Grid>
   )

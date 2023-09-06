@@ -15,18 +15,16 @@ import { EweyFactoryProvider, useEweyFactories } from "../providers/EweyFactoryP
 import OpenApiQuery from "../openApi/OpenApiQuery"
 import OpenApiContent from "../openApi/OpenApiContent"
 import TableFactory from "../eweyFactory/TableFactory"
-import { Button } from "@mui/material"
-import EweyField from "../eweyField/EweyField"
 import { useOpenApi } from "../openApi/OpenApiProvider"
-import { OpenApiOperation } from "../openApi/model/OpenApiOperation"
 import { crudActionsWrapper } from "./CrudActions"
 
 export interface CrudSearchProps {
   store: string,
-  limit?: number
+  limit?: number,
+  keyFactory?: (item: JsonObjectType) => string,
 }
 
-const CrudSearch = ({ store, limit }: CrudSearchProps) => {
+const CrudSearch = ({ store, limit, keyFactory }: CrudSearchProps) => {
   const [queryParams, setQueryParams] = useSearchParams();
   const [params, setParams] = useState<CrudParams>(() => {
     const initialParams: JsonObjectType = queryParamsToJsonObj(queryParams)
@@ -43,7 +41,7 @@ const CrudSearch = ({ store, limit }: CrudSearchProps) => {
     setQueryParams(newQueryParams)
     setParams(newParams)
   }
-
+  
   //const createOperation = openApi.operations.find(op => op.operationId === `${store}_create`)
   const updateOperation = openApi.operations.find(op => op.operationId === `${store}_update`)
   const deleteOperation = openApi.operations.find(op => op.operationId === `${store}_delete`)
@@ -53,7 +51,7 @@ const CrudSearch = ({ store, limit }: CrudSearchProps) => {
     new ResultSetFactory()
   ]
   if (updateOperation || deleteOperation) {
-    const crudActions = crudActionsWrapper(`${store}_search`, updateOperation, deleteOperation)
+    const crudActions = crudActionsWrapper(`${store}_search`, updateOperation, deleteOperation, keyFactory)
     searchFieldFactories.push(new TableFactory(300, null, ["results"], crudActions))
   }
   return (

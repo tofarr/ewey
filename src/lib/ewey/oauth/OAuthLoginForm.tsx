@@ -1,7 +1,6 @@
 import { FC, FormEvent, useContext, useState } from "react";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { EweyLayoutHint, EweyLayoutHintProvider } from "../providers/EweyLayoutHint";
 import {
@@ -10,6 +9,7 @@ import {
 } from "./OAuthBearerTokenProvider";
 import { useMessageBroker } from "../message/MessageBrokerContext";
 import AutoFocusProvider from "../providers/AutoFocusProvider";
+import Fab from "@mui/material/Fab";
 
 interface OAuthLoginFormProps {
   url: string;
@@ -65,9 +65,9 @@ const OAuthLoginForm: FC<OAuthLoginFormProps> = ({ url }) => {
         </EweyLayoutHintProvider>
       </Box>
       <Box display="flex" justifyContent="flex-end" pr={4} pb={2} pl={4}>
-        <Button type="submit" variant="contained">
+        <Fab color="primary" type="submit">
           <LockOpenIcon />
-        </Button>
+        </Fab>
       </Box>
     </form>
   );

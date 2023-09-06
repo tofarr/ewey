@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingComponent from "../component/LoadingComponent";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { useOpenApi } from "./OpenApiProvider";
-import { headersFromToken } from "./OpenApiForm";
+import { headersFromToken } from "../openApi/headers";
 import { OpenApiQueryContentProps } from "./OpenApiQueryContent";
 import JsonType from "../eweyField/JsonType";
 import ErrorComponent from "../component/ErrorComponent";

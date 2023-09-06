@@ -3,9 +3,9 @@ import { Fragment, useEffect, useState } from 'react';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { useTranslation } from 'react-i18next';
 import { CrudParams } from "./CrudParams";
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import EweyForm from '../EweyForm';
 import { useOpenApi } from '../openApi/OpenApiProvider';
@@ -52,9 +52,9 @@ const CrudFilters = ({ store, params, onSetParams }: CrudFilterProps) => {
  
   return (
     <Fragment>
-      <Button variant="outlined" onClick={() => setOpen(true)}>
+      <IconButton onClick={() => setOpen(true)}>
         <FilterAltIcon />
-      </Button>
+      </IconButton>
       <Dialog fullWidth open={open} onClose={() => setOpen(false)}>
         <DialogContent>
           <Typography variant="h4">{getLabel('search_filters', t)}</Typography>    

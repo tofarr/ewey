@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getLabel } from "../label";
 import { CrudParams } from "./CrudParams";
 import { useQuery } from "@tanstack/react-query";
-import { headersFromToken } from "../openApi/OpenApiForm";
+import { headersFromToken } from "../openApi/headers";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { JsonObjectType } from "../eweyField/JsonType";
 import { useOpenApi } from "../openApi/OpenApiProvider";
@@ -46,7 +46,7 @@ const CrudCount = ({ store, params }: CrudCountProps) => {
 
   if (isLoading) {
     return (
-      <CircularProgress />
+      <CircularProgress size={24} />
     );
   }
 

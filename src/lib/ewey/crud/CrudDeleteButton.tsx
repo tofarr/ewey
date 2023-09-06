@@ -1,19 +1,23 @@
 import { Fragment, useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useTranslation } from "react-i18next";
-import { getLabel } from "../label";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton"
+import { useTranslation } from "react-i18next";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { OpenApiOperation } from "../openApi/model/OpenApiOperation";
-import CircularProgress from "@mui/material/CircularProgress";
-import { headersFromToken } from "../openApi/OpenApiForm";
+import { getLabel } from "../label";
+import { headersFromToken } from "../openApi/headers";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
+import { useMessageBroker } from "../message/MessageBrokerContext";
+import Fab from "@mui/material/Fab";
+
 
 export interface CrudDeleteButtonProps {
   itemKey: string
@@ -24,13 +28,20 @@ export interface CrudDeleteButtonProps {
 export function CrudDeleteButton({ itemKey, searchOperationName, deleteOperation }: CrudDeleteButtonProps) {
   const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const headers = headersFromToken(useOAuthBearerToken()?.token);
+  const token = useOAuthBearerToken()
+  const headers = headersFromToken(token?.token);
   const queryClient = useQueryClient()
+  const messageBroker = useMessageBroker();
+  const isLocked = deleteOperation.requiresAuth && !token?.token;
 
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
-      await deleteOperation.invoke({ key: itemKey }, headers);
-      queryClient.invalidateQueries([searchOperationName], { exact: false });
+      const result = await deleteOperation.invoke({ key: itemKey }, headers);
+      if (result) {
+        queryClient.invalidateQueries([searchOperationName], { exact: false });
+      } else {
+        messageBroker.triggerError(getLabel('delete_failed', t))
+      }
     },
   });
 
@@ -42,21 +53,34 @@ export function CrudDeleteButton({ itemKey, searchOperationName, deleteOperation
 
   return (
     <Fragment>
-      <Button disabled={isLoading} onClick={() => setDialogOpen(true)}>
-        {isLoading ? <CircularProgress /> : <DeleteIcon />}
-      </Button>
+      <IconButton 
+        disabled={isLoading || isLocked} 
+        onClick={() => setDialogOpen(true)}
+      >
+        {isLoading ? <CircularProgress size={24} /> : <DeleteIcon />}
+      </IconButton>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>{getLabel("confirm_delete", t)}</DialogTitle>
+        <Grid container justifyContent="space-between">
+          <Grid item>
+            <DialogTitle>{getLabel("confirm_delete", t)}</DialogTitle>
+          </Grid>
+          <Grid item padding={1}>
+            <IconButton onClick={() => setDialogOpen(false)}>
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
         <DialogContent>
-          <DialogContentText>{t('are_you_sure', 'Are you sure?')}</DialogContentText>
+          <DialogContentText>{t('are_you_sure', 'Are you sure you want to delete this item?')}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={() => setDialogOpen(false)}>
-            <CloseIcon />
-          </Button>
-          <Button variant="contained" onClick={handleDelete}>
-            <DeleteIcon />
-          </Button>
+          <Grid container padding={1} minWidth={300} justifyContent="flex-end" spacing={1}>
+            <Grid item>
+              <Fab color="primary" onClick={handleDelete}>
+                <DeleteIcon />
+              </Fab>
+            </Grid>
+          </Grid>
         </DialogActions>
       </Dialog>
     </Fragment>

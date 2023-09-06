@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import EweyField from "./EweyField";
 
 const ListWrapper = (ItemComponent: EweyField<any>, createItem?: () => any) => {
-  const ListComponent: EweyField<any[]> = ({ value, onSetValue }) => {
+  const ListComponent: EweyField<any[]> = ({ path, value, onSetValue }) => {
     if (!value) {
       value = [];
     }
@@ -25,7 +25,8 @@ const ListWrapper = (ItemComponent: EweyField<any>, createItem?: () => any) => {
           }
         };
       }
-
+      const itemPath = [ ...(path || []), index.toString()]
+      
       function handleRemoveItem() {
         const newValue = value?.splice(index, 1);
         onSetValue?.(newValue);
@@ -35,7 +36,7 @@ const ListWrapper = (ItemComponent: EweyField<any>, createItem?: () => any) => {
         <ListItem key={index}>
           <Grid container spacing={2}>
             <Grid item xs>
-              <ItemComponent value={v} onSetValue={onSetItemValue} />
+              <ItemComponent path={itemPath} value={v} onSetValue={onSetItemValue} />
             </Grid>
             {onSetValue && (
               <Grid item>
