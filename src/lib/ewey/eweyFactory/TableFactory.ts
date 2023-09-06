@@ -3,20 +3,25 @@ import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import { ComponentSchemas } from "../ComponentSchemas";
 import EweyFactory from "./EweyFactory";
+import { ReactElement } from "react";
+import EweyField from "../eweyField/EweyField";
 
 class TableFactory implements EweyFactory {
   priority: number;
   restrictToKeys: string[] | null;
   pathMatch: string[] | null;
+  actionField?: EweyField<any> | null
 
   constructor(
     priority: number = 110,
     restrictToKeys: string[] | null = null,
     pathMatch: string[] | null = null,
+    actionField?: EweyField<any> | null
   ) {
     this.priority = priority;
     this.restrictToKeys = restrictToKeys;
     this.pathMatch = pathMatch;
+    this.actionField = actionField
   }
 
   create(
@@ -82,6 +87,13 @@ class TableFactory implements EweyFactory {
         });
         currentPath.pop();
       }
+    }
+
+    if (this.actionField) {
+      columns.push({
+        key: '',
+        Field: this.actionField
+      })
     }
     return TableWrapper(columns);
   }

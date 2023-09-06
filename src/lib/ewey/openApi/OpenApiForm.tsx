@@ -57,7 +57,6 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
     },
   });
 
-
   function createDefaultValue(): JsonType {
     if (value != null) {
       return value;

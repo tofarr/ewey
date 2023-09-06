@@ -14,6 +14,12 @@ import FieldSetWrapper from "../eweyField/FieldSetWrapper"
 import { EweyFactoryProvider, useEweyFactories } from "../providers/EweyFactoryProvider"
 import OpenApiQuery from "../openApi/OpenApiQuery"
 import OpenApiContent from "../openApi/OpenApiContent"
+import TableFactory from "../eweyFactory/TableFactory"
+import { Button } from "@mui/material"
+import EweyField from "../eweyField/EweyField"
+import { useOpenApi } from "../openApi/OpenApiProvider"
+import { OpenApiOperation } from "../openApi/model/OpenApiOperation"
+import { crudActionsWrapper } from "./CrudActions"
 
 export interface CrudSearchProps {
   store: string,
@@ -30,6 +36,7 @@ const CrudSearch = ({ store, limit }: CrudSearchProps) => {
     return initialParams
   })
   const factories = useEweyFactories()
+  const openApi = useOpenApi();
 
   function handleSetParams(newParams: CrudParams){
     const newQueryParams = jsonObjToQueryParams(newParams as JsonObjectType)
@@ -37,10 +44,22 @@ const CrudSearch = ({ store, limit }: CrudSearchProps) => {
     setParams(newParams)
   }
 
+  //const createOperation = openApi.operations.find(op => op.operationId === `${store}_create`)
+  const updateOperation = openApi.operations.find(op => op.operationId === `${store}_update`)
+  const deleteOperation = openApi.operations.find(op => op.operationId === `${store}_delete`)
+
+  const searchFieldFactories = [
+    ...factories,
+    new ResultSetFactory()
+  ]
+  if (updateOperation || deleteOperation) {
+    const crudActions = crudActionsWrapper(`${store}_search`, updateOperation, deleteOperation)
+    searchFieldFactories.push(new TableFactory(300, null, ["results"], crudActions))
+  }
   return (
     <Paper>
       <Box padding={1}>
-        <EweyFactoryProvider factories={[...factories,  new ResultSetFactory()]}>
+        <EweyFactoryProvider factories={searchFieldFactories}>
           <OpenApiQuery operationId={`${store}_search`} params={params}>
             {(resultSet) => (
               <Fragment>
@@ -72,7 +91,7 @@ class ResultSetFactory implements EweyFactory {
     if (schema.type === "object" && (schema.name || '').endsWith('ResultSet') && schema.properties.results) {
       const resultsSchema = schema.properties.results
       const fieldsByKey = {
-        results: JsonSchemaFieldFactory(resultsSchema, components, currentPath, factories)
+        results: JsonSchemaFieldFactory(resultsSchema, components, ["results"], factories)
       }
       const result = FieldSetWrapper(fieldsByKey, true, [], [], {})
       return result
