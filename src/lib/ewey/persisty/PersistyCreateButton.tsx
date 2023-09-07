@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
@@ -17,60 +16,54 @@ import JsonType, { JsonObjectType } from "../eweyField/JsonType";
 import EweyForm from "../EweyForm";
 import CircularProgress from "@mui/material/CircularProgress";
 import { EweyLayoutHint, EweyLayoutHintProvider } from "../providers/EweyLayoutHint";
-import Typography from "@mui/material/Typography";
 import { AnySchemaObject } from "../schemaCompiler";
 import { resolveRef } from "../ComponentSchemas";
+import { newCreateDefaultFnForSchema } from "../eweyFactory/ListFactory";
 import DialogHeader from "../component/DialogHeader";
 
 
-export interface CrudUpdateButtonProps {
-  initialValues: JsonObjectType
+export interface PersistyCreateButtonProps {
+  initialValues?: JsonObjectType
   searchOperationName: string
-  updateOperation: OpenApiOperation
+  createOperation: OpenApiOperation
 }
 
-export function CrudUpdateButton({ initialValues, searchOperationName, updateOperation }: CrudUpdateButtonProps) {
+export function PersistyCreateButton({ initialValues, searchOperationName, createOperation }: PersistyCreateButtonProps) {
   const { t } = useTranslation();
-  const [item, setItem] = useState<JsonType>(initialValues)
+  const [item, setItem] = useState<JsonType>(null)
   const [dialogOpen, setDialogOpen] = useState(false);
   const token = useOAuthBearerToken()
   const headers = headersFromToken(token?.token);
   const queryClient = useQueryClient()
   const messageBroker = useMessageBroker();
-  const isLocked = updateOperation.requiresAuth && !token?.token;
+  const isLocked = createOperation.requiresAuth && !token?.token;
   const [schema, setSchema] = useState<AnySchemaObject | null>(null);
-  const [keyAttr, setKeyAttr] = useState<string | null>(null);
   useEffect(() => {
     // Remove attributes which are part of the key from the form
-    const { paramsSchema } = updateOperation;
+    const { paramsSchema } = createOperation;
     const { components }  = paramsSchema;
     const itemSchema = resolveRef(paramsSchema.properties.item, paramsSchema.components)
-    const properties = { ...itemSchema.properties }
-    const newKeyAttr = getKeyAttr(itemSchema);
-    setKeyAttr(newKeyAttr)
-    delete properties[newKeyAttr]
     const newSchema = {
       ...itemSchema,
-      components,
-      properties
+      components
     }
     setSchema(newSchema)
-    const newItem: JsonObjectType = {}
-    for (const key in properties){
-      newItem[key] = initialValues[key]
+    let newItem = initialValues
+    if (!newItem) {
+      const defaultFactory = newCreateDefaultFnForSchema(itemSchema, components) as (() => JsonObjectType);
+      newItem = defaultFactory();
     }
-    setItem(newItem)
-  }, [updateOperation, initialValues])
+    setItem(newItem as JsonObjectType)
+  }, [createOperation, initialValues])
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
-      const key = initialValues[keyAttr as string];
-      (item as JsonObjectType)[keyAttr as string] = key
-      const result = await updateOperation.invoke({ item, key }, headers);
+      const result = await createOperation.invoke({ item }, headers);
       if (result) {
         queryClient.invalidateQueries([searchOperationName], { exact: false });
-        messageBroker.triggerMessage(getLabel('item_updated', t))
+        messageBroker.triggerMessage(getLabel('item_created', t))
+        setDialogOpen(false);
       } else {
-        messageBroker.triggerError(getLabel('update_failed', t))
+        messageBroker.triggerError(getLabel('create_failed', t))
       }
     },
   });
@@ -81,11 +74,11 @@ export function CrudUpdateButton({ initialValues, searchOperationName, updateOpe
         disabled={isLocked} 
         onClick={() => setDialogOpen(true)}
       >
-        <EditIcon />
+        <AddIcon />
       </IconButton>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} disableRestoreFocus>
         <DialogContent>
-          <DialogHeader label="update_item" setDialogOpen={setDialogOpen} />
+          <DialogHeader label="create_item" setDialogOpen={setDialogOpen} />
           {schema && (
             <EweyLayoutHintProvider hint={EweyLayoutHint.LABELS_ALWAYS_ABOVE}>
               <EweyForm
@@ -97,8 +90,8 @@ export function CrudUpdateButton({ initialValues, searchOperationName, updateOpe
                 submitComponent={({ submitting, valid }) => (
                   <Grid container justifyContent="flex-end" pb={1}>
                     <Grid item>
-                      <Fab disabled={valid && !submitting} color="primary" onClick={() => mutate()}>
-                        {submitting ? <CircularProgress size={24} /> : <EditIcon />}
+                      <Fab disabled={!valid || submitting} color="primary" onClick={() => mutate()}>
+                        {submitting ? <CircularProgress size={24} /> : <AddIcon />}
                       </Fab>
                     </Grid>
                   </Grid>
@@ -110,9 +103,4 @@ export function CrudUpdateButton({ initialValues, searchOperationName, updateOpe
       </Dialog>
     </Fragment>
   )
-}
-
-function getKeyAttr(schema: AnySchemaObject) {
-  const keyAttr = schema.key_config[1].attr_name
-  return keyAttr
 }

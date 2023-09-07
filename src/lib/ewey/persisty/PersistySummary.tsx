@@ -4,24 +4,24 @@ import OpenApiProvider from "../openApi/OpenApiProvider";
 import OpenApiSummary, { SummaryOperation, summaryOperation } from "../openApi/OpenApiSummary";
 import { OpenApi } from "../openApi/model/OpenApi";
 import { BearerToken } from "../oauth/OAuthBearerTokenProvider";
-import CrudSearch from './CrudSearch';
+import PersistySearch from './PersistySearch';
 
 const OPERATIONS = ['create', 'read', 'update', 'delete', 'search', 'count', "read_batch", "edit_batch"]
 
-export const crudSummaryRoute = (prefix: string, url: string) => {
+export const persistySummaryRoute = (prefix: string, url: string) => {
   return (
     <Route
       path={`${prefix}/:op?`}
       element={
         <OpenApiProvider url={url}>
-          <OpenApiSummary operationFactory={crudSummaryFactory} />
+          <OpenApiSummary operationFactory={persistySummaryFactory} />
         </OpenApiProvider>
       }
     />
   );
 };
 
-export function crudSummaryFactory(openApi: OpenApi, token?: BearerToken): SummaryOperation[] {
+export function persistySummaryFactory(openApi: OpenApi, token?: BearerToken): SummaryOperation[] {
   const operationsById: any = {}
   const stores: string[] = []
   for (const operation of openApi.operations) {
@@ -52,7 +52,7 @@ export function crudSummaryFactory(openApi: OpenApi, token?: BearerToken): Summa
       key: store,
       icon: () => <StorageIcon />,
       disabled: false,
-      component: () => ( <CrudSearch store={store} /> ),
+      component: () => ( <PersistySearch store={store} /> ),
       categoryKey: 'stores'
     })
   }

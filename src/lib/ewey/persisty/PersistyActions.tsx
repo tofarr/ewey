@@ -1,13 +1,11 @@
-import EditIcon from '@mui/icons-material/Edit';
-import IconButton from "@mui/material/IconButton"
 import EweyField from "../eweyField/EweyField"
 import { OpenApiOperation } from "../openApi/model/OpenApiOperation"
 import Grid from '@mui/material/Grid';
-import { CrudDeleteButton } from './CrudDeleteButton';
+import { PersistyDeleteButton } from './PersistyDeleteButton';
 import { JsonObjectType } from '../eweyField/JsonType';
-import { CrudUpdateButton } from './CrudUpdateButton';
+import { PersistyUpdateButton } from './PersistyUpdateButton';
 
-export const crudActionsWrapper = (
+export const persistyActionsWrapper = (
   searchOperationName: string,
   updateOperation?: OpenApiOperation,
   deleteOperation?: OpenApiOperation,
@@ -18,14 +16,14 @@ export const crudActionsWrapper = (
       return item?.id as string
     }
   }
-  const CrudActionsField: EweyField<any> = ({ value }) => {
+  const PersistyActionsField: EweyField<any> = ({ value }) => {
     const itemKey = (keyFactory as ((item: JsonObjectType) => string))(value);
     const width = (updateOperation ? 48 : 0) + (deleteOperation ? 48 : 0)
     return (
       <Grid container direction="row" width={width} spacing={1}>
         {updateOperation && 
           <Grid item>
-            <CrudUpdateButton
+            <PersistyUpdateButton
               initialValues={value}
               searchOperationName={searchOperationName} 
               updateOperation={updateOperation}
@@ -34,7 +32,7 @@ export const crudActionsWrapper = (
         }
         {deleteOperation &&
           <Grid item>
-            <CrudDeleteButton
+            <PersistyDeleteButton
               itemKey={itemKey}
               searchOperationName={searchOperationName} 
               deleteOperation={deleteOperation}
@@ -44,5 +42,5 @@ export const crudActionsWrapper = (
       </Grid>
     )
   }
-  return CrudActionsField
+  return PersistyActionsField
 }

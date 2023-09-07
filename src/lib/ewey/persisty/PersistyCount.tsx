@@ -3,19 +3,19 @@ import ErrorIcon from "@mui/icons-material/Error";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import { getLabel } from "../label";
-import { CrudParams } from "./CrudParams";
+import { PersistyParams } from "./PersistyParams";
 import { useQuery } from "@tanstack/react-query";
 import { headersFromToken } from "../openApi/headers";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { JsonObjectType } from "../eweyField/JsonType";
 import { useOpenApi } from "../openApi/OpenApiProvider";
 
-export interface CrudCountProps {
+export interface PersistyCountProps {
   store: string
-  params: CrudParams
+  params: PersistyParams
 }
 
-const CrudCount = ({ store, params }: CrudCountProps) => {
+const PersistyCount = ({ store, params }: PersistyCountProps) => {
   const { t } = useTranslation();
   const headers = headersFromToken(useOAuthBearerToken()?.token);
   const openApi = useOpenApi();
@@ -59,4 +59,4 @@ const CrudCount = ({ store, params }: CrudCountProps) => {
   )
 }
 
-export default CrudCount;
+export default PersistyCount;

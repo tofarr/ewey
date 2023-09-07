@@ -1,32 +1,28 @@
 
 import { Fragment, useEffect, useState } from 'react';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import { useTranslation } from 'react-i18next';
-import { CrudParams } from "./CrudParams";
+import { PersistyParams } from "./PersistyParams";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import EweyForm from '../EweyForm';
 import { useOpenApi } from '../openApi/OpenApiProvider';
 import { resolveRef } from '../ComponentSchemas';
 import JsonType, { JsonObjectType } from '../eweyField/JsonType';
-import { getLabel } from '../label';
 import { AnySchemaObject } from '../schemaCompiler';
 import { EweyLayoutHint, EweyLayoutHintProvider } from '../providers/EweyLayoutHint';
 import DialogHeader from '../component/DialogHeader';
 
-export interface CrudFilterProps {
+export interface PersistyFilterProps {
   store: string
-  params: CrudParams
-  onSetParams: (params: CrudParams) => void
+  params: PersistyParams
+  onSetParams: (params: PersistyParams) => void
 }
 
-const CrudFilters = ({ store, params, onSetParams }: CrudFilterProps) => {
+const PersistyFilters = ({ store, params, onSetParams }: PersistyFilterProps) => {
   const openApi = useOpenApi()
   const [open, setOpen] = useState(false)
   const [internalParams, setInternalParams] = useState(params)
-  const { t } = useTranslation()
   const operation = openApi.getOperation(`${store}_search`)
   const [schema, setSchema] = useState<AnySchemaObject | null>(null)
   
@@ -44,7 +40,7 @@ const CrudFilters = ({ store, params, onSetParams }: CrudFilterProps) => {
   }, [operation])
 
   function handleSubmit(params: JsonType) {
-    onSetParams(params as CrudParams)
+    onSetParams(params as PersistyParams)
     setOpen(false)
   }
 
@@ -64,7 +60,7 @@ const CrudFilters = ({ store, params, onSetParams }: CrudFilterProps) => {
             <EweyForm 
               schema={schema}
               value={internalParams as JsonObjectType} 
-              onSetValue={(value) => setInternalParams(value as CrudParams)}
+              onSetValue={(value) => setInternalParams(value as PersistyParams)}
               onSubmit={handleSubmit}
             />
           </EweyLayoutHintProvider>  
@@ -74,4 +70,4 @@ const CrudFilters = ({ store, params, onSetParams }: CrudFilterProps) => {
   )
 }
 
-export default CrudFilters;
+export default PersistyFilters;

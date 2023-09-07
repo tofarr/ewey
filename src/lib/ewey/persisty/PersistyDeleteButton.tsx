@@ -18,13 +18,13 @@ import Fab from "@mui/material/Fab";
 import DialogHeader from "../component/DialogHeader";
 
 
-export interface CrudDeleteButtonProps {
+export interface PersistyDeleteButtonProps {
   itemKey: string
   searchOperationName: string
   deleteOperation: OpenApiOperation
 }
 
-export function CrudDeleteButton({ itemKey, searchOperationName, deleteOperation }: CrudDeleteButtonProps) {
+export function PersistyDeleteButton({ itemKey, searchOperationName, deleteOperation }: PersistyDeleteButtonProps) {
   const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = useState(false);
   const token = useOAuthBearerToken()

@@ -1,19 +1,19 @@
 import Grid from "@mui/material/Grid"
-import CrudPaginator from "./CrudPaginator";
-import { CrudParams } from "./CrudParams";
-import CrudCount from "./CrudCount";
-import CrudFilters from "./CrudFilters";
+import PersistyPaginator from "./PersistyPaginator";
+import { PersistyParams } from "./PersistyParams";
+import PersistyCount from "./PersistyCount";
+import PersistyFilters from "./PersistyFilters";
 import { useOpenApi } from "../openApi/OpenApiProvider";
-import { CrudCreateButton } from "./CrudCreateButton";
+import { PersistyCreateButton } from "./PersistyCreateButton";
 
-export interface CrudHeaderProps {
+export interface PersistyHeaderProps {
   store: string
-  params: CrudParams
-  onSetParams: (params: CrudParams) => void
+  params: PersistyParams
+  onSetParams: (params: PersistyParams) => void
   nextPageKey?: string | null
 }
 
-const CrudHeader = ({ store, nextPageKey, params, onSetParams }: CrudHeaderProps) => {
+const PersistyHeader = ({ store, nextPageKey, params, onSetParams }: PersistyHeaderProps) => {
   const openApi = useOpenApi()
   const createOperation = openApi.operations.find(op => op.operationId === `${store}_create`)
 
@@ -36,21 +36,21 @@ const CrudHeader = ({ store, nextPageKey, params, onSetParams }: CrudHeaderProps
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
-        <CrudFilters store={store} params={params} onSetParams={onSetParams} />
+        <PersistyFilters store={store} params={params} onSetParams={onSetParams} />
       </Grid>
       <Grid item xs>
         {createOperation && (
-          <CrudCreateButton
+          <PersistyCreateButton
             searchOperationName={`${store}_search`}
             createOperation={createOperation}
           />
         )}
       </Grid>
       <Grid item xs>
-        <CrudCount store={store} params={params} />
+        <PersistyCount store={store} params={params} />
       </Grid>
       <Grid item>
-        <CrudPaginator
+        <PersistyPaginator
           pageKey={params.page_key}
           nextPageKey={nextPageKey}
           onSetPageKey={handleSetPageKey}
@@ -62,4 +62,4 @@ const CrudHeader = ({ store, nextPageKey, params, onSetParams }: CrudHeaderProps
   )
 }
 
-export default CrudHeader;
+export default PersistyHeader;

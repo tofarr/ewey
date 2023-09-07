@@ -1,9 +1,9 @@
 import { Fragment, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import Box from "@mui/material/Box"
-import CrudHeader from "./CrudHeader"
+import PersistyHeader from "./PersistyHeader"
 import Paper from "@mui/material/Paper"
-import { CrudParams } from "./CrudParams"
+import { PersistyParams } from "./PersistyParams"
 import { jsonObjToQueryParams, queryParamsToJsonObj } from "json-urley"
 import { JsonObjectType } from "../eweyField/JsonType"
 import EweyFactory from "../eweyFactory/EweyFactory"
@@ -16,17 +16,17 @@ import OpenApiQuery from "../openApi/OpenApiQuery"
 import OpenApiContent from "../openApi/OpenApiContent"
 import TableFactory from "../eweyFactory/TableFactory"
 import { useOpenApi } from "../openApi/OpenApiProvider"
-import { crudActionsWrapper } from "./CrudActions"
+import { persistyActionsWrapper } from "./PersistyActions"
 
-export interface CrudSearchProps {
+export interface PersistySearchProps {
   store: string,
   limit?: number,
   keyFactory?: (item: JsonObjectType) => string,
 }
 
-const CrudSearch = ({ store, limit, keyFactory }: CrudSearchProps) => {
+const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
   const [queryParams, setQueryParams] = useSearchParams();
-  const [params, setParams] = useState<CrudParams>(() => {
+  const [params, setParams] = useState<PersistyParams>(() => {
     const initialParams: JsonObjectType = queryParamsToJsonObj(queryParams)
     if (initialParams.limit == null) {
       initialParams.limit = limit || 5
@@ -36,7 +36,7 @@ const CrudSearch = ({ store, limit, keyFactory }: CrudSearchProps) => {
   const factories = useEweyFactories()
   const openApi = useOpenApi();
 
-  function handleSetParams(newParams: CrudParams){
+  function handleSetParams(newParams: PersistyParams){
     const newQueryParams = jsonObjToQueryParams(newParams as JsonObjectType)
     setQueryParams(newQueryParams)
     setParams(newParams)
@@ -51,8 +51,8 @@ const CrudSearch = ({ store, limit, keyFactory }: CrudSearchProps) => {
     new ResultSetFactory()
   ]
   if (updateOperation || deleteOperation) {
-    const crudActions = crudActionsWrapper(`${store}_search`, updateOperation, deleteOperation, keyFactory)
-    searchFieldFactories.push(new TableFactory(300, null, ["results"], crudActions))
+    const persistyActions = persistyActionsWrapper(`${store}_search`, updateOperation, deleteOperation, keyFactory)
+    searchFieldFactories.push(new TableFactory(300, null, ["results"], persistyActions))
   }
   return (
     <Paper>
@@ -61,7 +61,7 @@ const CrudSearch = ({ store, limit, keyFactory }: CrudSearchProps) => {
           <OpenApiQuery operationId={`${store}_search`} params={params}>
             {(resultSet) => (
               <Fragment>
-                <CrudHeader 
+                <PersistyHeader 
                   store={store} 
                   params={params} 
                   onSetParams={handleSetParams} 
@@ -98,4 +98,4 @@ class ResultSetFactory implements EweyFactory {
   }
 }
 
-export default CrudSearch
+export default PersistySearch

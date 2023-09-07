@@ -8,7 +8,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 const LIMITS = [5, 10, 20, 50, 100]
 
-export interface CrudPaginatorProps {
+export interface PersistyPaginatorProps {
   pageKey?: string | null;
   nextPageKey?: string | null;
   onSetPageKey: (pageKey: string | null) => void;
@@ -17,14 +17,14 @@ export interface CrudPaginatorProps {
   onSetLimit: (limit: number) => void;
 }
 
-const CrudPaginator = ({
+const PersistyPaginator = ({
   pageKey,
   nextPageKey,
   onSetPageKey,
   limits,
   limit,
   onSetLimit,
-}: CrudPaginatorProps) => {
+}: PersistyPaginatorProps) => {
   if (!limits) {
     limits = LIMITS;
   }
@@ -62,4 +62,4 @@ const CrudPaginator = ({
   )
 }
 
-export default CrudPaginator;
+export default PersistyPaginator;

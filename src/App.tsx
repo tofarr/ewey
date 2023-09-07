@@ -11,7 +11,7 @@ import { MessageDisplayProvider } from "./lib/ewey";
 import OAuthBearerTokenProvider, {
   Storage,
 } from "./lib/ewey/oauth/OAuthBearerTokenProvider";
-import { crudSummaryRoute } from "./lib/ewey/crud/CrudSummary";
+import { persistySummaryRoute } from "./lib/ewey/persisty/PersistySummary";
 
 const queryClient = new QueryClient();
 const OPEN_API_URL = "http://localhost:8000/openapi.json";
@@ -34,7 +34,7 @@ const theme = createTheme({
 function Root() {
   return (
     <Routes>
-      {crudSummaryRoute("api", OPEN_API_URL)}
+      {persistySummaryRoute("api", OPEN_API_URL)}
       <Route path="/" element={<Navigate to="api" />} />
       <Route path="*" element={<Navigate to="api" />} />
     </Routes>
