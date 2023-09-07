@@ -65,7 +65,7 @@ export function CrudDeleteButton({ itemKey, searchOperationName, deleteOperation
           <DialogContentText>{t('are_you_sure', 'Are you sure you want to delete this item?')}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Grid container padding={1} minWidth={300} justifyContent="flex-end" spacing={1}>
+          <Grid container padding={2} minWidth={300} justifyContent="flex-end">
             <Grid item>
               <Fab color="primary" onClick={handleDelete}>
                 <DeleteIcon />

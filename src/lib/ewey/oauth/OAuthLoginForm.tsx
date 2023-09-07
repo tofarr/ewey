@@ -57,14 +57,14 @@ const OAuthLoginForm: FC<OAuthLoginFormProps> = ({ url }) => {
 
   return (
     <form onSubmit={handleLogin}>
-      <Box pt={2} pr={4} pb={2} pl={4}>
+      <Box pt={2} pr={2} pb={2} pl={4}>
         <EweyLayoutHintProvider hint={EweyLayoutHint.LABELS_ALWAYS_ABOVE}>
           <AutoFocusProvider autoFocusPath={["username"]}>
             <FormComponent value={login} onSetValue={setLogin} />
           </AutoFocusProvider>
         </EweyLayoutHintProvider>
       </Box>
-      <Box display="flex" justifyContent="flex-end" pr={4} pb={2} pl={4}>
+      <Box display="flex" justifyContent="flex-end" padding={2}>
         <Fab color="primary" type="submit">
           <LockOpenIcon />
         </Fab>

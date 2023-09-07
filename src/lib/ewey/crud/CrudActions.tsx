@@ -20,8 +20,9 @@ export const crudActionsWrapper = (
   }
   const CrudActionsField: EweyField<any> = ({ value }) => {
     const itemKey = (keyFactory as ((item: JsonObjectType) => string))(value);
+    const width = (updateOperation ? 48 : 0) + (deleteOperation ? 48 : 0)
     return (
-      <Grid container direction="row" width={150} spacing={1}>
+      <Grid container direction="row" width={width} spacing={1}>
         {updateOperation && 
           <Grid item>
             <CrudUpdateButton
