@@ -9,6 +9,7 @@ import FormLabel from "@mui/material/FormLabel";
 import { useEweyLayoutHint } from "../providers/EweyLayoutHint";
 import EweyField from "./EweyField";
 import { getLabel } from "../label";
+import IconButton from "@mui/material/IconButton";
 
 const FieldSetWrapper = (
   fieldsByKey: any,
@@ -102,13 +103,13 @@ const FieldSetWrapper = (
           </Grid>
           {onSetValue && <Grid item>
             <Box pt={1}>
-              <Button onClick={() => {
+              <IconButton onClick={() => {
                 const newValue = { ...value }
                 delete newValue[key]
                 onSetValue(newValue)
               }}>
                 <DeleteIcon />
-              </Button>
+              </IconButton>
             </Box>
           </Grid>}
         </Grid>

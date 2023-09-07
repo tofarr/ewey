@@ -5,6 +5,7 @@ import { OpenApiOperation } from "../openApi/model/OpenApiOperation"
 import Grid from '@mui/material/Grid';
 import { CrudDeleteButton } from './CrudDeleteButton';
 import { JsonObjectType } from '../eweyField/JsonType';
+import { CrudUpdateButton } from './CrudUpdateButton';
 
 export const crudActionsWrapper = (
   searchOperationName: string,
@@ -23,9 +24,11 @@ export const crudActionsWrapper = (
       <Grid container direction="row" width={150} spacing={1}>
         {updateOperation && 
           <Grid item>
-            <IconButton onClick={() => alert('edit')}>
-              <EditIcon />
-            </IconButton>
+            <CrudUpdateButton
+              initialValues={value}
+              searchOperationName={searchOperationName} 
+              updateOperation={updateOperation}
+            />
           </Grid>
         }
         {deleteOperation &&

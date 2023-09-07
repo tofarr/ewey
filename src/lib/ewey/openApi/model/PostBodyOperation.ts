@@ -3,7 +3,7 @@ import {
   AnySchemaObject,
   ValidateFunction,
 } from "../../schemaCompiler";
-import JsonType from "../../eweyField/JsonType";
+import JsonType, { JsonObjectType } from "../../eweyField/JsonType";
 import { createUrl } from "./OpenApi";
 import OpenApiHeaders from "./OpenApiHeaders";
 import OpenApiOperationSchema from "./OpenApiOperationSchema";
@@ -65,7 +65,20 @@ export class PostBodyOperation implements OpenApiOperation {
     if (this.paramsValidate && !this.paramsValidate(params)) {
       throw new Error("invalid_params");
     }
-    const rawResponse = await fetch(this.url, {
+    
+    const parameters: JsonObjectType = { ...params as JsonObjectType }
+    const keys = Object.keys(parameters)
+    const url: string = this.url.replace(/{(.*)}/g, function(match, key) {
+      const present = keys.includes(key)
+      if (present) {
+        const value = parameters[key] + ""
+        delete parameters[key]
+        return value
+      }
+      return match;
+    });
+
+    const rawResponse = await fetch(url, {
       method: this.method,
       headers: {
         Accept: "application/json",

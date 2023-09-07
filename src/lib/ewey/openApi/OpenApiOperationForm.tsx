@@ -17,6 +17,7 @@ import OpenApiForm from "./OpenApiForm";
 import { getLabel } from "../label";
 import OpenApiContent from "./OpenApiContent";
 import OpenApiQueryContent from "./OpenApiQueryContent";
+import DialogHeader from "../component/DialogHeader";
 
 
 export interface OpenApiOperationFormProps {
@@ -61,11 +62,7 @@ export const OpenApiOperationForm = ({
           maxWidth="lg"
         >
           <DialogContent>
-            <Box pb={2}>
-              <Typography variant="h4">
-                {getLabel(operationId, t)}
-              </Typography>
-            </Box>
+            <DialogHeader label={operationId} setDialogOpen={setDialogOpen}/>
             <OpenApiContent operationId={operationId} value={result} />
           </DialogContent>
         </Dialog>

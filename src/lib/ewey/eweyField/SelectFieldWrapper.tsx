@@ -20,7 +20,7 @@ const SelectFieldWrapper = (validate: ValidateFunction<string>, values: string[]
         <Select 
           value={value}
           onChange={(event: SelectChangeEvent<any>) => onSetValue(event.target.value as string)}
-          error={validate(value)}
+          error={!validate(value)}
         >
           {values.map(v => <MenuItem key={v} value={v}>{getLabel(v, t)}</MenuItem>)}
         </Select>

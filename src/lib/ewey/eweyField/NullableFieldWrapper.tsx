@@ -5,6 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { getLabel } from "../label";
+import IconButton from "@mui/material/IconButton";
 
 const NullableFieldWrapper = (
   Component: EweyField<any>,
@@ -23,9 +24,9 @@ const NullableFieldWrapper = (
       return (
         <Grid container spacing={1} alignItems="center">
           {onSetValue && <Grid item>
-            <Button onClick={() => onSetValue(null)}>
+            <IconButton onClick={() => onSetValue(null)}>
               <DeleteIcon />
-            </Button>
+            </IconButton>
           </Grid>}
           <Grid xs item>
             <Component value={value} onSetValue={onSetValue} />

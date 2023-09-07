@@ -13,6 +13,8 @@ import { resolveRef } from '../ComponentSchemas';
 import JsonType, { JsonObjectType } from '../eweyField/JsonType';
 import { getLabel } from '../label';
 import { AnySchemaObject } from '../schemaCompiler';
+import { EweyLayoutHint, EweyLayoutHintProvider } from '../providers/EweyLayoutHint';
+import DialogHeader from '../component/DialogHeader';
 
 export interface CrudFilterProps {
   store: string
@@ -57,13 +59,15 @@ const CrudFilters = ({ store, params, onSetParams }: CrudFilterProps) => {
       </IconButton>
       <Dialog fullWidth open={open} onClose={() => setOpen(false)}>
         <DialogContent>
-          <Typography variant="h4">{getLabel('search_filters', t)}</Typography>    
-          <EweyForm 
-            schema={schema}
-            value={internalParams as JsonObjectType} 
-            onSetValue={(value) => setInternalParams(value as CrudParams)}
-            onSubmit={handleSubmit}
-          />
+          <DialogHeader label="search_filters" setDialogOpen={setOpen} />
+          <EweyLayoutHintProvider hint={EweyLayoutHint.LABELS_ALWAYS_ABOVE}>
+            <EweyForm 
+              schema={schema}
+              value={internalParams as JsonObjectType} 
+              onSetValue={(value) => setInternalParams(value as CrudParams)}
+              onSubmit={handleSubmit}
+            />
+          </EweyLayoutHintProvider>  
         </DialogContent>
       </Dialog>
     </Fragment>

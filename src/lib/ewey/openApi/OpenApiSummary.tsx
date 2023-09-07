@@ -28,6 +28,7 @@ import { getLabel } from "../label";
 import OpenApiOperationForm from "./OpenApiOperationForm";
 import { OpenApi } from "./model/OpenApi";
 import Paper from "@mui/material/Paper";
+import DialogHeader from "../component/DialogHeader";
 
 export const openApiSummaryRoute = (prefix: string, url: string) => {
   return (
@@ -184,9 +185,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations, op, children }) => 
           disableRestoreFocus
         >
           <DialogContent>
-            <Typography variant="h4">
-              {getLabel("login", t)}
-            </Typography>
+            <DialogHeader label="login" setDialogOpen={setLoginDialogOpen}/>
             <OAuthLoginForm url={openApi.loginUrl} />
           </DialogContent>
         </Dialog>

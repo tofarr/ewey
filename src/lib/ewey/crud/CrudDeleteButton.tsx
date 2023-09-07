@@ -1,9 +1,7 @@
 import { Fragment, useState } from "react";
-import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -17,6 +15,7 @@ import { headersFromToken } from "../openApi/headers";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { useMessageBroker } from "../message/MessageBrokerContext";
 import Fab from "@mui/material/Fab";
+import DialogHeader from "../component/DialogHeader";
 
 
 export interface CrudDeleteButtonProps {
@@ -39,6 +38,7 @@ export function CrudDeleteButton({ itemKey, searchOperationName, deleteOperation
       const result = await deleteOperation.invoke({ key: itemKey }, headers);
       if (result) {
         queryClient.invalidateQueries([searchOperationName], { exact: false });
+        messageBroker.triggerMessage(getLabel('item_deleted', t))
       } else {
         messageBroker.triggerError(getLabel('delete_failed', t))
       }
@@ -60,17 +60,8 @@ export function CrudDeleteButton({ itemKey, searchOperationName, deleteOperation
         {isLoading ? <CircularProgress size={24} /> : <DeleteIcon />}
       </IconButton>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <Grid container justifyContent="space-between">
-          <Grid item>
-            <DialogTitle>{getLabel("confirm_delete", t)}</DialogTitle>
-          </Grid>
-          <Grid item padding={1}>
-            <IconButton onClick={() => setDialogOpen(false)}>
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
         <DialogContent>
+          <DialogHeader label="confirm_delete" setDialogOpen={setDialogOpen}/>
           <DialogContentText>{t('are_you_sure', 'Are you sure you want to delete this item?')}</DialogContentText>
         </DialogContent>
         <DialogActions>
