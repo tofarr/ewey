@@ -155,7 +155,7 @@ function EweyFormInternal({
       )}
       <FormSubmitComponent
         submitting={!!isLoading}
-        valid={formState.validate(value)}
+        valid={valid}
         onSubmit={() => onSubmit(value == null ? null : value)}
       />
     </form>
