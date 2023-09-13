@@ -16,7 +16,6 @@ export interface PersistyHeaderProps {
 const PersistyHeader = ({ store, nextPageKey, params, onSetParams }: PersistyHeaderProps) => {
   const openApi = useOpenApi()
   const getUploadFormOperation = openApi.operations.find(op => op.operationId === `${store}_get_upload_form`)
-  console.log("TRACE:",getUploadFormOperation)
 
   function handleSetPageKey(pageKey: string | null) {
     const newParams = { ...params }
@@ -42,6 +41,7 @@ const PersistyHeader = ({ store, nextPageKey, params, onSetParams }: PersistyHea
       <Grid item xs>
         {getUploadFormOperation && (
           <PersistyDataUploadButton
+            store={store}
             searchOperationName={`${store}_search`}
             getUploadFormOperation={getUploadFormOperation}
           />
