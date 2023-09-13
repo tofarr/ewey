@@ -1,12 +1,14 @@
 import StorageIcon from '@mui/icons-material/Storage';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { Route } from "react-router-dom";
 import OpenApiProvider from "../openApi/OpenApiProvider";
 import OpenApiSummary, { SummaryOperation, summaryOperation } from "../openApi/OpenApiSummary";
 import { OpenApi } from "../openApi/model/OpenApi";
 import { BearerToken } from "../oauth/OAuthBearerTokenProvider";
 import PersistySearch from './PersistySearch';
+import PersistyDataSearch from './PersistyDataSearch';
 
-const OPERATIONS = ['create', 'read', 'update', 'delete', 'search', 'count', "read_batch", "edit_batch"]
+const OPERATIONS = ['create', 'read', 'update', 'delete', 'search', 'count', "read_batch", "edit_batch", "get_download_url", "get_upload_form"]
 
 export const persistySummaryRoute = (prefix: string, url: string) => {
   return (
@@ -24,12 +26,20 @@ export const persistySummaryRoute = (prefix: string, url: string) => {
 export function persistySummaryFactory(openApi: OpenApi, token?: BearerToken): SummaryOperation[] {
   const operationsById: any = {}
   const stores: string[] = []
+  const dataStores: string[] = []
   for (const operation of openApi.operations) {
     const { operationId } = operation
     operationsById[operationId] = operation
+  }
+  for (const operation of openApi.operations) {
+    const { operationId } = operation
     if (operationId.endsWith("_search")) {
       const store = operationId.substring(0, operationId.length - 7)
-      stores.push(store)
+      if (operationsById[`${store}_get_download_url`] || operationsById[`${store}_get_upload_form`]){
+        dataStores.push(store)
+      }else{
+        stores.push(store)
+      }
     }
   }
   const nonStoreOperations = { ...operationsById }
@@ -54,6 +64,16 @@ export function persistySummaryFactory(openApi: OpenApi, token?: BearerToken): S
       disabled: false,
       component: () => ( <PersistySearch store={store} /> ),
       categoryKey: 'stores'
+    })
+  }
+
+  for (const store of dataStores) {
+    result.push({
+      key: store,
+      icon: () => <UploadFileIcon />,
+      disabled: false,
+      component: () => ( <PersistyDataSearch store={store} /> ),
+      categoryKey: 'data'
     })
   }
 

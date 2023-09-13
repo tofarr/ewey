@@ -1,30 +1,26 @@
 import { Fragment, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import Box from "@mui/material/Box"
-import PersistyHeader from "./PersistyHeader"
 import Paper from "@mui/material/Paper"
 import { PersistyParams } from "./PersistyParams"
 import { jsonObjToQueryParams, queryParamsToJsonObj } from "json-urley"
 import { JsonObjectType } from "../eweyField/JsonType"
-import EweyFactory from "../eweyFactory/EweyFactory"
-import { AnySchemaObject } from "../schemaCompiler"
-import { ComponentSchemas } from "../ComponentSchemas"
-import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory"
-import FieldSetWrapper from "../eweyField/FieldSetWrapper"
 import { EweyFactoryProvider, useEweyFactories } from "../providers/EweyFactoryProvider"
 import OpenApiQuery from "../openApi/OpenApiQuery"
 import OpenApiContent from "../openApi/OpenApiContent"
 import TableFactory from "../eweyFactory/TableFactory"
 import { useOpenApi } from "../openApi/OpenApiProvider"
 import { persistyActionsWrapper } from "./PersistyActions"
+import { ResultSetFactory } from "./PersistySearch"
+import PersistyDataHeader from "./PersistyDataHeader"
 
-export interface PersistySearchProps {
+export interface PersistyDataSearchProps {
   store: string,
   limit?: number,
   keyFactory?: (item: JsonObjectType) => string,
 }
 
-const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
+const PersistyDataSearch = ({ store, limit, keyFactory }: PersistyDataSearchProps) => {
   const [queryParams, setQueryParams] = useSearchParams();
   const [params, setParams] = useState<PersistyParams>(() => {
     const initialParams: JsonObjectType = queryParamsToJsonObj(queryParams)
@@ -60,7 +56,7 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
           <OpenApiQuery operationId={`${store}_search`} params={params}>
             {(resultSet) => (
               <Fragment>
-                <PersistyHeader 
+                <PersistyDataHeader 
                   store={store} 
                   params={params} 
                   onSetParams={handleSetParams} 
@@ -76,25 +72,4 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
   )
 }
 
-export class ResultSetFactory implements EweyFactory {
-  priority: number = 200;
-
-  create(
-    schema: AnySchemaObject,
-    components: ComponentSchemas,
-    currentPath: string[],
-    factories: EweyFactory[],
-  ) {
-    if (schema.type === "object" && (schema.name || '').endsWith('ResultSet') && schema.properties.results) {
-      const resultsSchema = schema.properties.results
-      const fieldsByKey = {
-        results: JsonSchemaFieldFactory(resultsSchema, components, ["results"], factories)
-      }
-      const result = FieldSetWrapper(fieldsByKey, true, [], [], {})
-      return result
-    }
-    return null
-  }
-}
-
-export default PersistySearch
+export default PersistyDataSearch
