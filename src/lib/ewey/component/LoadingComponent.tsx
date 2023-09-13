@@ -4,17 +4,15 @@ import Paper from "@mui/material/Paper";
 
 export const LoadingComponent = () => {
   return (
-    <Paper>
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        padding={3}
-        height="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    </Paper>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      padding={3}
+      height="100vh"
+    >
+      <CircularProgress />
+    </Box>
   );
 };
 

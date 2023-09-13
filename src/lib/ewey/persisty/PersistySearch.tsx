@@ -38,7 +38,7 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
 
   function handleSetParams(newParams: PersistyParams){
     const newQueryParams = jsonObjToQueryParams(newParams as JsonObjectType)
-    setQueryParams(newQueryParams)
+    setQueryParams(newQueryParams as any)
     setParams(newParams)
   }
   

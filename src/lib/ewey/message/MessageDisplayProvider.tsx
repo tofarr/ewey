@@ -42,6 +42,7 @@ const MessageDisplayer = () => {
     <Snackbar
       open={!!messages.length}
       autoHideDuration={message.duration || null}
+      onClose={handleClose}
     >
       <Alert
         onClose={handleClose}

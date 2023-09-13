@@ -13,11 +13,11 @@ export interface DialogHeaderProps {
 const DialogHeader = ({ label, setDialogOpen}: DialogHeaderProps) => {
   const { t } = useTranslation();
   return (
-    <Grid container justifyContent="space-between">
+    <Grid container justifyContent="space-between" alignItems="center" pb={2}>
       <Grid item>
         <Typography variant="h4">{getLabel(label, t)}</Typography>  
       </Grid>
-      <Grid item padding={1}>
+      <Grid item>
         <IconButton onClick={() => setDialogOpen(false)}>
           <CloseIcon />
         </IconButton>

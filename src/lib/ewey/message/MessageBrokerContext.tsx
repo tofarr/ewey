@@ -38,7 +38,7 @@ export class MessageBroker {
   triggerMessage(
     text: string,
     severity: AlertColor = "info",
-    duration: number = 0,
+    duration: number = 10000,
   ) {
     const message = { timestamp: new Date(), text, severity, duration };
     for (const listener of this.listeners) {

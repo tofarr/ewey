@@ -67,23 +67,25 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
           formData.append(prePopulatedField.name, prePopulatedField.value)
         }
         formData.append(result.file_param, (fileRef.current as any).files[0])
-        queryClient.invalidateQueries([searchOperationName], { exact: false });
-        setDialogOpen(false);
+        
         let url = result.url
         if (!url.startsWith("http:") && !url.startsWith("https:")){
           url = openApi.schema.servers[0].url + url
         }
-        fetch(url, {
+        await fetch(url, {
           method: "POST",
           body: formData
         })
+
+        setDialogOpen(false);
+        queryClient.invalidateQueries([searchOperationName], { exact: false });
         messageBroker.triggerMessage(getLabel('item_uploaded', t))
       } else {
         messageBroker.triggerError(getLabel('upload_failed', t))
       }
     },
   });
- const valid = true
+ const valid = !!(fileRef.current as any)?.files[0]
  const component = store.split("_").map(v => v[0].toUpperCase()+v.substring(1)).join("")
  let content_types = getUploadFormOperation.paramsSchema.components[component].properties.content_type.enum
  if (content_types && content_types.length) {
@@ -105,12 +107,12 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
       >
         <AddIcon />
       </IconButton>
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} disableRestoreFocus>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} disableRestoreFocus fullWidth>
         <DialogContent>
           <DialogHeader label="upload" setDialogOpen={setDialogOpen} />
             <form onSubmit={handleSubmit}>
-              <Button variant="outlined" component="label">
-                Upload
+              <Button variant="outlined" component="label" fullWidth>
+                {(fileRef.current as any)?.files[0]?.name || getLabel("select_file", t)}
                 <input hidden type="file" ref={fileRef} accept={content_types} />
               </Button>
               <SubmitComponent

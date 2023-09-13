@@ -10,24 +10,22 @@ export interface ErrorComponentProps {
 
 const ErrorComponent: FC<ErrorComponentProps> = ({ message }) => {
   return (
-    <Paper>
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-        padding={3}
-      >
-        <Grid item>
-          <ErrorIcon color="error" fontSize="large" />
-        </Grid>
-        {message && (
-          <Grid item>
-            <Typography>{message}</Typography>
-          </Grid>
-        )}
+    <Grid
+      container
+      justifyContent="center"
+      alignItems="center"
+      spacing={1}
+      padding={3}
+    >
+      <Grid item>
+        <ErrorIcon color="error" fontSize="large" />
       </Grid>
-    </Paper>
+      {message && (
+        <Grid item>
+          <Typography>{message}</Typography>
+        </Grid>
+      )}
+    </Grid>
   );
 };
 
