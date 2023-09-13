@@ -26,6 +26,8 @@ import LoadingComponent from "../component/LoadingComponent";
 import ErrorComponent from "../component/ErrorComponent";
 import SubmitComponent from "../component/SubmitComponent";
 import { useOpenApi } from "../openApi/OpenApiProvider";
+import ImgPreviewComponent from "../component/ImgPreviewComponent";
+import Box from "@mui/material/Box";
 
 
 export interface PersistyDataUploadButtonProps {
@@ -57,6 +59,7 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
   const messageBroker = useMessageBroker();
   const isLocked = getUploadFormOperation.requiresAuth && !token?.token;
   const fileRef = useRef(null)
+  const file = (fileRef.current as any)?.files[0]
   const openApi = useOpenApi()
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
@@ -85,7 +88,8 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
       }
     },
   });
- const valid = !!(fileRef.current as any)?.files[0]
+ const valid = !!file
+ const isImg = (file?.type || '').toLowerCase().startsWith('image/')
  const component = store.split("_").map(v => v[0].toUpperCase()+v.substring(1)).join("")
  let content_types = getUploadFormOperation.paramsSchema.components[component].properties.content_type.enum
  if (content_types && content_types.length) {
@@ -112,9 +116,14 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
           <DialogHeader label="upload" setDialogOpen={setDialogOpen} />
             <form onSubmit={handleSubmit}>
               <Button variant="outlined" component="label" fullWidth>
-                {(fileRef.current as any)?.files[0]?.name || getLabel("select_file", t)}
+                {file?.name || getLabel("select_file", t)}
                 <input hidden type="file" ref={fileRef} accept={content_types} />
               </Button>
+              {isImg && (
+                <Box pt={1} pb={1} display="flex" justifyContent="center">
+                  <ImgPreviewComponent file={file} maxWidth={552} maxHeight={400} />
+                </Box>
+              )}
               <SubmitComponent
                 submitting={!!isLoading}
                 valid={valid}
