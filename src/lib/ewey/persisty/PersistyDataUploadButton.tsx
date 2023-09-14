@@ -63,7 +63,11 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
   const openApi = useOpenApi()
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
-      const result = await getUploadFormOperation.invoke({ key: uuidv4() }, headers) as unknown as UploadForm;
+      let key = uuidv4()
+      if (file.type) {
+        key += '.'+file.type.split('/')[1]
+      }
+      const result = await getUploadFormOperation.invoke({ key }, headers) as unknown as UploadForm;
       if (result) {
         const formData = new FormData()
         for (const prePopulatedField of (result.pre_populated_fields || [])) {
