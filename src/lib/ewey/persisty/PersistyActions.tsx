@@ -3,11 +3,11 @@ import { OpenApiOperation } from "../openApi/model/OpenApiOperation"
 import Grid from '@mui/material/Grid';
 import { PersistyDeleteButton } from './PersistyDeleteButton';
 import { JsonObjectType } from '../eweyField/JsonType';
-import { PersistyUpdateButton } from './PersistyUpdateButton';
+import { PersistyInfoButton } from "./PersistyInfoButton";
 
 export const persistyActionsWrapper = (
   searchOperationName: string,
-  updateOperation?: OpenApiOperation,
+  readOperation?: OpenApiOperation,
   deleteOperation?: OpenApiOperation,
   keyFactory?: (item: JsonObjectType) => string,
 ) => {
@@ -18,16 +18,11 @@ export const persistyActionsWrapper = (
   }
   const PersistyActionsField: EweyField<any> = ({ value }) => {
     const itemKey = (keyFactory as ((item: JsonObjectType) => string))(value);
-    const width = (updateOperation ? 48 : 0) + (deleteOperation ? 48 : 0)
     return (
-      <Grid container direction="row" width={width} spacing={1}>
-        {updateOperation && 
+      <Grid container direction="row" spacing={1} justifyContent="flex-end">
+        {readOperation && 
           <Grid item>
-            <PersistyUpdateButton
-              initialValues={value}
-              searchOperationName={searchOperationName} 
-              updateOperation={updateOperation}
-            />
+            <PersistyInfoButton itemKey={itemKey} readOperation={readOperation} />
           </Grid>
         }
         {deleteOperation &&

@@ -69,7 +69,7 @@ const Row = ({ path, columns, rowIndex, value, onSetValue, ActionField }: RowPro
   ))
   if (ActionField) {
     cells.push(
-      <TableCell key={`actions/${rowIndex}`}>
+      <TableCell key={`actions/${rowIndex}`} align="right">
         <ActionField value={rowValue} onSetValue={handleSetRowValue} />
       </TableCell>
     )

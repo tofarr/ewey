@@ -36,7 +36,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   const openApi = useOpenApi();
   const operation = openApi.getOperation(operationId);
   const headers = headersFromToken(useOAuthBearerToken()?.token);
-  const disconnected = typeof value === "undefined" && typeof onSetValue === "undefined";
+  const disconnected = typeof onSetValue === "undefined";
   const [internalValue, setInternalValue] = useState<JsonType>(createDefaultValue());
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {

@@ -60,7 +60,6 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 64, imgHeight
   const factories = useEweyFactories()
   const openApi = useOpenApi()
   const { t } = useTranslation()
-  const updateOperation = openApi.operations.find(op => op.operationId === `${store}_update`)
   const deleteOperation = openApi.operations.find(op => op.operationId === `${store}_delete`)
 
   function handleSetParams(newParams: PersistyParams){
@@ -134,8 +133,8 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 64, imgHeight
     ...factories,
     new ResultSetFactory()
   ]
-  if (updateOperation || deleteOperation) {
-    const persistyActions = persistyActionsWrapper(`${store}_search`, updateOperation, deleteOperation, keyFactory)
+  if (deleteOperation) {
+    const persistyActions = persistyActionsWrapper(`${store}_search`, undefined, deleteOperation, keyFactory)
     searchFieldFactories.push(new TableFactory(300, null, ["results"], persistyActions))
   }
   return (

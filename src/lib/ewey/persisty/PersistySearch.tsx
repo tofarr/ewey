@@ -18,6 +18,7 @@ import TableFactory from "../eweyFactory/TableFactory"
 import { useOpenApi } from "../openApi/OpenApiProvider"
 import { persistyActionsWrapper } from "./PersistyActions"
 import PersistyImgRefFactory from "./PersistyImgRefFactory"
+import PersistyItem from "./PersistyItem"
 
 export interface PersistySearchProps {
   store: string,
@@ -32,8 +33,10 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
     if (initialParams.limit == null) {
       initialParams.limit = limit || 5
     }
+    delete initialParams.key
     return initialParams
   })
+  const key = queryParams.get("key")
   const factories = useEweyFactories()
   const openApi = useOpenApi();
 
@@ -43,7 +46,7 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
     setParams(newParams)
   }
   
-  const updateOperation = openApi.operations.find(op => op.operationId === `${store}_update`)
+  const readOperation = openApi.operations.find(op => op.operationId === `${store}_read`)
   const deleteOperation = openApi.operations.find(op => op.operationId === `${store}_delete`)
 
   const searchFieldFactories = [
@@ -51,27 +54,36 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
     new ResultSetFactory(),
     new PersistyImgRefFactory()
   ]
-  if (updateOperation || deleteOperation) {
-    const persistyActions = persistyActionsWrapper(`${store}_search`, updateOperation, deleteOperation, keyFactory)
-    searchFieldFactories.push(new TableFactory(300, null, ["results"], persistyActions))
+
+  const persistyActions = persistyActionsWrapper(`${store}_search`, readOperation, deleteOperation, keyFactory)
+  searchFieldFactories.push(new TableFactory(300, null, ["results"], persistyActions))
+
+  function renderContent(){
+    if (key){
+      return <PersistyItem store={store} itemKey={key} />
+    }
+    return (
+      <OpenApiQuery operationId={`${store}_search`} params={params}>
+        {(resultSet) => (
+          <Fragment>
+            <PersistyHeader 
+              store={store} 
+              params={params} 
+              onSetParams={handleSetParams} 
+              nextPageKey={(resultSet as JsonObjectType).next_page_key as string}
+            />
+            <OpenApiContent operationId={`${store}_search`} value={resultSet} />
+          </Fragment>
+        )}
+      </OpenApiQuery>
+    )
   }
+
   return (
     <Paper>
       <Box padding={1}>
         <EweyFactoryProvider factories={searchFieldFactories}>
-          <OpenApiQuery operationId={`${store}_search`} params={params}>
-            {(resultSet) => (
-              <Fragment>
-                <PersistyHeader 
-                  store={store} 
-                  params={params} 
-                  onSetParams={handleSetParams} 
-                  nextPageKey={(resultSet as JsonObjectType).next_page_key as string}
-                />
-                <OpenApiContent operationId={`${store}_search`} value={resultSet} />
-              </Fragment>
-            )}
-          </OpenApiQuery>
+          {renderContent()}
         </EweyFactoryProvider>
       </Box>
     </Paper>

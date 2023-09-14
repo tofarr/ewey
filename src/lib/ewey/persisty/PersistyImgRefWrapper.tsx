@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 const PersistyImgRefWrapper = () => {
   const PersistyImgRef: EweyField<string> = ({ value, onSetValue }) => {
     const { t } = useTranslation()
-    debugger;
     if (!onSetValue) {
       return (
         <Typography variant="body2">PERSISTY IMG REF</Typography>

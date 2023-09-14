@@ -15,7 +15,6 @@ class PersistyImgRefFactory implements EweyFactory {
     if (!schema?.persistyImgStore) {
       return null;
     }
-    console.log("TRACE", schema)
     const field = PersistyImgRefWrapper()
     return field;
   }
