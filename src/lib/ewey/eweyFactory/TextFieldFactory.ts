@@ -16,6 +16,7 @@ class TextFieldFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     if (!schema || schema.type !== "string") {
       return null;

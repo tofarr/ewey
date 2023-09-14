@@ -18,6 +18,7 @@ class NumberFieldFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     if (!NUMBER_TYPES.includes(schema.type)) {
       return null;

@@ -18,9 +18,10 @@ class NamedFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     if (schema?.name === this.name) {
-      return this.factory.create(schema, components, currentPath, factories);
+      return this.factory.create(schema, components, currentPath, factories, parents);
     }
     return null;
   }

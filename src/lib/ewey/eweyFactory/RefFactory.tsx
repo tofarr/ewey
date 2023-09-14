@@ -11,6 +11,7 @@ class RefFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     if (!schema || !schema["$ref"]) {
       return null;

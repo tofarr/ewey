@@ -11,6 +11,7 @@ test("renders Checkbox Field", () => {
     {},
     [],
     [],
+    [],
   ) as EweyField<boolean>;
   render(<MyCheckbox value={true} />);
   const checkboxElement = screen.getByRole("checkbox", { checked: true });

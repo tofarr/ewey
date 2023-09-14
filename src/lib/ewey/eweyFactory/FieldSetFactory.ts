@@ -1,8 +1,7 @@
 import FieldSetWrapper from "../eweyField/FieldSetWrapper";
 import EweyFactory from "./EweyFactory";
-import { AnySchemaObject } from "../schemaCompiler";
+import { AnySchemaObject, newCreateDefaultFnForSchema } from "../schemaCompiler";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
-import { newCreateDefaultFnForSchema } from "./ListFactory";
 import { ComponentSchemas, resolveRef } from "../ComponentSchemas";
 
 class FieldSetFactory implements EweyFactory {
@@ -25,6 +24,7 @@ class FieldSetFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     if (!schema || schema.type !== "object") {
       return null;
@@ -40,54 +40,7 @@ class FieldSetFactory implements EweyFactory {
         continue
       }
 
-      // This logic is kinda stinky - kill it! (With fire)
-      // It is designed to prevent null values - I think we should do the opposite - explicitly allow null values if missing.
-      // And then filter nulls from the result.
-      // That is wrong too though - we need a difference between null and undefined.
-      // For example - when updating does null mean - "leave this alone" or does it mean "set this to null"
       let subSchema = schema.properties[key]
-      /*
-      if (!required.includes(key)){
-        if (subSchema?.anyOf?.length === 2) {
-          if (subSchema.anyOf[0].type === "null") {
-            subSchema = {...subSchema, ...subSchema.anyOf[1]}
-            delete subSchema.anyOf
-          } else if (subSchema.anyOf[1].type === "null") {
-            subSchema = {...subSchema, ...subSchema.anyOf[0]}
-            delete subSchema.anyOf
-          }
-        }
-      }
-
-      Lets define this by desired behavior...
-      * null and undefined are separate states.
-      * a non nullable field can be undefined
-      * a nullable field can be undefined
-      * A text field being empty may mean...
-      *   pass up an empty string
-      *   pass up null
-      *   do not pass up anything! (undefined)
-      * 
-      * There are 3 types of empty values
-      *   empty strings
-      *   null
-      *   undefined.
-      * If the field only allows one of these, we can consider every empty string or null to be that
-      * If the field allows all 3, then we need to figure out a decent UI for this.
-      * 
-      * Maybe the label becomes a toggle button, with the rest either being "undefined" or a value.
-      * Or maybe we get a select with optional fields?
-      * right now what we have works but is complicated. Can we simplify?
-      * 
-      * Simplifications:
-      *   Field does not allow blank strings but allows null - blank value should be null
-      *   Field does not allow blank strings but allows undefined - blank value should be undefined
-      * Cant simplify:
-      *   Field does not allow blank strings but allows null or undefined - need UI to figure out which
-      *   Field allows all - need UI to figure out undefined, null, or blank
-      * Need a UUID field.
-      */
-
       schemasByKey[key] = subSchema
       const factory = newCreateDefaultFnForSchema(subSchema, components)
       if (factory) {

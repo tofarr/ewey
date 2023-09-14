@@ -1,5 +1,5 @@
 import { FC, FormEvent, useEffect, useState } from "react";
-import { AnySchemaObject, ValidateFunction, schemaCompiler } from "./schemaCompiler";
+import { AnySchemaObject, ValidateFunction, newCreateDefaultFnForSchema, schemaCompiler } from "./schemaCompiler";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,6 @@ import { getLabel } from "./label";
 import JsonType from "./eweyField/JsonType";
 import CancelComponent, { CancelComponentProps } from "./component/CancelComponent";
 import EweyField from "./eweyField/EweyField";
-import { newCreateDefaultFnForSchema } from "./eweyFactory/ListFactory";
 import { useEweyFactories } from "./providers/EweyFactoryProvider";
 
 interface EweyFormState {

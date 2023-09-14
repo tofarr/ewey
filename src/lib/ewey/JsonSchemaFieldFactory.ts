@@ -7,14 +7,18 @@ const JsonSchemaFieldFactory = (
   components?: any,
   currentPath?: string[],
   factories?: EweyFactory[],
+  parents?: AnySchemaObject[],
 ) => {
+  if (!currentPath) {
+    currentPath = [];
+  }
   if (!factories) {
     factories = FACTORIES;
   } else {
     factories.sort((a, b) => b.priority - a.priority);
   }
-  if (!currentPath) {
-    currentPath = [];
+  if (!parents) {
+    parents = []
   }
   for (const factory of factories) {
     const component = factory.create(
@@ -22,6 +26,7 @@ const JsonSchemaFieldFactory = (
       components,
       currentPath,
       factories,
+      parents,
     );
     if (component) {
       return component;

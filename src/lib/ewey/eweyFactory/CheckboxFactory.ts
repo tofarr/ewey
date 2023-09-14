@@ -15,6 +15,7 @@ class CheckboxFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     if (schema?.type !== "boolean") {
       return null;

@@ -10,6 +10,7 @@ class PersistyImgRefFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     if (!schema?.persistyImgStore) {
       return null;

@@ -8,7 +8,8 @@ interface EweyFactory {
     schema: AnySchemaObject,
     components: ComponentSchemas,
     currentPath: string[],
-    factories: EweyFactory[]
+    factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ): EweyField<any> | undefined | null;
 }
 

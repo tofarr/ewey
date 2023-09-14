@@ -16,9 +16,8 @@ import JsonType, { JsonObjectType } from "../eweyField/JsonType";
 import EweyForm from "../EweyForm";
 import CircularProgress from "@mui/material/CircularProgress";
 import { EweyLayoutHint, EweyLayoutHintProvider } from "../providers/EweyLayoutHint";
-import { AnySchemaObject } from "../schemaCompiler";
+import { AnySchemaObject, newCreateDefaultFnForSchema } from "../schemaCompiler";
 import { resolveRef } from "../ComponentSchemas";
-import { newCreateDefaultFnForSchema } from "../eweyFactory/ListFactory";
 import DialogHeader from "../component/DialogHeader";
 
 

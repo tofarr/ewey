@@ -18,12 +18,14 @@ class ReadOnlyFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     const component = this.factory.create(
       schema,
       components,
       currentPath,
       factories,
+      parents,
     );
     return ReadOnlyWrapper(component as EweyField<any>);
   }

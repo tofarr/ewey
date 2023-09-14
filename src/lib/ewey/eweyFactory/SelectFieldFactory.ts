@@ -10,6 +10,7 @@ class SelectFieldFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     if (!schema?.enum) {
       return null;

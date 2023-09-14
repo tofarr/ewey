@@ -1,16 +1,14 @@
 import { FC, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useOpenApi } from "./OpenApiProvider";
-import {
-  SubmitComponentProps,
-} from "../component/SubmitComponent";
+import { SubmitComponentProps } from "../component/SubmitComponent";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { CancelComponentProps } from "../component/CancelComponent";
 import EweyForm from "../EweyForm";
 import JsonType from "../eweyField/JsonType";
-import { newCreateDefaultFnForSchema } from "../eweyFactory/ListFactory";
 import { JsonObjectType } from "../eweyField/JsonType";
 import { headersFromToken } from "../openApi/headers";
+import { newCreateDefaultFnForSchema } from "../schemaCompiler";
 
 export interface OpenApiFormProps {
   operationId: string;

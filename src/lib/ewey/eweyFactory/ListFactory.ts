@@ -1,9 +1,8 @@
 import ListWrapper from "../eweyField/ListWrapper";
 import EweyFactory from "./EweyFactory";
-import { AnySchemaObject } from "../schemaCompiler";
+import { AnySchemaObject, newCreateDefaultFnForSchema } from "../schemaCompiler";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
-import { ComponentSchemas, resolveRef } from "../ComponentSchemas";
-import JsonType, { JsonObjectType } from "../eweyField/JsonType";
+import { ComponentSchemas } from "../ComponentSchemas";
 
 class ListFactory implements EweyFactory {
   priority: number = 100;
@@ -14,6 +13,7 @@ class ListFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     if (!schema || schema.type !== "array" || !schema.items) {
       return null;
@@ -31,57 +31,6 @@ class ListFactory implements EweyFactory {
     const listComponent = ListWrapper(component, createItem);
     return listComponent;
   }
-}
-
-
-export const newCreateDefaultFnForSchema = (schema: AnySchemaObject, components: ComponentSchemas): (() => JsonType) | undefined => {
-  if (schema.default) {
-    return () => schema.default
-  }
-  if (schema["$ref"]) {
-    const referencedSchema = resolveRef(schema, components)
-    return newCreateDefaultFnForSchema(referencedSchema, components)
-  }
-  if (schema.enum) {
-    return () => schema.enum[0]
-  }
-  if (schema.type === 'boolean') {
-    return () => false
-  }
-  if (["number", "integer"].includes(schema.type)) {
-    return () => 0
-  }
-  if (schema.type === 'null') {
-    return () => null
-  }
-  if (schema.type === 'string') {
-    if (schema.format === 'date-time') {
-      return () => new Date().toISOString()
-    }
-    return () => ''
-  }
-  if (schema.type === 'object') {
-    return () => {
-      const result: any = {}
-      const required = schema.required || []
-      for (const key in schema.properties) {
-        if (required.includes(key)) {
-          const fn = newCreateDefaultFnForSchema(schema.properties[key], components)
-          if (fn !== undefined) {
-            result[key] = fn()
-          }
-        }
-      }
-      return result
-    }
-  }
-  if (schema.anyOf) {
-    const subSchema = schema.anyOf.find((s: JsonObjectType) => s.type !== "null")
-    if (subSchema){
-      return newCreateDefaultFnForSchema(subSchema, components)
-    }
-  }
-  return undefined
 }
 
 export default ListFactory;

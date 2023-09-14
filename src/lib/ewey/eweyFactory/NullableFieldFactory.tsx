@@ -1,8 +1,7 @@
 import NullableFieldWrapper from "../eweyField/NullableFieldWrapper";
 import EweyFactory from "./EweyFactory";
-import { AnySchemaObject } from "../schemaCompiler";
+import { AnySchemaObject, newCreateDefaultFnForSchema } from "../schemaCompiler";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
-import { newCreateDefaultFnForSchema } from "./ListFactory";
 import { ComponentSchemas } from "../ComponentSchemas";
 
 class NullableFieldFactory implements EweyFactory {
@@ -13,6 +12,7 @@ class NullableFieldFactory implements EweyFactory {
     components: ComponentSchemas,
     currentPath: string[],
     factories: EweyFactory[],
+    parents: AnySchemaObject[],
   ) {
     const anyOf = schema?.anyOf;
     if (!anyOf || anyOf.length !== 2) {
