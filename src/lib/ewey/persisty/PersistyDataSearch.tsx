@@ -13,7 +13,7 @@ import { useOpenApi } from "../openApi/OpenApiProvider"
 import { persistyActionsWrapper } from "./PersistyActions"
 import { ResultSetFactory } from "./PersistySearch"
 import PersistyDataHeader from "./PersistyDataHeader"
-import { Button, Fab, Grid, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material"
+import { Button, Grid, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import { getLabel } from "../label"
 import { PersistyDeleteButton } from "./PersistyDeleteButton"
@@ -48,7 +48,7 @@ const UNITS = [
 ]
 
 
-const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 50, imgHeight = 50 }: PersistyDataSearchProps) => {
+const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 64, imgHeight = 50 }: PersistyDataSearchProps) => {
   const [queryParams, setQueryParams] = useSearchParams();
   const [params, setParams] = useState<PersistyParams>(() => {
     const initialParams: JsonObjectType = queryParamsToJsonObj(queryParams)
@@ -75,14 +75,7 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 50, imgHeight
     return sizeInUnits.toLocaleString(navigator.language, {maximumFractionDigits: 1}) + unit.name
   }
 
-  function renderContent(key: string, data_url: string, contentType: string) {
-    if (store == "resized_image") {
-      return (
-        <Box display="flex" style={{width: imgWidth, height: imgHeight}}>
-          <PersistyImg src={data_url} maxWidth={imgWidth} maxHeight={imgHeight} />
-        </Box>
-      )
-    }
+  function renderContent(key: string, dataUrl: string, updatedAt?: string | null, contentType?: string | null) {
     if (contentType && contentType.toLowerCase().startsWith("image/")) {
       const queryStr = jsonObjToQueryStr({
         store_name: store,
@@ -91,9 +84,8 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 50, imgHeight
         height: imgHeight,
       })
       const src = `${openApi.schema.servers[0].url}/resized-img?${queryStr}`;
-      // Certain implementations only support eventual consistency - there can be a few seconds before images are actually ready
       return (
-        <PersistyImg src={src} width={imgWidth} height={imgHeight} />
+        <PersistyImg src={src} updatedAt={updatedAt} width={imgWidth} height={imgHeight} />
       )
     }
     return (
@@ -110,7 +102,7 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 50, imgHeight
     return (
       <TableRow key={key}>
         <TableCell>
-          {renderContent(key, data_url, content_type)}
+          {renderContent(key, data_url, updated_at, content_type)}
         </TableCell>
         <TableCell align="right">{renderSize(size)}</TableCell>
         <TableCell>{new Date(updated_at).toLocaleString()}</TableCell>
