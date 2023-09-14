@@ -91,7 +91,7 @@ const FieldSetWrapper = (
             onClick={() => handleAddDefault(key)}
             endIcon={<AddIcon />}
           >
-            {getLabel('empty', t)}
+            {getLabel('undefined', t)}
           </Button>
         )
       }

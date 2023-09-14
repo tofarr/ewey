@@ -17,6 +17,7 @@ import OpenApiContent from "../openApi/OpenApiContent"
 import TableFactory from "../eweyFactory/TableFactory"
 import { useOpenApi } from "../openApi/OpenApiProvider"
 import { persistyActionsWrapper } from "./PersistyActions"
+import PersistyImgRefFactory from "./PersistyImgRefFactory"
 
 export interface PersistySearchProps {
   store: string,
@@ -47,7 +48,8 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
 
   const searchFieldFactories = [
     ...factories,
-    new ResultSetFactory()
+    new ResultSetFactory(),
+    new PersistyImgRefFactory()
   ]
   if (updateOperation || deleteOperation) {
     const persistyActions = persistyActionsWrapper(`${store}_search`, updateOperation, deleteOperation, keyFactory)

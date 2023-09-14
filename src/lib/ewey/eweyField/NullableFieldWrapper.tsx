@@ -23,14 +23,14 @@ const NullableFieldWrapper = (
     if (value != null) {
       return (
         <Grid container spacing={1} alignItems="center">
+          <Grid xs item>
+            <Component value={value} onSetValue={onSetValue} />
+          </Grid>
           {onSetValue && <Grid item>
             <IconButton onClick={() => onSetValue(null)}>
               <DeleteIcon />
             </IconButton>
           </Grid>}
-          <Grid xs item>
-            <Component value={value} onSetValue={onSetValue} />
-          </Grid>
         </Grid>
       )
     }

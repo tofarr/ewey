@@ -130,7 +130,6 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 64, imgHeight
     )
   }
   
-
   const searchFieldFactories = [
     ...factories,
     new ResultSetFactory()
@@ -156,10 +155,12 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 64, imgHeight
                   />
                   <Table>
                     <TableHead>
-                      <TableCell></TableCell>
-                      <TableCell align="right">{getLabel('file_size', t)}</TableCell>
-                      <TableCell>{getLabel('updated_at', t)}</TableCell>
-                      <TableCell></TableCell>
+                      <TableRow>
+                        <TableCell></TableCell>
+                        <TableCell align="right">{getLabel('file_size', t)}</TableCell>
+                        <TableCell>{getLabel('updated_at', t)}</TableCell>
+                        <TableCell></TableCell>
+                      </TableRow>
                     </TableHead>
                     <TableBody>
                       {resultSet.results.map(renderRow)}

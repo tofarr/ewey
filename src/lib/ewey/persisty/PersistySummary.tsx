@@ -46,7 +46,7 @@ export function persistySummaryFactory(openApi: OpenApi, token?: BearerToken): S
   for (const store of [...stores, ...dataStores]) {
     for (const op of OPERATIONS) {
       const key = `${store}_${op}`
-      delete nonStoreOperations[key]
+      //delete nonStoreOperations[key]
     }
   }
   

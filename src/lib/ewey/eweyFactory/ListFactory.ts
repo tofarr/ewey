@@ -3,7 +3,7 @@ import EweyFactory from "./EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { ComponentSchemas, resolveRef } from "../ComponentSchemas";
-import JsonType from "../eweyField/JsonType";
+import JsonType, { JsonObjectType } from "../eweyField/JsonType";
 
 class ListFactory implements EweyFactory {
   priority: number = 100;
@@ -73,6 +73,12 @@ export const newCreateDefaultFnForSchema = (schema: AnySchemaObject, components:
         }
       }
       return result
+    }
+  }
+  if (schema.anyOf) {
+    const subSchema = schema.anyOf.find((s: JsonObjectType) => s.type !== "null")
+    if (subSchema){
+      return newCreateDefaultFnForSchema(subSchema, components)
     }
   }
   return undefined

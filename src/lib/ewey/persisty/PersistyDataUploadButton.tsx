@@ -1,29 +1,19 @@
-import { FormEvent, Fragment, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, Fragment, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton"
 import Button from "@mui/material/Button";
 import { useTranslation } from "react-i18next";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
 import { OpenApiOperation } from "../openApi/model/OpenApiOperation";
 import { getLabel } from "../label";
 import { headersFromToken } from "../openApi/headers";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { useMessageBroker } from "../message/MessageBrokerContext";
-import Fab from "@mui/material/Fab";
-import JsonType, { JsonObjectType } from "../eweyField/JsonType";
-import EweyForm from "../EweyForm";
-import CircularProgress from "@mui/material/CircularProgress";
-import { EweyLayoutHint, EweyLayoutHintProvider } from "../providers/EweyLayoutHint";
-import { AnySchemaObject } from "../schemaCompiler";
-import { resolveRef } from "../ComponentSchemas";
-import { newCreateDefaultFnForSchema } from "../eweyFactory/ListFactory";
+import { JsonObjectType } from "../eweyField/JsonType";
 import DialogHeader from "../component/DialogHeader";
-import LoadingComponent from "../component/LoadingComponent";
-import ErrorComponent from "../component/ErrorComponent";
 import SubmitComponent from "../component/SubmitComponent";
 import { useOpenApi } from "../openApi/OpenApiProvider";
 import ImgPreviewComponent from "../component/ImgPreviewComponent";
@@ -58,11 +48,13 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
   const queryClient = useQueryClient()
   const messageBroker = useMessageBroker();
   const isLocked = getUploadFormOperation.requiresAuth && !token?.token;
-  const fileRef = useRef(null)
-  const file = (fileRef.current as any)?.files[0]
+  const [file, setFile] = useState<File|null>(null)
   const openApi = useOpenApi()
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
+      if (!file){
+        return  // illegal state
+      }
       let key = uuidv4()
       if (file.type) {
         key += '.'+file.type.split('/')[1]
@@ -73,7 +65,7 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
         for (const prePopulatedField of (result.pre_populated_fields || [])) {
           formData.append(prePopulatedField.name, prePopulatedField.value)
         }
-        formData.append(result.file_param, (fileRef.current as any).files[0])
+        formData.append(result.file_param, file)
         
         let url = result.url
         if (!url.startsWith("http:") && !url.startsWith("https:")){
@@ -92,20 +84,27 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
       }
     },
   });
- const valid = !!file
- const isImg = (file?.type || '').toLowerCase().startsWith('image/')
- const component = store.split("_").map(v => v[0].toUpperCase()+v.substring(1)).join("")
- let content_types = getUploadFormOperation.paramsSchema.components[component].properties.content_type.enum
- if (content_types && content_types.length) {
-    content_types = content_types.join(", ")
- } else {
-    content_types = undefined
- }
+  console.log("TRACE:PersistyDataUploadButton", file)
+  const valid = !!file
+  const isImg = (file?.type || '').toLowerCase().startsWith('image/')
+  const component = store.split("_").map(v => v[0].toUpperCase()+v.substring(1)).join("")
+  let content_types = getUploadFormOperation.paramsSchema.components[component].properties.content_type.enum
+  if (content_types && content_types.length) {
+      content_types = content_types.join(", ")
+  } else {
+      content_types = undefined
+  }
 
- function handleSubmit(event: FormEvent) {
-    event.preventDefault()
-    mutate()
- }
+  function handleChangeFile(event: ChangeEvent<HTMLInputElement>) {
+    const { files } = event.target
+    const file = (files && files[0]) || null
+    setFile(file)
+  }
+
+  function handleSubmit(event: FormEvent) {
+      event.preventDefault()
+      mutate()
+  }
 
   return (
     <Fragment>
@@ -121,9 +120,9 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
             <form onSubmit={handleSubmit}>
               <Button variant="outlined" component="label" fullWidth>
                 {file?.name || getLabel("select_file", t)}
-                <input hidden type="file" ref={fileRef} accept={content_types} />
+                <input hidden type="file" accept={content_types} onChange={handleChangeFile} />
               </Button>
-              {isImg && (
+              {file && isImg && (
                 <Box pt={1} pb={1} display="flex" justifyContent="center">
                   <ImgPreviewComponent file={file} maxWidth={552} maxHeight={400} />
                 </Box>

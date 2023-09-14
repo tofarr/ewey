@@ -15,6 +15,7 @@ export interface OpenApiSchemaLoaderProps {
   children: FC<OpenApiSchemaLoaderChildProps>;
   loadingComponent?: FC;
   errorComponent?: FC<ErrorComponentProps>;
+  refetchOnWindowFocus?: boolean;
 }
 
 export const sanitizeOpenApiSchema = (schema: OpenApiSchema, url: string) => {
@@ -41,6 +42,7 @@ const OpenApiSchemaLoader: FC<OpenApiSchemaLoaderProps> = ({
   children,
   loadingComponent,
   errorComponent,
+  refetchOnWindowFocus = false
 }) => {
   if (!loadingComponent) {
     loadingComponent = LoadingComponent;
@@ -51,6 +53,7 @@ const OpenApiSchemaLoader: FC<OpenApiSchemaLoaderProps> = ({
   const { error, data } = useQuery({
     queryKey: [url],
     queryFn: () => fetch(url).then((res) => res.json()),
+    refetchOnWindowFocus,
   });
 
   if (error) {
