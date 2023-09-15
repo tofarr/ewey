@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import EditIcon from '@mui/icons-material/Edit';
+import MoreIcon from '@mui/icons-material/More';
 import IconButton from "@mui/material/IconButton"
 import { Link } from "react-router-dom";
 import { OpenApiOperation } from "../openApi/model/OpenApiOperation";
@@ -19,7 +19,7 @@ export function PersistyInfoButton({ itemKey, readOperation}: PersistyInfoButton
     <Fragment>
       <Link to={`?key=${itemKey}`}>
         <IconButton disabled={isLocked}>
-          <EditIcon />
+          <MoreIcon />
         </IconButton>
       </Link>
     </Fragment>

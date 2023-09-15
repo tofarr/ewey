@@ -16,15 +16,13 @@ const SubmitComponent: FC<SubmitComponentProps> = ({
   onSubmit,
 }) => {
   return (
-    <Box display="flex" justifyContent="flex-end" padding={2}>
-      <Fab
-        color="primary"
-        onClick={onSubmit}
-        disabled={submitting || !valid}
-      >
-        {submitting ? <CircularProgress size={24} /> : <PlayArrowIcon />}
-      </Fab>
-    </Box>
+    <Fab
+      color="primary"
+      onClick={onSubmit}
+      disabled={submitting || !valid}
+    >
+      {submitting ? <CircularProgress size={24} /> : <PlayArrowIcon />}
+    </Fab>
   );
 };
 

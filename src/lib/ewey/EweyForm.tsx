@@ -1,6 +1,5 @@
-import { FC, FormEvent, useEffect, useState } from "react";
+import { FC, FormEvent, ReactNode, useEffect, useState } from "react";
 import { AnySchemaObject, ValidateFunction, newCreateDefaultFnForSchema, schemaCompiler } from "./schemaCompiler";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
 import JsonSchemaFieldFactory from "./JsonSchemaFieldFactory";
@@ -9,9 +8,9 @@ import SubmitComponent, {
 } from "./component/SubmitComponent";
 import { getLabel } from "./label";
 import JsonType from "./eweyField/JsonType";
-import CancelComponent, { CancelComponentProps } from "./component/CancelComponent";
 import EweyField from "./eweyField/EweyField";
 import { useEweyFactories } from "./providers/EweyFactoryProvider";
+import Grid from "@mui/material/Grid";
 
 interface EweyFormState {
   component: EweyField<JsonType>
@@ -24,9 +23,8 @@ interface EweyFormProps {
   value?: JsonType;
   onSetValue?: (value: JsonType) => void;
   onSubmit: (value: JsonType) => void;
-  onCancel?: () => void;
   submitComponent?: FC<SubmitComponentProps>;
-  cancelComponent?: FC<CancelComponentProps>;
+  cancelElement?: ReactNode;
   labelKey?: string;
   summary?: string | null;
 }
@@ -44,9 +42,8 @@ function DisconnectedEweyForm({
   onSetValue,
   isLoading,
   onSubmit,
-  onCancel,
   submitComponent,
-  cancelComponent,
+  cancelElement,
   labelKey,
   summary,
 }: EweyFormProps) {
@@ -80,9 +77,8 @@ function DisconnectedEweyForm({
     onSetValue: handleSetValue,
     isLoading,
     onSubmit,
-    onCancel,
     submitComponent,
-    cancelComponent,
+    cancelElement,
     labelKey,
     summary,
   })
@@ -94,14 +90,12 @@ function EweyFormInternal({
   onSetValue,
   isLoading,
   onSubmit,
-  onCancel,
   submitComponent,
-  cancelComponent,
+  cancelElement,
   labelKey,
   summary,
 }: EweyFormProps) {
   const FormSubmitComponent = submitComponent || SubmitComponent;
-  const FormCancelComponent = cancelComponent || CancelComponent;
   const { t } = useTranslation();
   const [formState, setFormState] = useState<EweyFormState | null>(null)
   const valid = formState ? formState.validate(value) : false;
@@ -136,27 +130,39 @@ function EweyFormInternal({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Box padding={2} marginBottom={2}>
+      <Grid container padding={2} spacing={3} direction="column">
         {labelKey && (
-          <Typography variant="h4">
-            {getLabel(labelKey, t)}
-          </Typography>
+          <Grid item>
+            <Typography variant="h4">
+              {getLabel(labelKey, t)}
+            </Typography>
+          </Grid>
         )}
         {summary && (
-          <Box pt={1} pb={1}>
+          <Grid item>
             <Typography variant="body2">{summary}</Typography>
-          </Box>
+          </Grid>
         )}
-        <formState.component value={value == null ? null : value} onSetValue={onSetValue} />
-      </Box>
-      {onCancel && (
-        <FormCancelComponent onCancel={onCancel} />
-      )}
-      <FormSubmitComponent
-        submitting={!!isLoading}
-        valid={valid}
-        onSubmit={() => onSubmit(value == null ? null : value)}
-      />
+        <Grid item>
+          <formState.component value={value == null ? null : value} onSetValue={onSetValue} />
+        </Grid>
+        <Grid item>
+          <Grid container justifyContent="flex-end" spacing={2}>
+            {cancelElement && (
+              <Grid item>
+                {cancelElement}
+              </Grid>
+            )}
+            <Grid item>
+              <FormSubmitComponent
+                submitting={!!isLoading}
+                valid={valid}
+                onSubmit={() => onSubmit(value == null ? null : value)}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </form>
   );
 }

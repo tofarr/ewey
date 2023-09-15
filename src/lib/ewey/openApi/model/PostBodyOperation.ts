@@ -10,6 +10,7 @@ import OpenApiOperationSchema from "./OpenApiOperationSchema";
 import OpenApiSchema from "./OpenApiSchema";
 import { OpenApiOperation, OpenApiOperationFactory } from "./OpenApiOperation";
 import {
+  createParamsSchema,
   createResultSchema,
   remapReferences,
   requiresAuth,
@@ -65,7 +66,7 @@ export class PostBodyOperation implements OpenApiOperation {
     if (this.paramsValidate && !this.paramsValidate(params)) {
       throw new Error("invalid_params");
     }
-    
+    debugger
     const parameters: JsonObjectType = { ...params as JsonObjectType }
     const keys = Object.keys(parameters)
     const url: string = this.url.replace(/{(.*)}/g, function(match, key) {
@@ -116,9 +117,25 @@ export class PostBodyOperationFactory implements OpenApiOperationFactory {
     if (!Object.values(PostBodyMethod).includes(method as PostBodyMethod)) {
       return null;
     }
+    let inputSchema = createBodySchema(operationSchema, schema)
+    if (operationSchema.parameters?.length){
+      const paramsSchema = createParamsSchema(operationSchema, schema)
+      let required = [...(inputSchema.required || []), ...(paramsSchema.required || [])]
+      required = required.filter((a, i) => required.indexOf(a) === i)
+      inputSchema = {
+        ...inputSchema,
+        properties: {
+          ...inputSchema.properties,
+          ...paramsSchema.properties
+        }
+      }
+      if (required.length) {
+        inputSchema.required = required
+      }
+    }
     return new PostBodyOperation(
       operationSchema.operationId,
-      createBodySchema(operationSchema, schema),
+      inputSchema,
       createResultSchema(operationSchema, schema),
       requiresAuth(operationSchema),
       createUrl(schema, path),

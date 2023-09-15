@@ -84,7 +84,6 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
       }
     },
   });
-  console.log("TRACE:PersistyDataUploadButton", file)
   const valid = !!file
   const isImg = (file?.type || '').toLowerCase().startsWith('image/')
   const component = store.split("_").map(v => v[0].toUpperCase()+v.substring(1)).join("")
@@ -117,22 +116,24 @@ export function PersistyDataUploadButton({ store, searchOperationName, getUpload
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} disableRestoreFocus fullWidth>
         <DialogContent>
           <DialogHeader label="upload" setDialogOpen={setDialogOpen} />
-            <form onSubmit={handleSubmit}>
-              <Button variant="outlined" component="label" fullWidth>
-                {file?.name || getLabel("select_file", t)}
-                <input hidden type="file" accept={content_types} onChange={handleChangeFile} />
-              </Button>
-              {file && isImg && (
-                <Box pt={1} pb={1} display="flex" justifyContent="center">
-                  <ImgPreviewComponent file={file} maxWidth={552} maxHeight={400} />
-                </Box>
-              )}
+          <form onSubmit={handleSubmit}>
+            <Button variant="outlined" component="label" fullWidth>
+              {file?.name || getLabel("select_file", t)}
+              <input hidden type="file" accept={content_types} onChange={handleChangeFile} />
+            </Button>
+            {file && isImg && (
+              <Box pt={1} pb={1} display="flex" justifyContent="center">
+                <ImgPreviewComponent file={file} maxWidth={552} maxHeight={400} />
+              </Box>
+            )}
+            <Box display="flex" justifyContent="flex-end" pt={2}>
               <SubmitComponent
                 submitting={!!isLoading}
                 valid={valid}
                 onSubmit={() => mutate()}
               />
-            </form>
+            </Box>
+          </form>
         </DialogContent>
       </Dialog>
     </Fragment>

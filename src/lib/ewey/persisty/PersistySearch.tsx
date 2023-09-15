@@ -37,6 +37,7 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
     return initialParams
   })
   const key = queryParams.get("key")
+  const edit = !!queryParams.get("edit")
   const factories = useEweyFactories()
   const openApi = useOpenApi();
 
@@ -60,7 +61,7 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
 
   function renderContent(){
     if (key){
-      return <PersistyItem store={store} itemKey={key} />
+      return <PersistyItem store={store} itemKey={key} edit={edit} />
     }
     return (
       <OpenApiQuery operationId={`${store}_search`} params={params}>

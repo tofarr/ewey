@@ -1,9 +1,8 @@
-import { FC, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useOpenApi } from "./OpenApiProvider";
 import { SubmitComponentProps } from "../component/SubmitComponent";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
-import { CancelComponentProps } from "../component/CancelComponent";
 import EweyForm from "../EweyForm";
 import JsonType from "../eweyField/JsonType";
 import { JsonObjectType } from "../eweyField/JsonType";
@@ -16,9 +15,8 @@ export interface OpenApiFormProps {
   onSetValue?: (value: JsonType) => void;
   onSuccess?: (result: any) => void;
   onError?: (error: any) => void;
-  onCancel?: () => void;
   submitComponent?: FC<SubmitComponentProps>;
-  cancelComponent?: FC<CancelComponentProps>;
+  cancelElement?: ReactNode;
   displaySummary?: boolean;
 }
 
@@ -28,9 +26,8 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   onSetValue,
   onSuccess,
   onError,
-  onCancel,
   submitComponent,
-  cancelComponent,
+  cancelElement,
   displaySummary,
 }) => {
   const openApi = useOpenApi();
@@ -81,9 +78,8 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
       onSetValue={handleSetValue}
       isLoading={isLoading}
       onSubmit={() => mutate()}
-      onCancel={onCancel}
       submitComponent={submitComponent}
-      cancelComponent={cancelComponent}
+      cancelElement={cancelElement}
       labelKey={operationId}
       summary={displaySummary ? operation.summary : null}
     />
