@@ -117,7 +117,7 @@ class ItemWrapperFactory implements EweyFactory {
   priority: number = 500
 
   create(schema: AnySchemaObject, components: ComponentSchemas, currentPath: string[], factories: EweyFactory[], parents: AnySchemaObject[]): EweyField<any> | null | undefined {
-    if (currentPath.length) {
+    if (currentPath.length || !schema.properties?.item) {
       return null
     }
     schema = resolveRef(schema, components)

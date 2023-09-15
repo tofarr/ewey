@@ -42,7 +42,6 @@ const PersistyHeader = ({ store, nextPageKey, params, onSetParams }: PersistyHea
         {getUploadFormOperation && (
           <PersistyDataUploadButton
             store={store}
-            searchOperationName={`${store}_search`}
             getUploadFormOperation={getUploadFormOperation}
           />
         )}

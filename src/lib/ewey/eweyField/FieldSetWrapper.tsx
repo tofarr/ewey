@@ -67,13 +67,22 @@ const FieldSetWrapper = (
 
     function renderFieldLabelRow(key: string) {
       return (
-        <Grid container>
+        <Grid container alignItems="center" spacing={2}>
           <Grid item xs={labelsAlwaysAbove ? false : 3} md={3}></Grid>
-          <Grid item xs>
-            <FormControlLabel
-              control={renderNonRequiredField(key)}
-              label={getLabel(key, t)} />
+          <Grid item>
+            <FormControlLabel control={renderField(key)} label={getLabel(key, t)} />
           </Grid>
+          {onSetValue && 
+            <Grid item>
+              <IconButton onClick={() => {
+                const newValue = { ...value }
+                delete newValue[key]
+                onSetValue(newValue)
+              }}>
+                <DeleteIcon />
+              </IconButton>
+            </Grid>
+          }
         </Grid>
       )
     }
