@@ -1,11 +1,10 @@
+import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import UploadIcon from '@mui/icons-material/Upload';
 import Button from "@mui/material/Button";
-import Checkbox from '@mui/material/Checkbox';
 import Dialog from "@mui/material/Dialog";
 import DialogHeader from "../component/DialogHeader";
 import DialogContent from "@mui/material/DialogContent";
@@ -182,7 +181,7 @@ const PersistyImgRefWrapper = (
           onClick={() => setSelectDialogOpen(true)}
         >
           <Box width={imgWidth} height={imgHeight} display="flex" justifyContent="center" alignItems="center">
-            {value ? renderImg(value, imgWidth, imgHeight) : <PriorityHighIcon />}
+            {value ? renderImg(value, imgWidth, imgHeight) : <AddIcon />}
           </Box>
         </Button>
         {renderSelectDialog()}

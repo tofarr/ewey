@@ -1,53 +1,67 @@
+import AddIcon from "@mui/icons-material/Add";
 import ErrorIcon from "@mui/icons-material/Error";
-import LinkIcon from '@mui/icons-material/Link';
-import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useQuery } from "@tanstack/react-query";
-import EweyField from "../eweyField/EweyField";
+import Button from "@mui/material/Button"
+import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider"
+import { useOpenApi } from "../openApi/OpenApiProvider"
+import OpenApiQuery from "../openApi/OpenApiQuery";
+import { FC, Fragment, useState } from "react";
 import { JsonObjectType } from "../eweyField/JsonType";
-import { headersFromToken } from "../openApi/headers";
-import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
-import { useOpenApi } from "../openApi/OpenApiProvider";
+import SelectOneSearchDialog, { ItemLabelProps } from "./SelectOneSearchDialog";
+import EweyField from "../eweyField/EweyField";
 
-const BelongsToWrapper = (linkedStoreName: string, labelAttrNames: string[]) => {
-  const BelongsToField: EweyField<boolean> = ({ value, onSetValue }) => {
+export default function BelongsToWrapper(
+  store: string,
+  validate: (itemKey: string | null) => boolean,
+  keyExtractor: (item: JsonObjectType) => string,
+  labelExtractor: (item: JsonObjectType) => string,
+) {
+  const BelongsToField: EweyField<string|null> = ({ value, onSetValue }) => {
+    const openApi = useOpenApi()
+    const readOperation = openApi.operations.find(op => op.operationId === `${store}_read`)
+    const searchOperation = openApi.operations.find(op => op.operationId === `${store}_search`)
+    const token = useOAuthBearerToken()
+    const isReadable = readOperation && (!readOperation.requiresAuth || !!token?.token);
+    const isSearchable = searchOperation && (!searchOperation.requiresAuth || !!token?.token);
+    const isValid = validate(value)
+    const [dialogOpen, setDialogOpen] = useState(false)
     
-    const openApi = useOpenApi();
-    const operation = openApi.getOperation(`${linkedStoreName}_read`);
-    const headers = headersFromToken(useOAuthBearerToken()?.token);
-    const {
-      isLoading,
-      error,
-      data: item,
-    } = useQuery({
-      queryKey: [operation.operationId, value, headers],
-      queryFn: () => operation.invoke({key: value}, headers),
-    });
-
-    function renderLabel() {
-      if (isLoading) {
-        return <CircularProgress size={24} />
+    function renderButtonContent(){
+      if (!value){
+        return <AddIcon />
       }
-      if (error) {
-        return <ErrorIcon color="error" fontSize="large" />
+      if (!isReadable){
+        return value
       }
-      const label = labelAttrNames.map(k => ((item as JsonObjectType)[k] || '')).join(" ")
-      if (!label){
-        return <LinkIcon />
-      }
-      return label
+      return (
+        <OpenApiQuery operationId={readOperation.operationId} params={{key: value}}>
+          {item => item ? <Fragment>{labelExtractor(item as JsonObjectType)}</Fragment> : <ErrorIcon color="error" />}
+        </OpenApiQuery>
+      )
     }
 
     return (
-      <Button
-        disabled={!onSetValue} 
-        variant="outlined"
-      >
-        {renderLabel()}
-      </Button>
-    );
-  };
-  return BelongsToField;
-};
-
-export default BelongsToWrapper;
+      <Fragment>
+        <Button 
+          variant="outlined"
+          color={isValid ? "primary" : "error"}
+          disabled={!onSetValue || !isSearchable} 
+          onClick={() => setDialogOpen(true)}
+        >
+          {renderButtonContent()}
+        </Button>
+        {isSearchable && onSetValue &&
+          <SelectOneSearchDialog
+            dialogOpen={dialogOpen}
+            onSetDialogOpen={setDialogOpen}
+            store={store}
+            itemKey={value} 
+            onSetItemKey={onSetValue}
+            labelExtractor={labelExtractor}
+            keyExtractor={keyExtractor}
+          />
+        }
+      </Fragment>
+    )
+  }
+  return BelongsToField
+}

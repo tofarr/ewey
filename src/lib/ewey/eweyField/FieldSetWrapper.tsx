@@ -68,7 +68,7 @@ const FieldSetWrapper = (
     function renderFieldLabelRow(key: string) {
       return (
         <Grid container alignItems="center" spacing={2}>
-          <Grid item xs={labelsAlwaysAbove ? false : 3} md={3}></Grid>
+          <Grid item md={labelsAlwaysAbove ? false : 3}></Grid>
           <Grid item>
             <FormControlLabel control={renderField(key)} label={getLabel(key, t)} />
           </Grid>

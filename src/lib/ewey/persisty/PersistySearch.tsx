@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import Box from "@mui/material/Box"
 import PersistyHeader from "./PersistyHeader"
@@ -28,19 +28,27 @@ export interface PersistySearchProps {
 
 const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
   const [queryParams, setQueryParams] = useSearchParams();
-  const [params, setParams] = useState<PersistyParams>(() => {
-    const initialParams: JsonObjectType = queryParamsToJsonObj(queryParams)
-    if (initialParams.limit == null) {
-      initialParams.limit = limit || 5
-    }
-    delete initialParams.key
-    return initialParams
-  })
+  const [params, setParams] = useState<PersistyParams>(generateParams)
   const key = queryParams.get("key")
   const edit = !!queryParams.get("edit")
   const factories = useEweyFactories()
   const openApi = useOpenApi();
 
+  useEffect(() => {
+    let newParams = generateParams();
+    if (newParams.page_key != params.page_key || newParams.limit != params.limit){
+      setParams(newParams)
+    }
+  }, [store])
+
+  function generateParams() {
+    const newParams: JsonObjectType = queryParamsToJsonObj(queryParams)
+    if (newParams.limit == null) {
+      newParams.limit = limit || 5
+    }
+    return newParams 
+  }
+  
   function handleSetParams(newParams: PersistyParams){
     const newQueryParams = jsonObjToQueryParams(newParams as JsonObjectType)
     setQueryParams(newQueryParams as any)

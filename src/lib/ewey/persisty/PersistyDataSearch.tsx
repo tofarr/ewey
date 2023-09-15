@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import LinkIcon from '@mui/icons-material/Link';
 import Box from "@mui/material/Box"
@@ -50,17 +50,26 @@ const UNITS = [
 
 const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 64, imgHeight = 50 }: PersistyDataSearchProps) => {
   const [queryParams, setQueryParams] = useSearchParams();
-  const [params, setParams] = useState<PersistyParams>(() => {
-    const initialParams: JsonObjectType = queryParamsToJsonObj(queryParams)
-    if (initialParams.limit == null) {
-      initialParams.limit = limit || 5
-    }
-    return initialParams
-  })
+  const [params, setParams] = useState<PersistyParams>(generateParams)
   const factories = useEweyFactories()
   const openApi = useOpenApi()
   const { t } = useTranslation()
   const deleteOperation = openApi.operations.find(op => op.operationId === `${store}_delete`)
+
+  useEffect(() => {
+    let newParams = generateParams();
+    if (newParams.page_key != params.page_key || newParams.limit != params.limit){
+      setParams(newParams)
+    }
+  }, [store])
+
+  function generateParams() {
+    const newParams: JsonObjectType = queryParamsToJsonObj(queryParams)
+    if (newParams.limit == null) {
+      newParams.limit = limit || 5
+    }
+    return newParams 
+  }
 
   function handleSetParams(newParams: PersistyParams){
     const newQueryParams = jsonObjToQueryParams(newParams as JsonObjectType)
