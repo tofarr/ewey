@@ -17,7 +17,8 @@ import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory"
 import { getLabel } from "../label"
 import Typography from "@mui/material/Typography"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useMessageBroker } from "../message/MessageBrokerContext";
 
 export interface PersistyItemProps {
   store: string
@@ -33,6 +34,8 @@ const PersistyItem = ({ store, itemKey, edit }: PersistyItemProps) => {
   const searchable = !!openApi.operations.find(op => op.operationId === `${store}_search`)  
   const factories = useEweyFactories()
   const { t } = useTranslation()
+  const navigate = useNavigate();
+  const messageBroker = useMessageBroker();
 
   if (!edit) {
     return (
@@ -98,6 +101,10 @@ const PersistyItem = ({ store, itemKey, edit }: PersistyItemProps) => {
                 </Fab>
               </Link>
             }
+            onSuccess={() => {
+              messageBroker.triggerMessage(getLabel('update_successful', t))
+              navigate(`?key=${itemKey}`)
+            }}
           />
         </EweyFactoryProvider>
       )}

@@ -66,7 +66,6 @@ export class PostBodyOperation implements OpenApiOperation {
     if (this.paramsValidate && !this.paramsValidate(params)) {
       throw new Error("invalid_params");
     }
-    debugger
     const parameters: JsonObjectType = { ...params as JsonObjectType }
     const keys = Object.keys(parameters)
     const url: string = this.url.replace(/{(.*)}/g, function(match, key) {
