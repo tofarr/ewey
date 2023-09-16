@@ -1,18 +1,18 @@
 import { useTranslation } from "react-i18next";
+import Button from "@mui/material/Button";
 import { ValidateFunction } from "ajv";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import EweyField from "./EweyField";
 import { getLabel } from "../label";
-import Typography from "@mui/material/Typography";
 
 const SelectFieldWrapper = (validate: ValidateFunction<string>, values: string[]) => {
   const SelectField: EweyField<string> = ({ value, onSetValue }) => {
     const { t } = useTranslation()
     if (!onSetValue) {
       return (
-        <Typography variant="body2">{getLabel(value, t)}</Typography>
+        <Button disabled variant="outlined">{getLabel(value, t)}</Button>
       )
     }
     return (

@@ -4,7 +4,7 @@ import OpenApiSchema from "./model/OpenApiSchema";
 import ErrorComponent, {
   ErrorComponentProps,
 } from "../component/ErrorComponent";
-import LoadingComponent from "../component/LoadingComponent";
+import AppLoadingComponent from "../component/AppLoadingComponent";
 
 export interface OpenApiSchemaLoaderChildProps {
   schema: OpenApiSchema;
@@ -45,7 +45,7 @@ const OpenApiSchemaLoader: FC<OpenApiSchemaLoaderProps> = ({
   refetchOnWindowFocus = false
 }) => {
   if (!loadingComponent) {
-    loadingComponent = LoadingComponent;
+    loadingComponent = AppLoadingComponent;
   }
   if (!errorComponent) {
     errorComponent = ErrorComponent;

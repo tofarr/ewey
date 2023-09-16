@@ -7,6 +7,7 @@ import TableRow from "@mui/material/TableRow";
 import EweyField from "./EweyField";
 import JsonType, { JsonObjectType } from "./JsonType";
 import { getLabel } from "../label";
+import Box from "@mui/material/Box";
 
 export interface Column {
   key: string;
@@ -96,30 +97,32 @@ const TableWrapper = (columns: Column[], actionField?: EweyField<JsonObjectType>
       headCells.push(<TableCell key="/actions"></TableCell>);
     }
     return (
-      <Table>
-        <TableHead>
-          <TableRow>
-            {headCells}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(value || []).map((v, index) => {
-            return (
-              <Row
-                key={`row${index}`}
-                path={path as string[]}
-                columns={columns}
-                rowIndex={index}
-                value={value as JsonObjectType[]}
-                onSetValue={
-                  onSetValue as ((value: JsonObjectType[]) => void) | null
-                }
-                ActionField={actionField}
-              />
-            );
-          })}
-        </TableBody>
-      </Table>
+      <Box overflow="auto">
+        <Table>
+          <TableHead>
+            <TableRow>
+              {headCells}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {(value || []).map((v, index) => {
+              return (
+                <Row
+                  key={`row${index}`}
+                  path={path as string[]}
+                  columns={columns}
+                  rowIndex={index}
+                  value={value as JsonObjectType[]}
+                  onSetValue={
+                    onSetValue as ((value: JsonObjectType[]) => void) | null
+                  }
+                  ActionField={actionField}
+                />
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Box>
     );
   };
   return TableField;
