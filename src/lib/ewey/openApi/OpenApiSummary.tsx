@@ -140,7 +140,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations, op, children }) => 
 
   return (
     <Fragment>
-      <AppBar position="static">
+      <AppBar position="absolute">
         <Toolbar>
           <Grid container alignItems="center" spacing={2}>
             <Grid item>
@@ -171,6 +171,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations, op, children }) => 
           </Grid>
         </Toolbar>
       </AppBar>
+      <Box width="100%" height={60}></Box>
       <Drawer
         anchor="left"
         open={drawerOpen}

@@ -11,6 +11,7 @@ import JsonType from "./eweyField/JsonType";
 import EweyField from "./eweyField/EweyField";
 import { useEweyFactories } from "./providers/EweyFactoryProvider";
 import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 
 interface EweyFormState {
   component: EweyField<JsonType>
@@ -130,23 +131,23 @@ function EweyFormInternal({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container padding={2} spacing={3} direction="column">
+      <Box padding={2}>
         {labelKey && (
-          <Grid item>
+          <Box pb={3}>
             <Typography variant="h4">
               {getLabel(labelKey, t)}
             </Typography>
-          </Grid>
+          </Box>
         )}
         {summary && (
-          <Grid item>
+          <Box pb={3}>
             <Typography variant="body2">{summary}</Typography>
-          </Grid>
+          </Box>
         )}
-        <Grid item>
+        <Box pb={3}>
           <formState.component value={value == null ? null : value} onSetValue={onSetValue} />
-        </Grid>
-        <Grid item>
+        </Box>
+        <Box>
           <Grid container justifyContent="flex-end" spacing={2}>
             {cancelElement && (
               <Grid item>
@@ -161,8 +162,8 @@ function EweyFormInternal({
               />
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </form>
   );
 }
