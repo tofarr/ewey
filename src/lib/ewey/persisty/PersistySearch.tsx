@@ -37,9 +37,7 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
 
   useEffect(() => {
     let newParams = generateParams();
-    if (newParams.page_key !== params.page_key || newParams.limit !== params.limit){
-      setParams(newParams)
-    }
+    setParams(newParams)
   }, [store, queryParams])
 
   function generateParams() {
