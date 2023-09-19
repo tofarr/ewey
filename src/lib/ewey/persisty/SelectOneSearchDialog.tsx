@@ -1,7 +1,7 @@
 import { useOpenApi } from "../openApi/OpenApiProvider"
 import OpenApiQuery from "../openApi/OpenApiQuery";
 import { JsonObjType } from "json-urley";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import JsonType, { JsonObjectType } from "../eweyField/JsonType";
 import Dialog from "@mui/material/Dialog";
 import DialogHeader from "../component/DialogHeader";
@@ -11,7 +11,6 @@ import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Radio } from "@mui/icons-material";
 import Checkbox from "@mui/material/Checkbox";
 
 export interface ItemLabelProps {

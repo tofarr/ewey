@@ -1,5 +1,5 @@
 import EweyFactory from "../eweyFactory/EweyFactory";
-import { AnySchemaObject, schemaCompiler, ValidateFunction } from "../schemaCompiler";
+import { AnySchemaObject } from "../schemaCompiler";
 import { ComponentSchemas } from "../ComponentSchemas";
 import PersistyImgRefWrapper from "./PersistyImgRefWrapper";
 

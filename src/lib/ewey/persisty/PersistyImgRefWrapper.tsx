@@ -9,7 +9,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogHeader from "../component/DialogHeader";
 import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
-import { useTranslation } from "react-i18next";
 import EweyField from "../eweyField/EweyField";
 import { Fragment, useState } from "react";
 import OpenApiQuery from "../openApi/OpenApiQuery";
@@ -39,7 +38,6 @@ const PersistyImgRefWrapper = (
     const [selectDialogOpen, setSelectDialogOpen] = useState(false)
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     const [pageKey, setPageKey] = useState<string|null|undefined>(null)
-    const { t } = useTranslation()
     const imgQueryParams: JsonObjectType = {limit: 3}
     if (pageKey) {
       imgQueryParams.page_key = pageKey

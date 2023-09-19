@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Fragment, useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import Box from "@mui/material/Box"
@@ -36,10 +37,10 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
 
   useEffect(() => {
     let newParams = generateParams();
-    if (newParams.page_key != params.page_key || newParams.limit != params.limit){
+    if (newParams.page_key !== params.page_key || newParams.limit !== params.limit){
       setParams(newParams)
     }
-  }, [store])
+  }, [store, queryParams])
 
   function generateParams() {
     const newParams: JsonObjectType = queryParamsToJsonObj(queryParams)

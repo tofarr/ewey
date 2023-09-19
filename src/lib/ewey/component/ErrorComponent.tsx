@@ -1,7 +1,6 @@
 import { FC } from "react";
 import ErrorIcon from "@mui/icons-material/Error";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
 export interface ErrorComponentProps {

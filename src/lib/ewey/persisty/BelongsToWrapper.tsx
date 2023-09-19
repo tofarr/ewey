@@ -4,9 +4,9 @@ import Button from "@mui/material/Button"
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider"
 import { useOpenApi } from "../openApi/OpenApiProvider"
 import OpenApiQuery from "../openApi/OpenApiQuery";
-import { FC, Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 import { JsonObjectType } from "../eweyField/JsonType";
-import SelectOneSearchDialog, { ItemLabelProps } from "./SelectOneSearchDialog";
+import SelectOneSearchDialog from "./SelectOneSearchDialog";
 import EweyField from "../eweyField/EweyField";
 
 export default function BelongsToWrapper(

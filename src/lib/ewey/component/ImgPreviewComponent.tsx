@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 
 export interface ImgPreviewComponentProps {
   file: File
@@ -9,7 +8,7 @@ export interface ImgPreviewComponentProps {
 const ImgPreviewComponent = ({ file, maxWidth, maxHeight }: ImgPreviewComponentProps) => {
   const objectUrl = URL.createObjectURL(file);
   return (
-    <img src={objectUrl} style={{maxWidth, maxHeight}} />
+    <img src={objectUrl} style={{maxWidth, maxHeight}} alt="" />
   )
 }
 

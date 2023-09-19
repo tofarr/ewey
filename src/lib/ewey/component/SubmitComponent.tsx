@@ -1,7 +1,6 @@
 import { FC } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 
 export interface SubmitComponentProps {

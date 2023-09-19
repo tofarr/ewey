@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Fragment, useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import LinkIcon from '@mui/icons-material/Link';
@@ -58,7 +59,7 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 64, imgHeight
 
   useEffect(() => {
     let newParams = generateParams();
-    if (newParams.page_key != params.page_key || newParams.limit != params.limit){
+    if (newParams.page_key !== params.page_key || newParams.limit !== params.limit){
       setParams(newParams)
     }
   }, [store])

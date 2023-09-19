@@ -40,7 +40,9 @@ const PersistyFilters = ({ store, params, onSetParams }: PersistyFilterProps) =>
   }, [operation])
 
   function handleSubmit(params: JsonType) {
-    onSetParams(params as PersistyParams)
+    const newParams = { ...params as PersistyParams }
+    delete newParams.page_key
+    onSetParams(newParams)
     setOpen(false)
   }
 
