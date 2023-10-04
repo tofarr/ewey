@@ -7,7 +7,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import Fab from "@mui/material/Fab";
 import Grid from "@mui/material/Grid";
 import { useTranslation } from "react-i18next";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { OpenApiOperation } from "../../openApi/model/OpenApiOperation";
 import { useOAuthBearerToken } from "../../oauth/OAuthBearerTokenProvider";
 import { headersFromToken } from "../../openApi/headers";
@@ -16,6 +16,7 @@ import { getLabel } from "../../label";
 import DialogHeader from "../../component/DialogHeader";
 import Result from "../Result";
 import { isLocked } from "../../oauth/utils";
+import usePersistyOperations from "../PersistyOperationsProvider";
 
 export interface PersistyDeleteDialogProps {
   deleteOp: OpenApiOperation
@@ -24,18 +25,22 @@ export interface PersistyDeleteDialogProps {
   onDelete?: () => void;
 }
 
-export default function DeleteDialog({ deleteOp, result, children, onDelete }: PersistyDeleteDialogProps) {
+export default function DeleteDialog({ result, children, onDelete }: PersistyDeleteDialogProps) {
+  const { countOp, deleteOp, searchOp, readOp } = usePersistyOperations()
   const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = useState(false);
   const token = useOAuthBearerToken()
   const headers = headersFromToken(token?.token);
   const messageBroker = useMessageBroker();
-
+  const queryClient = useQueryClient()
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
-      const deleteResult = await deleteOp.invoke({ key: result.key }, headers);
+      const deleteResult = await (deleteOp as OpenApiOperation).invoke({ key: result.key }, headers);
       if (deleteResult) {
         messageBroker.triggerMessage(getLabel('item_deleted', t))
+        for (const op of [countOp, readOp, searchOp]){
+          queryClient.invalidateQueries([op?.operationId], { exact: false });
+        }
         if (onDelete) {
           onDelete()
         }
@@ -44,6 +49,7 @@ export default function DeleteDialog({ deleteOp, result, children, onDelete }: P
       }
     },
   });
+  const disabled = isLoading || !result.deletable || isLocked(deleteOp as OpenApiOperation, token)
 
   function handleDelete(){
     setDialogOpen(false)
@@ -52,7 +58,7 @@ export default function DeleteDialog({ deleteOp, result, children, onDelete }: P
 
   return (
     <Fragment>
-      {children(isLoading, isLoading || isLocked(deleteOp, token), setDialogOpen)}
+      {children(isLoading, disabled, setDialogOpen)}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogContent>
           <DialogHeader label="confirm_delete" setDialogOpen={setDialogOpen}/>

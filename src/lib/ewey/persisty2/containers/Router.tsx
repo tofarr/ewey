@@ -7,6 +7,7 @@ import { PersistyOperationsProvider } from "../PersistyOperationsProvider";
 import { EweyFactoryProvider, useEweyFactories } from "../../providers/EweyFactoryProvider";
 import ResultFieldFactory from "../ewey/ResultFieldFactory";
 import ResultSetFieldFactory from "../ewey/ResultSetFieldFactory";
+import BelongsToFactory from "../ewey/BelongsToFactory";
 
 export interface RouterProps {
   storeName: string
@@ -38,6 +39,7 @@ export default function Router({ storeName }: RouterProps) {
       ...factories,
       new ResultFieldFactory(),
       new ResultSetFieldFactory(),
+      new BelongsToFactory(),
     ]}>
       <PersistyOperationsProvider storeName={storeName}>
         {renderComponent()}

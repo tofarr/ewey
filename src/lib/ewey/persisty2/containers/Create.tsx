@@ -2,30 +2,27 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Fab from '@mui/material/Fab';
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import usePersistyOperations from "../PersistyOperationsProvider";
 import { getLabel } from "../../label";
 import { useTranslation } from "react-i18next";
-import OpenApiQuery from "../../openApi/OpenApiQuery";
 import ErrorComponent from "../../component/ErrorComponent";
-import Result from "../Result";
 import LockableLink from '../components/LockableLink';
 import { isLocked } from '../../oauth/utils';
 import { useOAuthBearerToken } from '../../oauth/OAuthBearerTokenProvider';
-import DeleteDialog from '../components/DeleteDialog';
-import CircularProgress from '@mui/material/CircularProgress';
 import OpenApiForm from '../../openApi/OpenApiForm';
 import { useMessageBroker } from '../../message/MessageBrokerContext';
 import { OpenApiOperation } from '../../openApi/model/OpenApiOperation';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 export default function Create() {
-  const { searchOp, createOp } = usePersistyOperations()
+  const { searchOp, countOp, createOp, readOp } = usePersistyOperations()
   const { t } = useTranslation()
   const token = useOAuthBearerToken()
   const messageBroker = useMessageBroker()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   function renderActions(){
     return (
@@ -55,6 +52,9 @@ export default function Create() {
       cancelElement={renderActions()}
       onSuccess={() => {
         messageBroker.triggerMessage(getLabel("create_successful", t));
+        for (const op of [countOp, readOp, searchOp]){
+          queryClient.invalidateQueries([op?.operationId], { exact: false });
+        }
         if (searchOp) {
           navigate("")
         }

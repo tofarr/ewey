@@ -38,6 +38,7 @@ export default function Read() {
   }
 
   function renderActions(result: Result){
+    const updateDisabled = !!updateOp && (isLocked(updateOp, token) || !result.updatable)
     return (
       <Grid item xs>
         <Grid container justifyContent="flex-end" spacing={2}>
@@ -54,9 +55,9 @@ export default function Read() {
             <Grid item>
               <LockableLink
                 to={`?key=${encodeURIComponent(result.key)}&edit=true`}
-                locked={isLocked(updateOp, token)}
+                locked={updateDisabled}
               >
-                <Fab title={getLabel("update_item", t)}>
+                <Fab disabled={updateDisabled} title={getLabel("update_item", t)}>
                   <EditIcon />
                 </Fab>
               </LockableLink>
@@ -89,7 +90,7 @@ export default function Read() {
           params={{key}}
         >
         {value => (
-          <Grid container spacing={2}>
+          <Grid container spacing={2} direction="column">
             {renderHeader()}
             <Grid item>
               <OpenApiContent operationId={readOp.operationId} value={value} />

@@ -2,7 +2,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Fab from '@mui/material/Fab';
 import Grid from "@mui/material/Grid";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import usePersistyOperations from "../PersistyOperationsProvider";
 import { getLabel } from "../../label";
 import { useTranslation } from "react-i18next";
@@ -19,16 +19,18 @@ import { resolveRef } from '../../ComponentSchemas';
 import { useMessageBroker } from '../../message/MessageBrokerContext';
 import { OpenApiOperation } from '../../openApi/model/OpenApiOperation';
 import { JsonObjectType } from '../../eweyField/JsonType';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 export default function Update() {
   const [queryParams] = useSearchParams();
   const key = queryParams.get("key")
-  const { readOp, updateOp, deleteOp, searchOp } = usePersistyOperations()
+  const { countOp, deleteOp, readOp, searchOp, updateOp } = usePersistyOperations()
   const { t } = useTranslation()
   const token = useOAuthBearerToken()
   const messageBroker = useMessageBroker()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   function createInitialValues(readResult: Result){
     if (!updateOp){
@@ -50,14 +52,11 @@ export default function Update() {
     return (
       <Grid container spacing={2}>
         <Grid item>
-          <LockableLink
-            to={`?key=${encodeURIComponent(result.key)}`}
-            locked={isLocked(updateOp as OpenApiOperation, token)}
-          >
+          <Link to={`?key=${encodeURIComponent(result.key)}`}>
             <Fab title={getLabel("cancel", t)}>
               <CloseIcon />
             </Fab>
-          </LockableLink>
+          </Link>
         </Grid>
         {deleteOp &&
           <Grid item>
@@ -90,6 +89,9 @@ export default function Update() {
           cancelElement={renderActions(value as unknown as Result)}
           onSuccess={() => {
             messageBroker.triggerMessage(getLabel("update_successful", t));
+            for (const op of [countOp, readOp, searchOp]){
+              queryClient.invalidateQueries([op?.operationId], { exact: false });
+            }
             if (searchOp) {
               navigate("")
             }
