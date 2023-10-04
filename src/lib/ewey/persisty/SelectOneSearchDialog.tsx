@@ -18,6 +18,7 @@ export interface ItemLabelProps {
   selected?: boolean | null
 }
 
+/*
 export interface SelectOneSearchDialogProps {
   dialogOpen: boolean
   onSetDialogOpen: (dialogOpen: boolean) => void
@@ -83,3 +84,4 @@ export default function SelectOneSearchDialog({ dialogOpen, onSetDialogOpen, sto
     </Dialog>
   )
 }
+*/

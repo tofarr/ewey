@@ -1,6 +1,6 @@
-import { JsonObjectType } from "../eweyField/JsonType"
+import { Result } from "./Result"
 
 export interface ResultSet {
-  results: JsonObjectType[]
+  results: Result[]
   next_page_key?: string | null
 }

@@ -6,9 +6,10 @@ import { useOpenApi } from "../openApi/OpenApiProvider"
 import OpenApiQuery from "../openApi/OpenApiQuery";
 import { Fragment, useState } from "react";
 import { JsonObjectType } from "../eweyField/JsonType";
-import SelectOneSearchDialog from "./SelectOneSearchDialog";
+// import SelectOneSearchDialog from "./SelectOneSearchDialog";
 import EweyField from "../eweyField/EweyField";
 
+/*
 export default function BelongsToWrapper(
   store: string,
   validate: (itemKey: string | null) => boolean,
@@ -65,3 +66,4 @@ export default function BelongsToWrapper(
   }
   return BelongsToField
 }
+*/

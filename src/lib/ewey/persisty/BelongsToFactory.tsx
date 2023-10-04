@@ -3,10 +3,10 @@ import {
 } from "../schemaCompiler";
 import EweyFactory from "../eweyFactory/EweyFactory";
 import { ComponentSchemas } from "../ComponentSchemas";
-import BelongsToWrapper from "./BelongsToWrapper";
+// import BelongsToWrapper from "./BelongsToWrapper";
 import { JsonObjectType } from "../eweyField/JsonType";
 import { toCamelCase } from "./util";
-
+/*
 class BelongsToFactory implements EweyFactory {
   priority: number = 150;
 
@@ -46,3 +46,4 @@ class BelongsToFactory implements EweyFactory {
 }
 
 export default BelongsToFactory;
+*/

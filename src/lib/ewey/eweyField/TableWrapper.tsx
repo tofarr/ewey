@@ -21,7 +21,7 @@ interface CellProps {
   onSetValue?: ((value: JsonObjectType) => void);
 }
 
-const Cell = ({ column, path, value, onSetValue }: CellProps) => {
+export const Cell = ({ column, path, value, onSetValue }: CellProps) => {
   return (
     <TableCell key={column.key}>
       <column.Field
@@ -41,7 +41,7 @@ const Cell = ({ column, path, value, onSetValue }: CellProps) => {
   );
 };
 
-interface RowProps {
+export interface RowProps {
   path: string[];
   columns: Column[];
   rowIndex: number;
@@ -50,7 +50,7 @@ interface RowProps {
   ActionField?: EweyField<JsonObjectType> | null
 }
 
-const Row = ({ path, columns, rowIndex, value, onSetValue, ActionField }: RowProps) => {
+export const Row = ({ path, columns, rowIndex, value, onSetValue, ActionField }: RowProps) => {
   const rowValue = value[rowIndex] as JsonObjectType
 
   const handleSetRowValue = onSetValue ? (newValue: JsonObjectType) => {

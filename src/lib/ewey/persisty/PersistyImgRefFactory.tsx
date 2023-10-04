@@ -1,7 +1,7 @@
 import EweyFactory from "../eweyFactory/EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import { ComponentSchemas } from "../ComponentSchemas";
-import PersistyImgRefWrapper from "./PersistyImgRefWrapper";
+// import PersistyImgRefWrapper from "./PersistyImgRefWrapper";
 
 class PersistyImgRefFactory implements EweyFactory {
   priority: number = 250;
@@ -15,9 +15,10 @@ class PersistyImgRefFactory implements EweyFactory {
     if (!schema?.persistyImgStore) {
       return null;
     }
-    const { store_name } = schema.persistyImgStore
-    const field = PersistyImgRefWrapper(store_name)
-    return field;
+    //const { store_name } = schema.persistyImgStore
+    //const field = PersistyImgRefWrapper(store_name)
+    //return field;
+    return null
   }
 }
 

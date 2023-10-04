@@ -2,34 +2,31 @@ import EweyField from "../eweyField/EweyField"
 import { OpenApiOperation } from "../openApi/model/OpenApiOperation"
 import Grid from '@mui/material/Grid';
 import { PersistyDeleteButton } from './PersistyDeleteButton';
-import { JsonObjectType } from '../eweyField/JsonType';
 import { PersistyInfoButton } from "./PersistyInfoButton";
+import { Result } from "./Result";
+import { useOpenApi } from "../openApi/OpenApiProvider";
+import { useState } from "react";
 
-export const persistyActionsWrapper = (
-  searchOperationName: string,
-  readOperation?: OpenApiOperation,
-  deleteOperation?: OpenApiOperation,
-  keyFactory?: (item: JsonObjectType) => string,
+export const PersistyActionsWrapper = (
+  storeName: string
 ) => {
-  if(keyFactory == null){
-    keyFactory = (item: JsonObjectType) => {
-      return item?.id as string
-    }
-  }
-  const PersistyActionsField: EweyField<any> = ({ value }) => {
-    const itemKey = (keyFactory as ((item: JsonObjectType) => string))(value);
+  const PersistyActionsField: EweyField<Result> = ({ value }) => {
+    const openApi = useOpenApi()
+    const readOperation = openApi.operations.find(op => op.operationId === `${storeName}_read`)
+    const deleteOperation = openApi.operations.find(op => op.operationId === `${storeName}_delete`)
+
     return (
       <Grid container direction="row" spacing={1} justifyContent="flex-end">
         {readOperation && 
           <Grid item>
-            <PersistyInfoButton itemKey={itemKey} readOperation={readOperation} />
+            <PersistyInfoButton result={value} readOperation={readOperation} />
           </Grid>
         }
         {deleteOperation &&
           <Grid item>
             <PersistyDeleteButton
-              itemKey={itemKey}
-              searchOperationName={searchOperationName} 
+              result={value}
+              searchOperationName={`${storeName}_search`} 
               deleteOperation={deleteOperation}
             />
           </Grid>

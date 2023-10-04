@@ -11,7 +11,7 @@ import { EweyFactoryProvider, useEweyFactories } from "../providers/EweyFactoryP
 import OpenApiQuery from "../openApi/OpenApiQuery"
 import TableFactory from "../eweyFactory/TableFactory"
 import { useOpenApi } from "../openApi/OpenApiProvider"
-import { persistyActionsWrapper } from "./PersistyActions"
+// import { persistyActionsWrapper } from "./PersistyActions"
 import { ResultSetFactory } from "./PersistySearch"
 import PersistyDataHeader from "./PersistyDataHeader"
 import { Button, Grid, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material"
@@ -28,6 +28,7 @@ export interface PersistyDataSearchProps {
   imgHeight?: number
 }
 
+/*
 export interface PersistyDataItem {
   key: string
   content_type: string
@@ -186,3 +187,4 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 64, imgHeight
 }
 
 export default PersistyDataSearch
+*/

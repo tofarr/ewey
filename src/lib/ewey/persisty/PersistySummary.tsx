@@ -1,12 +1,12 @@
 import StorageIcon from '@mui/icons-material/Storage';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+// import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { Route } from "react-router-dom";
 import OpenApiProvider from "../openApi/OpenApiProvider";
 import OpenApiSummary, { SummaryOperation, summaryOperation } from "../openApi/OpenApiSummary";
 import { OpenApi } from "../openApi/model/OpenApi";
 import { BearerToken } from "../oauth/OAuthBearerTokenProvider";
 import PersistySearch from './PersistySearch';
-import PersistyDataSearch from './PersistyDataSearch';
+// import PersistyDataSearch from './PersistyDataSearch';
 
 const OPERATIONS = ['create', 'read', 'update', 'delete', 'search', 'count', "read_batch", "edit_batch", "get_download_url", "get_upload_form"]
 
@@ -66,7 +66,7 @@ export function persistySummaryFactory(openApi: OpenApi, token?: BearerToken): S
       categoryKey: 'stores'
     })
   }
-
+  /*
   for (const store of dataStores) {
     result.push({
       key: store,
@@ -76,6 +76,7 @@ export function persistySummaryFactory(openApi: OpenApi, token?: BearerToken): S
       categoryKey: 'data'
     })
   }
+  */
 
   return result
 }

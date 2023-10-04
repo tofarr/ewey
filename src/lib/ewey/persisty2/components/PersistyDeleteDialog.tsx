@@ -1,45 +1,46 @@
-import { Fragment, useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
+import Fab from "@mui/material/Fab";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton"
 import { useTranslation } from "react-i18next";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { OpenApiOperation } from "../openApi/model/OpenApiOperation";
-import { getLabel } from "../label";
-import { headersFromToken } from "../openApi/headers";
-import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
-import { useMessageBroker } from "../message/MessageBrokerContext";
-import Fab from "@mui/material/Fab";
-import DialogHeader from "../component/DialogHeader";
-import { Result } from "./Result";
+import { OpenApiOperation } from "../../openApi/model/OpenApiOperation";
+import { useOAuthBearerToken } from "../../oauth/OAuthBearerTokenProvider";
+import { headersFromToken } from "../../openApi/headers";
+import { useMessageBroker } from "../../message/MessageBrokerContext";
+import { getLabel } from "../../label";
+import DialogHeader from "../../component/DialogHeader";
+import Result from "../ewey/Result";
+import usePersistyOperations from "../usePersistyOperations";
+import { isLocked } from "../../oauth/utils";
 
-
-export interface PersistyDeleteButtonProps {
+export interface PersistyDeleteDialogProps {
+  storeName: string
   result: Result
-  searchOperationName: string
-  deleteOperation: OpenApiOperation
+  children: (isLoading: boolean, disabled: boolean, setDialogOpen: (open: boolean) => void) => ReactNode;
+  onDelete?: () => void;
 }
 
-export function PersistyDeleteButton({ result, searchOperationName, deleteOperation }: PersistyDeleteButtonProps) {
+export function PersistyDeleteDialog({ storeName, result, children, onDelete }: PersistyDeleteDialogProps) {
   const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = useState(false);
   const token = useOAuthBearerToken()
   const headers = headersFromToken(token?.token);
-  const queryClient = useQueryClient()
   const messageBroker = useMessageBroker();
-  const isLocked = deleteOperation.requiresAuth && !token?.token;
+  const { delete: deleteItem } = usePersistyOperations(storeName)
 
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
-      const deleteResult = await deleteOperation.invoke({ key: result.key }, headers);
+      const deleteResult = await (deleteItem as OpenApiOperation).invoke({ key: result.key }, headers);
       if (deleteResult) {
-        queryClient.invalidateQueries([searchOperationName], { exact: false });
         messageBroker.triggerMessage(getLabel('item_deleted', t))
+        if (onDelete) {
+          onDelete()
+        }
       } else {
         messageBroker.triggerError(getLabel('delete_failed', t))
       }
@@ -52,14 +53,13 @@ export function PersistyDeleteButton({ result, searchOperationName, deleteOperat
     mutate()
   }
 
+  if (!deleteItem) {
+    return null
+  }
+
   return (
     <Fragment>
-      <IconButton 
-        disabled={isLoading || isLocked} 
-        onClick={() => setDialogOpen(true)}
-      >
-        {isLoading ? <CircularProgress size={24} /> : <DeleteIcon />}
-      </IconButton>
+      {children(isLoading, isLoading || isLocked(deleteItem, token), setDialogOpen)}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogContent>
           <DialogHeader label="confirm_delete" setDialogOpen={setDialogOpen}/>

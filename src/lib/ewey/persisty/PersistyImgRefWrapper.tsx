@@ -27,7 +27,7 @@ const IMG_HEIGHT = 50
 
 const SELECT_IMG_WIDTH = 100
 const SELECT_IMG_HEIGHT = 100
-
+/*
 const PersistyImgRefWrapper = (
   store: string,
   imgWidth: number = IMG_WIDTH,
@@ -191,3 +191,4 @@ const PersistyImgRefWrapper = (
 };
 
 export default PersistyImgRefWrapper;
+*/

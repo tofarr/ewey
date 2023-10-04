@@ -17,17 +17,18 @@ import OpenApiQuery from "../openApi/OpenApiQuery"
 import OpenApiContent from "../openApi/OpenApiContent"
 import TableFactory from "../eweyFactory/TableFactory"
 import { useOpenApi } from "../openApi/OpenApiProvider"
-import { persistyActionsWrapper } from "./PersistyActions"
-import PersistyImgRefFactory from "./PersistyImgRefFactory"
+// import { persistyActionsWrapper } from "./PersistyActions"
+// import PersistyImgRefFactory from "./PersistyImgRefFactory"
 import PersistyItem from "./PersistyItem"
+import PersistyResultSetFactory from "./PersistyResultSetFactory"
+
 
 export interface PersistySearchProps {
   store: string,
   limit?: number,
-  keyFactory?: (item: JsonObjectType) => string,
 }
 
-const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
+const PersistySearch = ({ store, limit }: PersistySearchProps) => {
   const [queryParams, setQueryParams] = useSearchParams();
   const [params, setParams] = useState<PersistyParams>(generateParams)
   const key = queryParams.get("key")
@@ -59,12 +60,13 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
 
   const searchFieldFactories = [
     ...factories,
-    new ResultSetFactory(),
-    new PersistyImgRefFactory()
+    new PersistyResultSetFactory()
+    // new ResultSetFactory(),
+    // new PersistyImgRefFactory()
   ]
 
-  const persistyActions = persistyActionsWrapper(`${store}_search`, readOperation, deleteOperation, keyFactory)
-  searchFieldFactories.push(new TableFactory(300, null, ["results"], persistyActions))
+  //const persistyActions = persistyActionsWrapper(`${store}_search`, readOperation, deleteOperation)
+  //searchFieldFactories.push(new TableFactory(300, null, ["results"], persistyActions))
 
   function renderContent(){
     if (key){
@@ -97,6 +99,7 @@ const PersistySearch = ({ store, limit, keyFactory }: PersistySearchProps) => {
     </Paper>
   )
 }
+
 
 export class ResultSetFactory implements EweyFactory {
   priority: number = 200;
