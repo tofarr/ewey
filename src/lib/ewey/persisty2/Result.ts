@@ -1,4 +1,4 @@
-import { JsonObjectType } from "../../eweyField/JsonType"
+import { JsonObjectType } from "../eweyField/JsonType"
 
 interface Result {
   key: string

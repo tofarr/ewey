@@ -1,6 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
+import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -10,13 +11,14 @@ import { getLabel } from "../../label";
 import { useTranslation } from "react-i18next";
 import OpenApiQuery from "../../openApi/OpenApiQuery";
 import ErrorComponent from "../../component/ErrorComponent";
-import Result from "../ewey/Result";
+import Result from "../Result";
 import LockableLink from '../components/LockableLink';
 import { isLocked } from '../../oauth/utils';
 import { useOAuthBearerToken } from '../../oauth/OAuthBearerTokenProvider';
-import { PersistyDeleteDialog } from '../components/PersistyDeleteDialog';
+import DeleteDialog from '../components/DeleteDialog';
 import CircularProgress from '@mui/material/CircularProgress';
 import OpenApiContent from '../../openApi/OpenApiContent';
+
 
 
 export default function Read() {
@@ -37,12 +39,12 @@ export default function Read() {
 
   function renderActions(result: Result){
     return (
-      <Grid item>
-        <Grid container justifyContent="flex-end">
+      <Grid item xs>
+        <Grid container justifyContent="flex-end" spacing={2}>
           {searchOp &&
             <Grid item>
               <Link to="">
-                <Fab>
+                <Fab title={getLabel("cancel", t)}>
                   <CloseIcon />
                 </Fab>
               </Link>
@@ -54,7 +56,7 @@ export default function Read() {
                 to={`?key=${encodeURIComponent(result.key)}&edit=true`}
                 locked={isLocked(updateOp, token)}
               >
-                <Fab>
+                <Fab title={getLabel("update_item", t)}>
                   <EditIcon />
                 </Fab>
               </LockableLink>
@@ -62,13 +64,13 @@ export default function Read() {
           }
           {deleteOp &&
             <Grid item>
-              <PersistyDeleteDialog result={result} storeName={storeName} onDelete={() => navigate("")}>
+              <DeleteDialog deleteOp={deleteOp} result={result} onDelete={() => navigate("")}>
                 {(isLoading, disabled, setDialogOpen) => (
-                  <Fab onClick={() => setDialogOpen(true)}>
+                  <Fab title={getLabel("delete_item", t)} onClick={() => setDialogOpen(true)} disabled={disabled}>
                     {isLoading ? <CircularProgress size={24} /> : <DeleteIcon />}
                   </Fab>
                 )}
-              </PersistyDeleteDialog>
+              </DeleteDialog>
             </Grid>
           }
         </Grid>
@@ -76,24 +78,26 @@ export default function Read() {
     )
   }
 
-  if (!readOp) {
+  if (!readOp || isLocked(readOp, token)) {
     return <ErrorComponent />
   }
 
   return (
-    <OpenApiQuery
-        operationId={readOp.operationId}
-        params={{key}}
-      >
-      {value => (
-        <Grid container spacing={2}>
-          {renderHeader()}
-          <Grid item>
-            <OpenApiContent operationId={readOp.operationId} value={value} />
+    <Box padding={2}>
+      <OpenApiQuery
+          operationId={readOp.operationId}
+          params={{key}}
+        >
+        {value => (
+          <Grid container spacing={2}>
+            {renderHeader()}
+            <Grid item>
+              <OpenApiContent operationId={readOp.operationId} value={value} />
+            </Grid>
+            {renderActions(value as unknown as Result)}
           </Grid>
-          {renderActions(value as unknown as Result)}
-        </Grid>
-      )}
-    </OpenApiQuery>
+        )}
+      </OpenApiQuery>
+    </Box>
   )
 }

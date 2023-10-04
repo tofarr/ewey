@@ -7,35 +7,33 @@ import DialogContentText from "@mui/material/DialogContentText";
 import Fab from "@mui/material/Fab";
 import Grid from "@mui/material/Grid";
 import { useTranslation } from "react-i18next";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { OpenApiOperation } from "../../openApi/model/OpenApiOperation";
 import { useOAuthBearerToken } from "../../oauth/OAuthBearerTokenProvider";
 import { headersFromToken } from "../../openApi/headers";
 import { useMessageBroker } from "../../message/MessageBrokerContext";
 import { getLabel } from "../../label";
 import DialogHeader from "../../component/DialogHeader";
-import Result from "../ewey/Result";
-import usePersistyOperations from "../usePersistyOperations";
+import Result from "../Result";
 import { isLocked } from "../../oauth/utils";
 
 export interface PersistyDeleteDialogProps {
-  storeName: string
+  deleteOp: OpenApiOperation
   result: Result
   children: (isLoading: boolean, disabled: boolean, setDialogOpen: (open: boolean) => void) => ReactNode;
   onDelete?: () => void;
 }
 
-export function PersistyDeleteDialog({ storeName, result, children, onDelete }: PersistyDeleteDialogProps) {
+export default function DeleteDialog({ deleteOp, result, children, onDelete }: PersistyDeleteDialogProps) {
   const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = useState(false);
   const token = useOAuthBearerToken()
   const headers = headersFromToken(token?.token);
   const messageBroker = useMessageBroker();
-  const { delete: deleteItem } = usePersistyOperations(storeName)
 
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
-      const deleteResult = await (deleteItem as OpenApiOperation).invoke({ key: result.key }, headers);
+      const deleteResult = await deleteOp.invoke({ key: result.key }, headers);
       if (deleteResult) {
         messageBroker.triggerMessage(getLabel('item_deleted', t))
         if (onDelete) {
@@ -47,19 +45,14 @@ export function PersistyDeleteDialog({ storeName, result, children, onDelete }: 
     },
   });
 
-  
   function handleDelete(){
     setDialogOpen(false)
     mutate()
   }
 
-  if (!deleteItem) {
-    return null
-  }
-
   return (
     <Fragment>
-      {children(isLoading, isLoading || isLocked(deleteItem, token), setDialogOpen)}
+      {children(isLoading, isLoading || isLocked(deleteOp, token), setDialogOpen)}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogContent>
           <DialogHeader label="confirm_delete" setDialogOpen={setDialogOpen}/>

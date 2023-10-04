@@ -17,6 +17,7 @@ const OpenApiQuery = ({
   params,
   ResultsLoadingComponent,
   ResultsErrorComponent,
+  refetchOnMount,
   children,
 }: OpenApiQueryProps) => {
   if (!ResultsLoadingComponent) {
@@ -24,6 +25,9 @@ const OpenApiQuery = ({
   }
   if (!ResultsErrorComponent) {
     ResultsErrorComponent = ErrorComponent;
+  }
+  if (refetchOnMount == null) {
+    refetchOnMount = true
   }
   const openApi = useOpenApi();
   const operation = openApi.getOperation(operationId);
@@ -34,6 +38,7 @@ const OpenApiQuery = ({
     data: value,
   } = useQuery({
     queryKey: [operation.operationId, params, headers],
+    refetchOnMount,
     queryFn: () => operation.invoke(params, headers),
   });
 

@@ -8,13 +8,14 @@ import EweyField from "./EweyField";
 import JsonType, { JsonObjectType } from "./JsonType";
 import { getLabel } from "../label";
 import Box from "@mui/material/Box";
+import { ReactNode } from "react";
 
 export interface Column {
   key: string;
   Field: EweyField<JsonType>;
 }
 
-interface CellProps {
+export interface CellProps {
   column: Column;
   path: string[]
   value: JsonObjectType;
@@ -48,9 +49,11 @@ export interface RowProps {
   value: JsonObjectType[];
   onSetValue: ((value: JsonObjectType[]) => void) | null;
   ActionField?: EweyField<JsonObjectType> | null
+  cellComponent?: (props: CellProps) => JSX.Element
 }
 
-export const Row = ({ path, columns, rowIndex, value, onSetValue, ActionField }: RowProps) => {
+export const Row = ({ path, columns, rowIndex, value, onSetValue, cellComponent, ActionField }: RowProps) => {
+  const CellComponent = cellComponent || Cell
   const rowValue = value[rowIndex] as JsonObjectType
 
   const handleSetRowValue = onSetValue ? (newValue: JsonObjectType) => {
@@ -60,7 +63,7 @@ export const Row = ({ path, columns, rowIndex, value, onSetValue, ActionField }:
   } : undefined
   
   const cells = columns.map((column, columnIndex) => (
-    <Cell
+    <CellComponent
       key={`tableCell/${rowIndex}/${columnIndex}`}
       path={[...path, rowIndex.toString(), column.key]}
       column={column}
@@ -82,7 +85,7 @@ export const Row = ({ path, columns, rowIndex, value, onSetValue, ActionField }:
   );
 };
 
-const TableWrapper = (columns: Column[], actionField?: EweyField<JsonObjectType> | null): EweyField<JsonObjectType[]> => {
+const TableWrapper = (columns: Column[], cellComponent?: (props: CellProps) => JSX.Element, actionField?: EweyField<JsonObjectType> | null): EweyField<JsonObjectType[]> => {
   const TableField: EweyField<JsonObjectType[]> = ({ path, value, onSetValue }) => {
     const { t } = useTranslation();
     if(path == null){
@@ -116,6 +119,7 @@ const TableWrapper = (columns: Column[], actionField?: EweyField<JsonObjectType>
                   onSetValue={
                     onSetValue as ((value: JsonObjectType[]) => void) | null
                   }
+                  cellComponent={cellComponent}
                   ActionField={actionField}
                 />
               );

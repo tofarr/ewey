@@ -10,6 +10,7 @@ export interface PersistyOperations {
   updateOp?: OpenApiOperation
   deleteOp?: OpenApiOperation
   searchOp?: OpenApiOperation
+  countOp?: OpenApiOperation
 }
 
 export const PersistyOperationsContext = createContext<PersistyOperations | null>(null);
@@ -28,10 +29,11 @@ export function PersistyOperationsProvider({ storeName, children }: PersistyOper
     updateOp: find('update'),
     deleteOp: find('delete'),
     searchOp: find('search'),
+    countOp: find('count'),
   }
 
   function find(suffix: string) {
-    return openApi.operations.find(op => op.operationId == `${storeName}_${suffix}`)
+    return openApi.operations.find(op => op.operationId === `${storeName}_${suffix}`)
   }
 
   return (

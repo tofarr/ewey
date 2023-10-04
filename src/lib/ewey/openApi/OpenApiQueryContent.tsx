@@ -8,6 +8,7 @@ export interface OpenApiQueryContentProps {
   params?: any;
   ResultsLoadingComponent?: FC;
   ResultsErrorComponent?: FC<ErrorComponentProps>;
+  refetchOnMount?: boolean
 }
 
 const OpenApiQueryContent: FC<OpenApiQueryContentProps> = ({
@@ -15,6 +16,7 @@ const OpenApiQueryContent: FC<OpenApiQueryContentProps> = ({
   params,
   ResultsLoadingComponent,
   ResultsErrorComponent,
+  refetchOnMount,
 }) => {
   return (
     <OpenApiQuery
@@ -22,6 +24,7 @@ const OpenApiQueryContent: FC<OpenApiQueryContentProps> = ({
       params={params}
       ResultsLoadingComponent={ResultsLoadingComponent}
       ResultsErrorComponent={ResultsErrorComponent}
+      refetchOnMount={refetchOnMount}
     >
       {(value) => (
         <OpenApiContent
