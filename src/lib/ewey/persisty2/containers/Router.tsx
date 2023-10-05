@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { useSearchParams } from "react-router-dom";
 import Update from "./Update";
 import Read from "./Read";
@@ -9,7 +8,10 @@ import { EweyFactoryProvider, useEweyFactories } from "../../providers/EweyFacto
 import ResultFieldFactory from "../ewey/ResultFieldFactory";
 import ResultSetFieldFactory from "../ewey/ResultSetFieldFactory";
 import BelongsToFactory from "../ewey/BelongsToFactory";
-import Transitioner from "../components/Transitioner";
+import Fader from "../../component/Fader";
+import FaderSwitch from "../../component/FaderSwitch";
+import { useState } from "react";
+import LoadingComponent from "../../component/LoadingComponent";
 
 export interface RouterProps {
   storeName: string
@@ -27,6 +29,7 @@ export default function Router({ storeName }: RouterProps) {
   const key = queryParams.get("key")
   const edit = queryParams.get("edit")
   const factories = useEweyFactories()
+  const [previousStoreName, setPreviousStoreName] = useState(storeName);
   
   function getMode(){
     if (edit) {
@@ -36,14 +39,19 @@ export default function Router({ storeName }: RouterProps) {
   }
 
   function renderComponent(){
+    if (previousStoreName !== storeName) {
+      // In the event that the url changed force components to remount
+      setPreviousStoreName(storeName)
+      return <LoadingComponent />
+    }
     const mode = getMode()
     return (
-      <Fragment>
-        <Transitioner show={mode === Mode.CREATE}><Create /></Transitioner>
-        <Transitioner show={mode === Mode.READ}><Read /></Transitioner>
-        <Transitioner show={mode === Mode.UPDATE}><Update /></Transitioner>
-        <Transitioner show={mode === Mode.SEARCH}><Search /></Transitioner>
-      </Fragment>
+      <FaderSwitch>
+        <Fader show={mode === Mode.CREATE}><Create /></Fader>
+        <Fader show={mode === Mode.READ}><Read /></Fader>
+        <Fader show={mode === Mode.UPDATE}><Update /></Fader>
+        <Fader show={mode === Mode.SEARCH}><Search /></Fader>
+      </FaderSwitch>
     )
   }
 
@@ -54,7 +62,7 @@ export default function Router({ storeName }: RouterProps) {
       new ResultSetFieldFactory(),
       new BelongsToFactory(),
     ]}>
-      <PersistyOperationsProvider storeName={storeName}>
+      <PersistyOperationsProvider storeName={previousStoreName}>
         {renderComponent()}
       </PersistyOperationsProvider>
     </EweyFactoryProvider>

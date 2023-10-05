@@ -66,29 +66,27 @@ export default function Search({ limit }: SearchProps) {
   }
 
   return (
-    <Paper>
-      <Box padding={1}>
-        <OpenApiQuery 
-          operationId={(countOp as OpenApiOperation).operationId} 
-          params={countParams}
-        >
-          {(count) => (
-            <OpenApiQuery operationId={searchOp.operationId} params={params}>
-              {(resultSet) => (
-                <Fragment>
-                  <Header 
-                    params={params} 
-                    onSetParams={setParams} 
-                    nextPageKey={(resultSet as JsonObjectType).next_page_key as string}
-                    count={count as number}
-                  />
-                  <OpenApiContent operationId={searchOp.operationId} value={resultSet} />
-                </Fragment>
-              )}
-            </OpenApiQuery>
-          )}
-        </OpenApiQuery>
-      </Box>
-    </Paper>
+    <Box padding={1}>
+      <OpenApiQuery 
+        operationId={(countOp as OpenApiOperation).operationId} 
+        params={countParams}
+      >
+        {(count) => (
+          <OpenApiQuery operationId={searchOp.operationId} params={params}>
+            {(resultSet) => (
+              <Fragment>
+                <Header 
+                  params={params} 
+                  onSetParams={setParams} 
+                  nextPageKey={(resultSet as JsonObjectType).next_page_key as string}
+                  count={count as number}
+                />
+                <OpenApiContent operationId={searchOp.operationId} value={resultSet} />
+              </Fragment>
+            )}
+          </OpenApiQuery>
+        )}
+      </OpenApiQuery>
+    </Box>
   )
 }

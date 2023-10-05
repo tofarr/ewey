@@ -14,6 +14,7 @@ import OpenApiForm from '../../openApi/OpenApiForm';
 import { useMessageBroker } from '../../message/MessageBrokerContext';
 import { OpenApiOperation } from '../../openApi/model/OpenApiOperation';
 import { useQueryClient } from '@tanstack/react-query';
+import HeightAnimator from '../../component/HeightAnimator';
 
 
 export default function Create() {
@@ -47,21 +48,23 @@ export default function Create() {
   }
 
   return (
-    <OpenApiForm
-      operationId={createOp.operationId}
-      cancelElement={renderActions()}
-      onSuccess={() => {
-        messageBroker.triggerMessage(getLabel("create_successful", t));
-        for (const op of [countOp, readOp, searchOp]){
-          queryClient.invalidateQueries([op?.operationId], { exact: false });
-        }
-        if (searchOp) {
-          navigate("")
-        }
-      }}
-      onError={(error: any) => {
-        messageBroker.triggerError(error);
-      }}
-    />
+    <HeightAnimator>
+      <OpenApiForm
+        operationId={createOp.operationId}
+        cancelElement={renderActions()}
+        onSuccess={() => {
+          messageBroker.triggerMessage(getLabel("create_successful", t));
+          for (const op of [countOp, readOp, searchOp]){
+            queryClient.invalidateQueries([op?.operationId], { exact: false });
+          }
+          if (searchOp) {
+            navigate("")
+          }
+        }}
+        onError={(error: any) => {
+          messageBroker.triggerError(error);
+        }}
+      />
+    </HeightAnimator>
   )
 }

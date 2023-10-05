@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import pick from 'lodash/pick';
 import usePersistyOperations from "../PersistyOperationsProvider";
@@ -41,6 +41,9 @@ export default function Read() {
   }
 
   function renderActions(result: Result){
+    if (!result){
+      return null
+    }
     const updateDisabled = !!updateOp && (isLocked(updateOp, token) || !result.updatable)
     return (
       <Grid item xs>

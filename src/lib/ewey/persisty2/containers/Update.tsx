@@ -81,25 +81,31 @@ export default function Update() {
       operationId={readOp.operationId}
       params={{key}}
     >
-      {value => (
-        <OpenApiForm
-          operationId={updateOp.operationId}
-          value={createInitialValues(value as unknown as Result)}
-          cancelElement={renderActions(value as unknown as Result)}
-          onSuccess={() => {
-            messageBroker.triggerMessage(getLabel("update_successful", t));
-            for (const op of [countOp, readOp, searchOp]){
-              queryClient.invalidateQueries([op?.operationId], { exact: false });
-            }
-            if (searchOp) {
-              navigate("")
-            }
-          }}
-          onError={(error: any) => {
-            messageBroker.triggerError(error);
-          }}
-        />
-      )}
+      {value => {
+        if (!value){
+          // Item was deleted
+          return <ErrorComponent />
+        }
+        return (
+          <OpenApiForm
+            operationId={updateOp.operationId}
+            value={createInitialValues(value as unknown as Result)}
+            cancelElement={renderActions(value as unknown as Result)}
+            onSuccess={() => {
+              messageBroker.triggerMessage(getLabel("update_successful", t));
+              for (const op of [countOp, readOp, searchOp]){
+                queryClient.invalidateQueries([op?.operationId], { exact: false });
+              }
+              if (searchOp) {
+                navigate("")
+              }
+            }}
+            onError={(error: any) => {
+              messageBroker.triggerError(error);
+            }}
+          />
+        )
+      }}
     </OpenApiQuery>
   )
 }

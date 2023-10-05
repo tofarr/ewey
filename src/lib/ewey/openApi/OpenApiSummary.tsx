@@ -29,6 +29,7 @@ import OpenApiOperationForm from "./OpenApiOperationForm";
 import { OpenApi } from "./model/OpenApi";
 import Paper from "@mui/material/Paper";
 import DialogHeader from "../component/DialogHeader";
+import HeightAnimator from "../component/HeightAnimator";
 
 export const openApiSummaryRoute = (prefix: string, url: string) => {
   return (
@@ -193,7 +194,9 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations, op, children }) => 
       )}
       <Box pt={1} pb={1}>
         <Paper>
-          {children}
+          <HeightAnimator>
+            {children}
+          </HeightAnimator>
         </Paper>
       </Box>
     </Fragment>
