@@ -10,6 +10,7 @@ import { JsonObjectType } from "../../eweyField/JsonType";
 import EweyField from "../../eweyField/EweyField";
 import Result from "../Result";
 import SelectOneSearchDialog from "../components/SelectOneSearchDialog";
+import { CircularProgress } from "@mui/material";
 
 
 export default function BelongsToWrapper(
@@ -35,7 +36,11 @@ export default function BelongsToWrapper(
         return value
       }
       return (
-        <OpenApiQuery operationId={readOperation.operationId} params={{key: value}}>
+        <OpenApiQuery
+          operationId={readOperation.operationId} 
+          params={{key: value}}
+          ResultsLoadingComponent={() => <CircularProgress size={24} />}
+        >
           {result => result ? <Fragment>{labelExtractor(result as unknown as Result)}</Fragment> : <ErrorIcon color="error" />}
         </OpenApiQuery>
       )

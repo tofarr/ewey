@@ -2,14 +2,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Fab from '@mui/material/Fab';
 import Grid from "@mui/material/Grid";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { pick } from 'lodash';
 import usePersistyOperations from "../PersistyOperationsProvider";
 import { getLabel } from "../../label";
 import { useTranslation } from "react-i18next";
 import OpenApiQuery from "../../openApi/OpenApiQuery";
 import ErrorComponent from "../../component/ErrorComponent";
 import Result from "../Result";
-import LockableLink from '../components/LockableLink';
 import { isLocked } from '../../oauth/utils';
 import { useOAuthBearerToken } from '../../oauth/OAuthBearerTokenProvider';
 import DeleteDialog from '../components/DeleteDialog';
@@ -17,14 +17,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 import OpenApiForm from '../../openApi/OpenApiForm';
 import { resolveRef } from '../../ComponentSchemas';
 import { useMessageBroker } from '../../message/MessageBrokerContext';
-import { OpenApiOperation } from '../../openApi/model/OpenApiOperation';
 import { JsonObjectType } from '../../eweyField/JsonType';
 import { useQueryClient } from '@tanstack/react-query';
-
+import useQueryParams from '../components/useQueryParams';
+import { ReadParams } from './Read';
 
 export default function Update() {
-  const [queryParams] = useSearchParams();
-  const key = queryParams.get("key")
+  const { key } = useQueryParams<ReadParams>(newParams => pick(newParams, ["key"]))[0]
   const { countOp, deleteOp, readOp, searchOp, updateOp } = usePersistyOperations()
   const { t } = useTranslation()
   const token = useOAuthBearerToken()

@@ -6,9 +6,10 @@ import Fab from '@mui/material/Fab';
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import pick from 'lodash/pick';
 import usePersistyOperations from "../PersistyOperationsProvider";
 import { getLabel } from "../../label";
-import { useTranslation } from "react-i18next";
 import OpenApiQuery from "../../openApi/OpenApiQuery";
 import ErrorComponent from "../../component/ErrorComponent";
 import Result from "../Result";
@@ -18,12 +19,14 @@ import { useOAuthBearerToken } from '../../oauth/OAuthBearerTokenProvider';
 import DeleteDialog from '../components/DeleteDialog';
 import CircularProgress from '@mui/material/CircularProgress';
 import OpenApiContent from '../../openApi/OpenApiContent';
+import useQueryParams from '../components/useQueryParams';
 
-
+export interface ReadParams {
+  key: string
+}
 
 export default function Read() {
-  const [queryParams] = useSearchParams();
-  const key = queryParams.get("key")
+  const { key } = useQueryParams<ReadParams>(newParams => pick(newParams, ["key"]))[0]
   const { storeName, readOp, updateOp, deleteOp, searchOp } = usePersistyOperations()
   const { t } = useTranslation()
   const token = useOAuthBearerToken()

@@ -1,25 +1,29 @@
+import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
 import Grid from "@mui/material/Grid"
 import IconButton from "@mui/material/IconButton"
+import Typography from '@mui/material/Typography';
 import { SearchParams } from "../../containers/Search"
 import usePersistyOperations from "../../PersistyOperationsProvider"
-import Count from "./Count"
 import Paginator from "./Paginator"
 import LockableLink from "../LockableLink"
 import { isLocked } from '../../../oauth/utils';
 import { useOAuthBearerToken } from '../../../oauth/OAuthBearerTokenProvider';
 import Filter from './Filter';
-
+import { getLabel } from '../../../label';
 
 export interface HeaderProps {
   params: SearchParams
   onSetParams: (params: SearchParams) => void
   nextPageKey?: string | null
+  count?: number
 }
 
-export default function Header({ nextPageKey, params, onSetParams }: HeaderProps) {
+export default function Header({ nextPageKey, params, onSetParams, count }: HeaderProps) {
   const { createOp } = usePersistyOperations()
   const token = useOAuthBearerToken()
+  const { t } = useTranslation()
 
   function handleSetPageKey(pageKey: string | null) {
     const newParams = { ...params }
@@ -37,6 +41,14 @@ export default function Header({ nextPageKey, params, onSetParams }: HeaderProps
     onSetParams(newParams)
   }
 
+  function renderLabel() {
+    if (count === 0) {
+      return getLabel('no_results', t)
+    }
+    const result = t('x_results', `${count} Results`, {x: count});
+    return result
+  }
+
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
@@ -52,7 +64,7 @@ export default function Header({ nextPageKey, params, onSetParams }: HeaderProps
         )}
       </Grid>
       <Grid item xs>
-        <Count params={params} />
+        <Typography variant="body2">{renderLabel()}</Typography>
       </Grid>
       <Grid item>
         <Paginator

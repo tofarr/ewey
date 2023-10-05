@@ -88,6 +88,7 @@ export class UrlParamsOperation implements OpenApiOperation {
     if (this.resultValidate && !this.resultValidate(result)) {
       throw new Error("invalid_result");
     }
+    await new Promise(resolve => window.setTimeout(resolve, 2000))
     return result;
   }
 }

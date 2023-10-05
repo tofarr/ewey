@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useSearchParams } from "react-router-dom";
 import Update from "./Update";
 import Read from "./Read";
@@ -8,9 +9,17 @@ import { EweyFactoryProvider, useEweyFactories } from "../../providers/EweyFacto
 import ResultFieldFactory from "../ewey/ResultFieldFactory";
 import ResultSetFieldFactory from "../ewey/ResultSetFieldFactory";
 import BelongsToFactory from "../ewey/BelongsToFactory";
+import Transitioner from "../components/Transitioner";
 
 export interface RouterProps {
   storeName: string
+}
+
+enum Mode {
+  CREATE,
+  READ,
+  UPDATE,
+  SEARCH,
 }
 
 export default function Router({ storeName }: RouterProps) {
@@ -19,19 +28,23 @@ export default function Router({ storeName }: RouterProps) {
   const edit = queryParams.get("edit")
   const factories = useEweyFactories()
   
-  function renderComponent(){
+  function getMode(){
     if (edit) {
-      if (key) {
-        return <Update />
-      } else {
-        return <Create />
-      }
+      return key ? Mode.UPDATE : Mode.CREATE
     }
-    if (key) {
-      return <Read />
-    } else {
-      return <Search />
-    }
+    return key ? Mode.READ : Mode.SEARCH
+  }
+
+  function renderComponent(){
+    const mode = getMode()
+    return (
+      <Fragment>
+        <Transitioner show={mode === Mode.CREATE}><Create /></Transitioner>
+        <Transitioner show={mode === Mode.READ}><Read /></Transitioner>
+        <Transitioner show={mode === Mode.UPDATE}><Update /></Transitioner>
+        <Transitioner show={mode === Mode.SEARCH}><Search /></Transitioner>
+      </Fragment>
+    )
   }
 
   return (
