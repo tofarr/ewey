@@ -4,8 +4,7 @@ import { useOpenApi } from "./OpenApiProvider";
 import { SubmitComponentProps } from "../component/SubmitComponent";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import EweyForm from "../EweyForm";
-import JsonType from "../eweyField/JsonType";
-import { JsonObjectType } from "../eweyField/JsonType";
+import { JsonObjType, JsonType } from "json-urley";
 import { headersFromToken } from "../openApi/headers";
 import { newCreateDefaultFnForSchema } from "../schemaCompiler";
 
@@ -38,7 +37,7 @@ const OpenApiForm: FC<OpenApiFormProps> = ({
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
       try {
-        const params = (disconnected ? internalValue : value) as JsonObjectType;
+        const params = (disconnected ? internalValue : value) as JsonObjType;
         const result = await operation.invoke(params, headers);
         if (onSuccess) {
           onSuccess(result);

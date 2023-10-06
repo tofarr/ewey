@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useSearchParams } from "react-router-dom";
-import { JsonObjType, jsonObjToQueryParams, queryParamsToJsonObj } from "json-urley";
+import { jsonObjToQueryParams, queryParamsToJsonObj } from "json-urley";
 import { useEffect, useState } from "react";
 import isEqual from 'lodash/isEqual';
-import { JsonObjectType } from "../../eweyField/JsonType";
+import { JsonObjType } from "json-urley";
 
 export default function useQueryParams<T>(filterParams: (params: T) => T): [T, (newParams: T) => void] {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,10 +13,10 @@ export default function useQueryParams<T>(filterParams: (params: T) => T): [T, (
       const newQueryParams = filterParams(queryParamsToJsonObj(searchParams) as T)
       return isEqual(queryParams, newQueryParams) ? prevQueryParams : queryParams
     })
-  }, [searchParams])
+  }, [filterParams, searchParams])
 
   function handleSetParams(newParams: T) {
-    const newQueryParams = jsonObjToQueryParams(newParams as JsonObjectType)
+    const newQueryParams = jsonObjToQueryParams(newParams as JsonObjType)
     setSearchParams(newQueryParams as any)
     setQueryParams(newParams)
   }

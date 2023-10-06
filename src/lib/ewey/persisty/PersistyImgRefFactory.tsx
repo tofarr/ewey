@@ -1,3 +1,5 @@
+export default function foobar() {}
+/*
 import EweyFactory from "../eweyFactory/EweyFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import { ComponentSchemas } from "../ComponentSchemas";
@@ -23,3 +25,4 @@ class PersistyImgRefFactory implements EweyFactory {
 }
 
 export default PersistyImgRefFactory;
+*/

@@ -1,4 +1,4 @@
-import JsonType from "../../eweyField/JsonType";
+import { JsonType } from "json-urley";
 import { AnySchemaObject } from "../../schemaCompiler";
 import OpenApiHeaders from "./OpenApiHeaders";
 import OpenApiOperationSchema from "./OpenApiOperationSchema";

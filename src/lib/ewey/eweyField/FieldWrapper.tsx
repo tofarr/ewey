@@ -1,11 +1,10 @@
 import { JsonType } from "json-urley";
 import EweyProps from "./EweyProps";
-import { JsonObjectType } from "./JsonType";
 import EweyField from "./EweyField";
 
-export default function FieldWrapper<JsonObjectType>(key: string, ValueComponent: EweyField<JsonType>) {
+export default function FieldWrapper<T>(key: string, ValueComponent: EweyField<JsonType>) {
 
-  return ({ value, onSetValue}: EweyProps<JsonObjectType>) => {
+  return ({ value, onSetValue}: EweyProps<T>) => {
       
     function handleSetItemValue(v: JsonType){
       if (onSetValue){

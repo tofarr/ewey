@@ -13,7 +13,7 @@ export interface FaderProps {
  */
 export default function Fader({ show, timeout, children }: FaderProps) {
   if (!timeout){
-    timeout = 400
+    timeout = 200
   }
   const container = useRef<HTMLDivElement | null>(null)
 

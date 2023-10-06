@@ -1,3 +1,5 @@
+export default function foobar() {}
+/*
 import { Fragment, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import Dialog from "@mui/material/Dialog";
@@ -40,3 +42,4 @@ export function PersistyDataUploadButton({ store, getUploadFormOperation, onUplo
     </Fragment>
   )
 }
+*/

@@ -27,7 +27,7 @@ export default function HeightAnimator({ children }: HeightAnimatorProps) {
     padding: "0",
     border: "none",
     boxSizing: "border-box",
-    transition: "height 0.4s ease-in-out"
+    transition: "height 0.2s ease-in-out"
   }
 
   return (

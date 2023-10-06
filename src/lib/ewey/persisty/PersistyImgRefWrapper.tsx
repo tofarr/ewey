@@ -1,3 +1,5 @@
+export default function foobar() {}
+/*
 import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -13,7 +15,7 @@ import EweyField from "../eweyField/EweyField";
 import { Fragment, useState } from "react";
 import OpenApiQuery from "../openApi/OpenApiQuery";
 import { ResultSet } from "./ResultSet";
-import { JsonObjectType } from "../eweyField/JsonType";
+import { JsonObjType } from "../eweyField/JsonType";
 import { jsonObjToQueryStr } from "json-urley";
 import PersistyImg from "./PersistyImg";
 import { useOpenApi } from "../openApi/OpenApiProvider";
@@ -27,7 +29,7 @@ const IMG_HEIGHT = 50
 
 const SELECT_IMG_WIDTH = 100
 const SELECT_IMG_HEIGHT = 100
-/*
+
 const PersistyImgRefWrapper = (
   store: string,
   imgWidth: number = IMG_WIDTH,
@@ -38,13 +40,13 @@ const PersistyImgRefWrapper = (
     const [selectDialogOpen, setSelectDialogOpen] = useState(false)
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     const [pageKey, setPageKey] = useState<string|null|undefined>(null)
-    const imgQueryParams: JsonObjectType = {limit: 3}
+    const imgQueryParams: JsonObjType = {limit: 3}
     if (pageKey) {
       imgQueryParams.page_key = pageKey
     }
     const getUploadFormOperation = openApi.operations.find(op => op.operationId === `${store}_get_upload_form`)
 
-    function renderOption(item: JsonObjectType){
+    function renderOption(item: JsonObjType){
       if (!onSetValue) {
         throw new Error('illegal_state')
       }

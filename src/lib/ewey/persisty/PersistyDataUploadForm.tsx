@@ -1,3 +1,5 @@
+export default function foobar() {}
+/*
 import { ChangeEvent, FormEvent, useState } from "react";
 import Button from "@mui/material/Button";
 import { useTranslation } from "react-i18next";
@@ -8,7 +10,7 @@ import { getLabel } from "../label";
 import { headersFromToken } from "../openApi/headers";
 import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { useMessageBroker } from "../message/MessageBrokerContext";
-import { JsonObjectType } from "../eweyField/JsonType";
+import { JsonObjType } from "../eweyField/JsonType";
 import SubmitComponent from "../component/SubmitComponent";
 import { useOpenApi } from "../openApi/OpenApiProvider";
 import ImgPreviewComponent from "../component/ImgPreviewComponent";
@@ -17,9 +19,9 @@ import Box from "@mui/material/Box";
 
 export interface PersistyDataUploadFormProps {
   store: string
-  initialValues?: JsonObjectType
+  initialValues?: JsonObjType
   getUploadFormOperation: OpenApiOperation
-  onUpload?: (item: JsonObjectType) => void
+  onUpload?: (item: JsonObjType) => void
 }
 
 export interface FormField {
@@ -124,3 +126,4 @@ export function PersistyDataUploadForm({ store, getUploadFormOperation, onUpload
     </form>
   )
 }
+*/

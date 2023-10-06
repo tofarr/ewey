@@ -4,7 +4,6 @@ import {
 import EweyFactory from "../../eweyFactory/EweyFactory";
 import { ComponentSchemas } from "../../ComponentSchemas";
 import BelongsToWrapper from "./BelongsToWrapper";
-import { JsonObjectType } from "../../eweyField/JsonType";
 import { toCamelCase } from "../util";
 import Result from "../Result";
 

@@ -5,7 +5,7 @@ import { useOAuthBearerToken } from "../oauth/OAuthBearerTokenProvider";
 import { useOpenApi } from "./OpenApiProvider";
 import { headersFromToken } from "../openApi/headers";
 import { OpenApiQueryContentProps } from "./OpenApiQueryContent";
-import JsonType from "../eweyField/JsonType";
+import { JsonType } from "json-urley";
 import ErrorComponent from "../component/ErrorComponent";
 
 export interface OpenApiQueryProps extends OpenApiQueryContentProps {

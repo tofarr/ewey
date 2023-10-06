@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+export default function foobar() {}
+/*
 import { Fragment, useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import LinkIcon from '@mui/icons-material/Link';
@@ -6,7 +7,7 @@ import Box from "@mui/material/Box"
 import Paper from "@mui/material/Paper"
 import { PersistyParams } from "./PersistyParams"
 import { jsonObjToQueryParams, jsonObjToQueryStr, queryParamsToJsonObj } from "json-urley"
-import { JsonObjectType } from "../eweyField/JsonType"
+import { JsonObjType } from "../eweyField/JsonType"
 import { EweyFactoryProvider, useEweyFactories } from "../providers/EweyFactoryProvider"
 import OpenApiQuery from "../openApi/OpenApiQuery"
 import TableFactory from "../eweyFactory/TableFactory"
@@ -23,7 +24,7 @@ import PersistyImg from "./PersistyImg"
 export interface PersistyDataSearchProps {
   store: string,
   limit?: number,
-  keyFactory?: (item: JsonObjectType) => string,
+  keyFactory?: (item: JsonObjType) => string,
   imgWidth?: number
   imgHeight?: number
 }
@@ -66,7 +67,7 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 64, imgHeight
   }, [store])
 
   function generateParams() {
-    const newParams: JsonObjectType = queryParamsToJsonObj(queryParams)
+    const newParams: JsonObjType = queryParamsToJsonObj(queryParams)
     if (newParams.limit == null) {
       newParams.limit = limit || 5
     }
@@ -74,7 +75,7 @@ const PersistyDataSearch = ({ store, limit, keyFactory, imgWidth = 64, imgHeight
   }
 
   function handleSetParams(newParams: PersistyParams){
-    const newQueryParams = jsonObjToQueryParams(newParams as JsonObjectType)
+    const newQueryParams = jsonObjToQueryParams(newParams as JsonObjType)
     setQueryParams(newQueryParams as any)
     setParams(newParams)
   }

@@ -4,7 +4,7 @@ import {
   ValidateFunction,
 } from "../../schemaCompiler";
 import { jsonObjToQueryStr } from "json-urley";
-import JsonType, { JsonObjectType } from "../../eweyField/JsonType";
+import { JsonObjType, JsonType } from "json-urley";
 import { createUrl } from "./OpenApi";
 import OpenApiHeaders from "./OpenApiHeaders";
 import OpenApiOperationSchema from "./OpenApiOperationSchema";
@@ -61,7 +61,7 @@ export class UrlParamsOperation implements OpenApiOperation {
     if (this.paramsValidate && !this.paramsValidate(params)) {
       throw new Error("invalid_params");
     }
-    const parameters: JsonObjectType = { ...params as JsonObjectType }
+    const parameters: JsonObjType = { ...params as JsonObjType }
     const keys = Object.keys(parameters)
     const urlStr: string = this.url.replace(/{(.*)}/g, function(match, key) {
       const present = keys.includes(key)

@@ -1,7 +1,7 @@
 import addFormats from "ajv-formats";
 import Ajv, { AnySchemaObject } from "ajv";
 import { v4 as uuidv4 } from "uuid";
-import JsonType, { JsonObjectType } from "./eweyField/JsonType";
+import { JsonObjType, JsonType } from "json-urley";
 import { ComponentSchemas, resolveRef } from "./ComponentSchemas";
 
 export type { AnySchemaObject, ValidateFunction } from "ajv";
@@ -54,7 +54,7 @@ export const newCreateDefaultFnForSchema = (schema: AnySchemaObject, components:
     }
   }
   if (schema.anyOf) {
-    const subSchema = schema.anyOf.find((s: JsonObjectType) => s.type !== "null")
+    const subSchema = schema.anyOf.find((s: JsonObjType) => s.type !== "null")
     if (subSchema){
       return newCreateDefaultFnForSchema(subSchema, components)
     }

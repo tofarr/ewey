@@ -1,4 +1,3 @@
-import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Fab from '@mui/material/Fab';
 import Grid from "@mui/material/Grid";

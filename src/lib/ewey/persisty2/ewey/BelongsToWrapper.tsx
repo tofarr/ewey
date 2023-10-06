@@ -5,8 +5,6 @@ import { useOAuthBearerToken } from "../../oauth/OAuthBearerTokenProvider"
 import { useOpenApi } from "../../openApi/OpenApiProvider"
 import OpenApiQuery from "../../openApi/OpenApiQuery";
 import { Fragment, useState } from "react";
-import { JsonObjectType } from "../../eweyField/JsonType";
-// import SelectOneSearchDialog from "./SelectOneSearchDialog";
 import EweyField from "../../eweyField/EweyField";
 import Result from "../Result";
 import SelectOneSearchDialog from "../components/SelectOneSearchDialog";

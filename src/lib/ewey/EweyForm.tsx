@@ -1,13 +1,13 @@
 import { FC, FormEvent, ReactNode, useEffect, useState } from "react";
+import { JsonType } from "json-urley";
+import { useTranslation } from "react-i18next";
 import { AnySchemaObject, ValidateFunction, newCreateDefaultFnForSchema, schemaCompiler } from "./schemaCompiler";
 import Typography from "@mui/material/Typography";
-import { useTranslation } from "react-i18next";
 import JsonSchemaFieldFactory from "./JsonSchemaFieldFactory";
 import SubmitComponent, {
   SubmitComponentProps,
 } from "./component/SubmitComponent";
 import { getLabel } from "./label";
-import JsonType from "./eweyField/JsonType";
 import EweyField from "./eweyField/EweyField";
 import { useEweyFactories } from "./providers/EweyFactoryProvider";
 import Grid from "@mui/material/Grid";

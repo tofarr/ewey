@@ -1,3 +1,5 @@
+export default function foobar() {}
+/*
 import Grid from "@mui/material/Grid"
 import PersistyPaginator from "./PersistyPaginator";
 import { PersistyParams } from "./PersistyParams";
@@ -63,3 +65,4 @@ const PersistyHeader = ({ store, nextPageKey, params, onSetParams }: PersistyHea
 }
 
 export default PersistyHeader;
+*/

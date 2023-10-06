@@ -1,10 +1,10 @@
-import { JsonObjectType } from "../eweyField/JsonType"
+import { JsonObjType } from "json-urley";
 
 interface Result {
   key: string
   deletable: boolean
   updatable: boolean
-  item: JsonObjectType
+  item: JsonObjType
 }
 
 export default Result

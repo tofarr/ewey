@@ -7,6 +7,7 @@ import { pick } from 'lodash';
 import usePersistyOperations from "../PersistyOperationsProvider";
 import { getLabel } from "../../label";
 import { useTranslation } from "react-i18next";
+import { JsonObjType } from 'json-urley';
 import OpenApiQuery from "../../openApi/OpenApiQuery";
 import ErrorComponent from "../../component/ErrorComponent";
 import Result from "../Result";
@@ -17,10 +18,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import OpenApiForm from '../../openApi/OpenApiForm';
 import { resolveRef } from '../../ComponentSchemas';
 import { useMessageBroker } from '../../message/MessageBrokerContext';
-import { JsonObjectType } from '../../eweyField/JsonType';
 import { useQueryClient } from '@tanstack/react-query';
 import useQueryParams from '../components/useQueryParams';
 import { ReadParams } from './Read';
+
 
 export default function Update() {
   const { key } = useQueryParams<ReadParams>(newParams => pick(newParams, ["key"]))[0]
@@ -38,7 +39,7 @@ export default function Update() {
     const { paramsSchema } = updateOp
     const properties = resolveRef(paramsSchema.properties.item, paramsSchema.components).properties
     const readItem = readResult.item
-    const item: JsonObjectType = {}
+    const item: JsonObjType = {}
     for (const key in readItem){
       if (properties[key]){
         item[key] = readItem[key]

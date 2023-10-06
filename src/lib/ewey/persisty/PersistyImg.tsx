@@ -1,3 +1,5 @@
+export default function foobar() {}
+/*
 import { useEffect, useRef, useState } from "react"
 import ErrorIcon from '@mui/icons-material/Error';
 import Button from "@mui/material/Button"
@@ -74,3 +76,4 @@ const PersistyImg = ({src, updatedAt, width, height, maxWidth, maxHeight}: Persi
 }
 
 export default PersistyImg
+*/

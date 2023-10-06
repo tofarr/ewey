@@ -4,15 +4,14 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
+import { JsonObjType, JsonType } from "json-urley";
 import { SearchParams } from '../../containers/Search';
 import usePersistyOperations from '../../PersistyOperationsProvider';
 import { AnySchemaObject } from 'ajv';
 import { resolveRef } from '../../../ComponentSchemas';
-import { JsonType } from 'json-urley';
 import DialogHeader from '../../../component/DialogHeader';
 import { EweyLayoutHint, EweyLayoutHintProvider } from '../../../providers/EweyLayoutHint';
 import EweyForm from '../../../EweyForm';
-import { JsonObjectType } from '../../../eweyField/JsonType';
 
 export interface FilterProps {
   params: SearchParams
@@ -63,7 +62,7 @@ export default function Filter({ params, onSetParams }: FilterProps) {
           <EweyLayoutHintProvider hint={EweyLayoutHint.LABELS_ALWAYS_ABOVE}>
             <EweyForm 
               schema={schema}
-              value={internalParams as JsonObjectType} 
+              value={internalParams as JsonObjType} 
               onSetValue={(value) => setInternalParams(value as SearchParams)}
               onSubmit={handleSubmit}
             />
