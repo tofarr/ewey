@@ -5,18 +5,21 @@ import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { ComponentSchemas, resolveRef } from "../ComponentSchemas";
 
 class FieldSetFactory implements EweyFactory {
-  inclusive: boolean = false;
+  inclusive: boolean;
   fieldNames?: string[];
-  priority: number = 100;
+  maxOptionalFieldsForSelect: number;
+  priority: number;
 
   constructor(
     inclusive: boolean = false,
     fieldNames?: string[],
-    priority: number = 100
+    priority: number = 100,
+    maxOptionalFieldsForSelect = 3
   ) {
     this.priority = priority;
     this.inclusive = inclusive;
     this.fieldNames = fieldNames;
+    this.maxOptionalFieldsForSelect = maxOptionalFieldsForSelect;
   }
 
   create(
@@ -64,6 +67,7 @@ class FieldSetFactory implements EweyFactory {
     }
 
     const alwaysFullWidth = hasComplexChildren(schema, components)
+    const selectOptional = Object.keys(fieldsByKey).length - required.length > this.maxOptionalFieldsForSelect;
 
     const fieldSetComponent = FieldSetWrapper(
       fieldsByKey,
@@ -71,6 +75,7 @@ class FieldSetFactory implements EweyFactory {
       labelFields,
       required,
       defaultValueFactories,
+      selectOptional,
     );
     return fieldSetComponent;
   }

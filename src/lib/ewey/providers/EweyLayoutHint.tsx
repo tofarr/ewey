@@ -2,7 +2,8 @@ import { createContext, FC, ReactElement, useContext } from "react";
 
 
 export enum EweyLayoutHint {
-  LABELS_ALWAYS_ABOVE = 'labelsAlwaysAbove'
+  LABELS_ALWAYS_ABOVE = 'labelsAlwaysAbove',
+  NESTED = 'nested'
 }
 
 export const EweyLayoutHintContext = createContext<EweyLayoutHint | null>(null);

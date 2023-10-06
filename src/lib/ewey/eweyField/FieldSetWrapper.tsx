@@ -6,27 +6,32 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import { useEweyLayoutHint } from "../providers/EweyLayoutHint";
+import { EweyLayoutHint, EweyLayoutHintProvider, useEweyLayoutHint } from "../providers/EweyLayoutHint";
 import EweyField from "./EweyField";
 import { getLabel } from "../label";
 import IconButton from "@mui/material/IconButton";
+import MenuItem from "@mui/material/MenuItem";
+import { Fragment, useState } from "react";
+import Menu from "@mui/material/Menu";
+import Paper from "@mui/material/Paper";
 
 const FieldSetWrapper = (
   fieldsByKey: any,
   alwaysFullWidth: boolean,
   labelFields: string[],
   requiredFieldNames: string[],
-  defaultValueFactories: any
+  defaultValueFactories: any,
+  selectOptional: boolean
 ) => {
   const FieldSetComponent: EweyField<any> = ({ path, value, onSetValue }) => {
     if (!value){
       value = {}
     }
     const { t } = useTranslation();
-    const fieldKeys = Object.keys(fieldsByKey)
+    let fieldKeys = Object.keys(fieldsByKey)
     const existingKeys = Object.keys(value);
     const eweyLayoutHint = useEweyLayoutHint()
-    const labelsAlwaysAbove = alwaysFullWidth || eweyLayoutHint === 'labelsAlwaysAbove';
+    const labelsAlwaysAbove = alwaysFullWidth || [EweyLayoutHint.LABELS_ALWAYS_ABOVE, EweyLayoutHint.NESTED].includes(eweyLayoutHint as EweyLayoutHint);
 
     function handleAddDefault(key: string) {
       const newValue = { ...value };
@@ -142,20 +147,64 @@ const FieldSetWrapper = (
       )
     }
 
+    function renderSelectForOptionalFields(){
+      const selectOptions = Object.keys(fieldsByKey).filter(k => !existingKeys.includes(k));
+      if (!selectOptions.length){
+        return null
+      }
+      return (
+        <Grid container alignItems="center" pt={3}>
+          <Grid item xs={12} md={labelsAlwaysAbove ? 12 : 3}></Grid>
+          <Grid
+            item
+            xs={12}
+            md={labelsAlwaysAbove ? 12 : 9}
+            lg={labelsAlwaysAbove ? 12 : 6}
+            pl={1}
+          >
+            <OptionalFieldSelect selectOptions={selectOptions} onSelect={handleAddDefault} />
+          </Grid>
+        </Grid>
+      )
+    }
+
     if(fieldKeys.length === 1){
       return renderField(fieldKeys[0])
     }
 
-    return (
-      <Grid container spacing={1} alignItems="center">
-        {fieldKeys.map(key => (
-          <Grid item key={key} xs={12}>
-            <Grid container alignItems="center">
-              {labelFields.includes(key) && existingKeys.includes(key) ? renderFieldLabelRow(key) : renderFieldRow(key)}
+    if (selectOptional) {
+      fieldKeys = fieldKeys.filter(k => existingKeys.includes(k));
+    }
+
+    function renderFields(){
+      return (
+        <Grid container spacing={1} alignItems="center">
+          {fieldKeys.map(key => (
+            <Grid item key={key} xs={12}>
+              <Grid container alignItems="center">
+                {labelFields.includes(key) && existingKeys.includes(key) ? renderFieldLabelRow(key) : renderFieldRow(key)}
+              </Grid>
             </Grid>
-          </Grid>
-        ))}
-      </Grid>
+          ))}
+          {selectOptional && renderSelectForOptionalFields()}
+        </Grid>
+      )
+    }
+
+    if (eweyLayoutHint == EweyLayoutHint.NESTED){
+      return (
+        <Paper>
+          <Box padding={1}>
+            {renderFields()}
+          </Box>
+        </Paper>
+      )
+    }
+
+    return (
+      <EweyLayoutHintProvider hint={EweyLayoutHint.NESTED}>
+        {renderFields()}
+      </EweyLayoutHintProvider>
     )
   };
 
@@ -163,3 +212,43 @@ const FieldSetWrapper = (
 };
 
 export default FieldSetWrapper;
+
+
+interface OptionalFieldSelectProps{
+  selectOptions: string[],
+  onSelect: (value: string) => void
+}
+
+
+function OptionalFieldSelect({ selectOptions, onSelect}: OptionalFieldSelectProps){
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { t } = useTranslation();
+  const open = Boolean(anchorEl);
+
+  return (
+    <Fragment>
+      <Button variant="outlined" endIcon={<AddIcon />} onClick={(event) => setAnchorEl(event.currentTarget)}>{getLabel('optional_values', t)}</Button>
+      <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={() => setAnchorEl(null)}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+        >
+        {selectOptions.map(opt => (
+          <MenuItem
+            key={opt}
+            onClick={() => {
+              setAnchorEl(null)
+              onSelect(opt)
+            }}
+          >
+            {getLabel(opt, t)}
+          </MenuItem>
+        ))}
+      </Menu>
+    </Fragment>
+  )
+}

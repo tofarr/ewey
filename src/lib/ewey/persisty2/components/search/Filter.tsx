@@ -13,6 +13,7 @@ import DialogHeader from '../../../component/DialogHeader';
 import { EweyLayoutHint, EweyLayoutHintProvider } from '../../../providers/EweyLayoutHint';
 import EweyForm from '../../../EweyForm';
 import HeightAnimator from '../../../component/HeightAnimator';
+import isEqual from 'lodash/isEqual';
 
 export interface FilterProps {
   params: SearchParams
@@ -48,13 +49,22 @@ export default function Filter({ params, onSetParams }: FilterProps) {
     setOpen(false)
   }
 
+  function handleOpen(){
+    if (!internalParams.search_filter){
+      if (schema?.properties?.search_filter?.properties?.query){
+        setInternalParams({search_filter:{query:""}})
+      }
+    }
+    setOpen(true)
+  }
+
   if (!schema) {
     return null
   }
  
   return (
     <Fragment>
-      <IconButton onClick={() => setOpen(true)}>
+      <IconButton onClick={handleOpen}>
         <FilterAltIcon />
       </IconButton>
       <Dialog fullWidth open={open} onClose={() => setOpen(false)}>
