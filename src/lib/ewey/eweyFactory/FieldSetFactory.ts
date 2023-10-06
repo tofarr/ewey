@@ -30,7 +30,10 @@ class FieldSetFactory implements EweyFactory {
       return null;
     }
 
-    // const required = schema.required || []
+    // Maybe if the fieldset has fields that are both optional and nullable, we use a dropdown?
+    // Or if it has more than a certain number of optional fields, we use a dropdown
+
+    const required = schema.required || []
     const schemasByKey: any = {}
     const defaultValueFactories: any = {}
     const labelFields = []
@@ -41,6 +44,7 @@ class FieldSetFactory implements EweyFactory {
       }
 
       let subSchema = schema.properties[key]
+      subSchema = unwrapOptional(key, subSchema, required)
       schemasByKey[key] = subSchema
       const factory = newCreateDefaultFnForSchema(subSchema, components)
       if (factory) {
@@ -65,7 +69,7 @@ class FieldSetFactory implements EweyFactory {
       fieldsByKey,
       alwaysFullWidth,
       labelFields,
-      schema.required || [],
+      required,
       defaultValueFactories,
     );
     return fieldSetComponent;
@@ -79,7 +83,7 @@ class FieldSetFactory implements EweyFactory {
   }
 }
 
-export const hasComplexChildren = (schema: AnySchemaObject, components: ComponentSchemas) => {
+export function hasComplexChildren(schema: AnySchemaObject, components: ComponentSchemas) {
   for (const key in schema.properties) {
     const subSchema = schema.properties[key]
     if (isComplex(subSchema, components)) {
@@ -89,7 +93,7 @@ export const hasComplexChildren = (schema: AnySchemaObject, components: Componen
   return false
 }
 
-export const isComplex = (schema: AnySchemaObject, components: ComponentSchemas): boolean => {
+export function isComplex(schema: AnySchemaObject, components: ComponentSchemas): boolean {
   schema = resolveRef(schema, components)
   if (schema.enum) {
     return false
@@ -109,6 +113,23 @@ export const isComplex = (schema: AnySchemaObject, components: ComponentSchemas)
     return isComplex(schema.properties[Object.keys(schema.properties)[0]], components)
   }
   return true
+}
+
+export function unwrapOptional(key: string, schema: AnySchemaObject, required: string[]) {
+  if (schema.default !== null || required.includes(key)){
+    return schema
+  }
+  const anyOf = schema.anyOf;
+  if (anyOf?.length !== 2){
+    return schema
+  }
+  if (anyOf[0].type === 'null'){
+    return anyOf[1]
+  }
+  if (anyOf[1].type === 'null'){
+    return anyOf[0]
+  }
+  return schema
 }
 
 export default FieldSetFactory;

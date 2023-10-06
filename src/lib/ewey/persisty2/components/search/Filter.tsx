@@ -12,6 +12,7 @@ import { resolveRef } from '../../../ComponentSchemas';
 import DialogHeader from '../../../component/DialogHeader';
 import { EweyLayoutHint, EweyLayoutHintProvider } from '../../../providers/EweyLayoutHint';
 import EweyForm from '../../../EweyForm';
+import HeightAnimator from '../../../component/HeightAnimator';
 
 export interface FilterProps {
   params: SearchParams
@@ -59,14 +60,16 @@ export default function Filter({ params, onSetParams }: FilterProps) {
       <Dialog fullWidth open={open} onClose={() => setOpen(false)}>
         <DialogContent>
           <DialogHeader label="search_filters" setDialogOpen={setOpen} />
-          <EweyLayoutHintProvider hint={EweyLayoutHint.LABELS_ALWAYS_ABOVE}>
-            <EweyForm 
-              schema={schema}
-              value={internalParams as JsonObjType} 
-              onSetValue={(value) => setInternalParams(value as SearchParams)}
-              onSubmit={handleSubmit}
-            />
-          </EweyLayoutHintProvider>  
+          <HeightAnimator>
+            <EweyLayoutHintProvider hint={EweyLayoutHint.LABELS_ALWAYS_ABOVE}>
+              <EweyForm 
+                schema={schema}
+                value={internalParams as JsonObjType} 
+                onSetValue={(value) => setInternalParams(value as SearchParams)}
+                onSubmit={handleSubmit}
+              />
+            </EweyLayoutHintProvider>
+          </HeightAnimator>
         </DialogContent>
       </Dialog>
     </Fragment>
