@@ -21,11 +21,13 @@ import { useMessageBroker } from '../../message/MessageBrokerContext';
 import { useQueryClient } from '@tanstack/react-query';
 import useQueryParams from '../components/useQueryParams';
 import { ReadParams } from './Read';
+import { useState } from 'react';
 
 
 export default function Update() {
   const { key } = useQueryParams<ReadParams>(newParams => pick(newParams, ["key"]))[0]
-  const { countOp, deleteOp, readOp, searchOp, updateOp } = usePersistyOperations()
+  const { storeName, countOp, deleteOp, readOp, searchOp, updateOp } = usePersistyOperations()
+  const [prevStoreName] = useState(storeName)
   const { t } = useTranslation()
   const token = useOAuthBearerToken()
   const messageBroker = useMessageBroker()
@@ -71,6 +73,11 @@ export default function Update() {
         }
       </Grid>
     )
+  }
+
+  if (prevStoreName != storeName){
+    // Catch case where user navigates to different store. Wait for the router to catch up
+    return null
   }
 
   if (!readOp || !updateOp || isLocked(readOp, token) || isLocked(updateOp, token)) {

@@ -1,10 +1,11 @@
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import EweyField from "./EweyField";
 import EweyFactory from "../eweyFactory/EweyFactory";
+import { ComponentSchemas } from "../ComponentSchemas";
 
 const RefWrapper = (
   componentName: string,
-  components: any,
+  components: ComponentSchemas,
   currentPath: string[],
   factories: EweyFactory[],
 ) => {

@@ -2,19 +2,27 @@ import OpenApiSchema from "./OpenApiSchema";
 import { OpenApiOperation, OpenApiOperationFactory } from "./OpenApiOperation";
 import { UrlParamsOperationFactory } from "./UrlParamsOperation";
 import { PostBodyOperationFactory } from "./PostBodyOperation";
+import { ComponentSchemas } from "../../ComponentSchemas";
 
 export class OpenApi {
   schema: OpenApiSchema;
   operations: OpenApiOperation[];
+  components: ComponentSchemas;
+  baseUrl: string;
   loginUrl?: string;
+  
 
   constructor(
     schema: OpenApiSchema,
     operations: OpenApiOperation[],
+    components: ComponentSchemas,
+    baseUrl: string,
     loginUrl?: string,
   ) {
     this.schema = schema;
     this.operations = operations;
+    this.components = components;
+    this.baseUrl = baseUrl;
     this.loginUrl = loginUrl;
   }
 
@@ -28,12 +36,16 @@ export class OpenApi {
   }
 }
 
-export const createUrl = (schema: OpenApiSchema, path: string) => {
+export const baseUrl = (schema: OpenApiSchema) => {
   let url = schema.servers[0].url;
   if (url.endsWith("/")) {
     url = url.substring(0, url.length - 1);
   }
-  return url + path;
+  return url
+}
+
+export const createUrl = (schema: OpenApiSchema, path: string) => {
+  return baseUrl(schema) + path;
 };
 
 export const getLoginUrl = (schema: OpenApiSchema) => {
@@ -80,5 +92,5 @@ export const createOpenApi = (
       }
     }
   }
-  return new OpenApi(schema, operations, getLoginUrl(schema));
+  return new OpenApi(schema, operations, schema.components, baseUrl(schema), getLoginUrl(schema));
 };

@@ -192,7 +192,7 @@ const SummaryLayout: FC<SummaryLayoutProps> = ({ operations, op, children }) => 
           </DialogContent>
         </Dialog>
       )}
-      <Box pt={1} pb={1}>
+      <Box padding={1}>
         <Paper>
           <HeightAnimator>
             {children}

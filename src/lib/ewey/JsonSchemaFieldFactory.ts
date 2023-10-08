@@ -1,10 +1,11 @@
 import EweyFactory from "./eweyFactory/EweyFactory";
 import { FACTORIES } from "./eweyFactory";
 import { AnySchemaObject } from "./schemaCompiler";
+import { ComponentSchemas } from "./ComponentSchemas";
 
 const JsonSchemaFieldFactory = (
   schema: AnySchemaObject,
-  components?: any,
+  components?: ComponentSchemas,
   currentPath?: string[],
   factories?: EweyFactory[],
   parents?: AnySchemaObject[],
@@ -23,7 +24,7 @@ const JsonSchemaFieldFactory = (
   for (const factory of factories) {
     const component = factory.create(
       schema,
-      components,
+      components || {},
       currentPath,
       factories,
       parents,

@@ -8,10 +8,10 @@ import TableWrapper, { Column } from "../../eweyField/TableWrapper"
 import { AnySchemaObject } from "../../schemaCompiler"
 import Result from "../Result"
 import { ResultSetCell } from "../components/search/ResultSetCell"
-import { ActionField } from "../components/search/ActionField"
 import ResultSet from "../ResultSet"
+import { DataActionField } from "../components/data/DataActionField"
 
-export default class ResultSetFieldFactory implements EweyFactory {
+export default class DataResultSetFieldFactory implements EweyFactory {
   priority: number = 200
 
   create(
@@ -31,18 +31,13 @@ export default class ResultSetFieldFactory implements EweyFactory {
       return null
     }
     itemSchema = resolveRef(itemSchema, components)
-    if (!itemSchema.persistyStored){
+    if (!itemSchema.persistyData){
       return null
     }
-    const columns: Column[] = []
-    for (const key of itemSchema.persistyStored.summary_attr_names) {
-      const attrSchema = itemSchema.properties[key]
-      columns.push({
-        key,
-        Field: JsonSchemaFieldFactory(attrSchema, components, ["results", "item", key], factories, [schema, itemSchema, attrSchema])
-      })
-    }
-    const TableComponent = TableWrapper(columns, ResultSetCell, ActionField as unknown as EweyField<JsonObjType>) as unknown as EweyField<Result[]>
+    const columns: Column[] = [
+      {key: "file_name", Field: JsonSchemaFieldFactory({type: "string"}, components, ["results", "item", "file_name"], factories, [schema, itemSchema, {type: "string"}])},
+    ]
+    const TableComponent = TableWrapper(columns, ResultSetCell, DataActionField as unknown as EweyField<JsonObjType>) as unknown as EweyField<Result[]>
 
     return FieldWrapper('results', TableComponent as unknown as EweyField<JsonType>);
   }

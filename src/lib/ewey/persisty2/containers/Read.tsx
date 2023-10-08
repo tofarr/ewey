@@ -20,6 +20,7 @@ import DeleteDialog from '../components/DeleteDialog';
 import CircularProgress from '@mui/material/CircularProgress';
 import OpenApiContent from '../../openApi/OpenApiContent';
 import useQueryParams from '../components/useQueryParams';
+import { useState } from 'react';
 
 export interface ReadParams {
   key: string
@@ -28,6 +29,7 @@ export interface ReadParams {
 export default function Read() {
   const { key } = useQueryParams<ReadParams>(newParams => pick(newParams, ["key"]))[0]
   const { storeName, readOp, updateOp, deleteOp, searchOp } = usePersistyOperations()
+  const [prevStoreName] = useState(storeName)
   const { t } = useTranslation()
   const token = useOAuthBearerToken()
   const navigate = useNavigate()
@@ -83,6 +85,11 @@ export default function Read() {
         </Grid>
       </Grid>
     )
+  }
+
+  if (prevStoreName != storeName){
+    // Catch case where user navigates to different store. Wait for the router to catch up
+    return null
   }
 
   if (!readOp || isLocked(readOp, token)) {
