@@ -21,7 +21,7 @@ export interface CellProps {
   onSetValue?: ((value: JsonObjType) => void);
 }
 
-export const Cell = ({ column, path, value, onSetValue }: CellProps) => {
+export function Cell({ column, path, value, onSetValue }: CellProps) {
   return (
     <TableCell key={column.key}>
       <column.Field
@@ -47,12 +47,11 @@ export interface RowProps {
   rowIndex: number;
   value: JsonObjType[];
   onSetValue: ((value: JsonObjType[]) => void) | null;
-  ActionField?: EweyField<JsonObjType> | null
-  cellComponent?: (props: CellProps) => JSX.Element
+  cellType?: (props: CellProps) => JSX.Element
 }
 
-export const Row = ({ path, columns, rowIndex, value, onSetValue, cellComponent, ActionField }: RowProps) => {
-  const CellComponent = cellComponent || Cell
+export function Row({ path, columns, rowIndex, value, onSetValue, cellType }: RowProps) {
+  const CellComponent = cellType || Cell
   const rowValue = value[rowIndex] as JsonObjType
 
   const handleSetRowValue = onSetValue ? (newValue: JsonObjType) => {
@@ -61,55 +60,57 @@ export const Row = ({ path, columns, rowIndex, value, onSetValue, cellComponent,
     onSetValue(newValues);
   } : undefined
   
-  const cells = columns.map((column, columnIndex) => (
-    <CellComponent
-      key={`tableCell/${rowIndex}/${columnIndex}`}
-      path={[...path, rowIndex.toString(), column.key]}
-      column={column}
-      value={rowValue}
-      onSetValue={handleSetRowValue}
-    />
-  ))
-  if (ActionField) {
-    cells.push(
-      <TableCell key={`actions/${rowIndex}`} align="right">
-        <ActionField value={rowValue} onSetValue={handleSetRowValue} />
-      </TableCell>
-    )
-  }
   return (
     <TableRow key={`tableRow/${rowIndex}`}>
-      {cells}
+      {columns.map((column, columnIndex) => (
+        <CellComponent
+          key={`tableCell/${rowIndex}/${columnIndex}`}
+          path={[...path, rowIndex.toString(), column.key]}
+          column={column}
+          value={rowValue}
+          onSetValue={handleSetRowValue}
+        />
+      ))}
     </TableRow>
   );
 };
 
-const TableWrapper = (columns: Column[], cellComponent?: (props: CellProps) => JSX.Element, actionField?: EweyField<JsonObjType> | null): EweyField<JsonObjType[]> => {
+export interface HeadProps {
+  columns: Column[]
+  columnsBefore?: number
+  columnsAfter?: number
+}
+
+export function Head({ columns }: HeadProps) {
+  const { t } = useTranslation()
+  return (
+    <TableHead>
+      <TableRow>{columns.map(column => (
+        <TableCell key={column.key}>
+          {getLabel(column.key, t)}
+        </TableCell>
+      ))}</TableRow>
+    </TableHead>
+  )
+}
+
+export default function TableWrapper(columns: Column[], rowType?: (props: RowProps) => JSX.Element, headType?: (props: HeadProps) => JSX.Element): EweyField<JsonObjType[]> {
   const TableField: EweyField<JsonObjType[]> = ({ path, value, onSetValue }) => {
     const { t } = useTranslation();
     if(path == null){
       path = [];
     }
-    const headCells = columns.map((column) => (
-      <TableCell key={column.key}>
-        {getLabel(column.key, t)}
-      </TableCell>
-    ))
-    if (actionField){
-      headCells.push(<TableCell key="/actions"></TableCell>);
-    }
+
+    const RowComponent = rowType || Row
+    const HeadComponent = headType || Head
     return (
       <Box overflow="auto">
         <Table>
-          <TableHead>
-            <TableRow>
-              {headCells}
-            </TableRow>
-          </TableHead>
+          <HeadComponent columns={columns} />
           <TableBody>
             {(value || []).map((v, index) => {
               return (
-                <Row
+                <RowComponent
                   key={`row${index}`}
                   path={path as string[]}
                   columns={columns}
@@ -118,8 +119,6 @@ const TableWrapper = (columns: Column[], cellComponent?: (props: CellProps) => J
                   onSetValue={
                     onSetValue as ((value: JsonObjType[]) => void) | null
                   }
-                  cellComponent={cellComponent}
-                  ActionField={actionField}
                 />
               );
             })}
@@ -130,5 +129,3 @@ const TableWrapper = (columns: Column[], cellComponent?: (props: CellProps) => J
   };
   return TableField;
 };
-
-export default TableWrapper;

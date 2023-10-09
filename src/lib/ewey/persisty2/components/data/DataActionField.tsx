@@ -1,5 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import MoreIcon from '@mui/icons-material/More';
+import LinkIcon from '@mui/icons-material/Link';
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import IconButton from '@mui/material/IconButton';
@@ -28,7 +28,7 @@ export function DataActionField({ value }: EweyProps<Result>) {
       <Grid item>
         <Link target="_blank" to={downloadUrl}>
           <IconButton>
-            <MoreIcon />
+            <LinkIcon />
           </IconButton>
         </Link>
       </Grid>

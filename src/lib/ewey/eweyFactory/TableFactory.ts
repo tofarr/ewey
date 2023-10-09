@@ -1,4 +1,4 @@
-import TableWrapper, { Cell, CellProps } from "../eweyField/TableWrapper";
+import TableWrapper, { HeadProps, Row, RowProps } from "../eweyField/TableWrapper";
 import JsonSchemaFieldFactory from "../JsonSchemaFieldFactory";
 import { AnySchemaObject } from "../schemaCompiler";
 import { ComponentSchemas } from "../ComponentSchemas";
@@ -9,21 +9,21 @@ class TableFactory implements EweyFactory {
   priority: number;
   restrictToKeys: string[] | null;
   pathMatch: string[] | null;
-  cellComponent?: (props: CellProps) => JSX.Element
-  actionField?: EweyField<any> | null
+  rowComponent?: (props: RowProps) => JSX.Element
+  headType?: (props: HeadProps) => JSX.Element
 
   constructor(
     priority: number = 110,
     restrictToKeys: string[] | null = null,
     pathMatch: string[] | null = null,
-    cellComponent?: (props: CellProps) => JSX.Element,
-    actionField?: EweyField<any> | null,
+    rowComponent?: (props: RowProps) => JSX.Element,
+    headType?: (props: HeadProps) => JSX.Element
   ) {
     this.priority = priority;
     this.restrictToKeys = restrictToKeys;
     this.pathMatch = pathMatch;
-    this.cellComponent = cellComponent || Cell;
-    this.actionField = actionField
+    this.rowComponent = rowComponent || Row;
+    this.headType = headType
   }
 
   create(
@@ -92,7 +92,7 @@ class TableFactory implements EweyFactory {
       }
     }
 
-    return TableWrapper(columns, this.cellComponent, this.actionField);
+    return TableWrapper(columns, this.rowComponent, this.headType);
   }
 }
 

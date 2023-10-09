@@ -11,6 +11,7 @@ import { isLocked } from '../../../oauth/utils';
 import { useOAuthBearerToken } from '../../../oauth/OAuthBearerTokenProvider';
 import Filter from './Filter';
 import { getLabel } from '../../../label';
+import { OpenApiOperation } from '../../../openApi/model/OpenApiOperation';
 
 export interface HeaderProps {
   params: SearchParams
@@ -20,7 +21,7 @@ export interface HeaderProps {
 }
 
 export default function Header({ nextPageKey, params, onSetParams, count }: HeaderProps) {
-  const { createOp } = usePersistyOperations()
+  const { createOp, searchOp } = usePersistyOperations()
   const token = useOAuthBearerToken()
   const { t } = useTranslation()
 
@@ -51,7 +52,7 @@ export default function Header({ nextPageKey, params, onSetParams, count }: Head
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
-        <Filter params={params} onSetParams={onSetParams} />
+        <Filter params={params} onSetParams={onSetParams} searchOp={searchOp as OpenApiOperation} />
       </Grid>
       <Grid item xs>
         {createOp && (

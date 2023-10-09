@@ -12,6 +12,8 @@ import { Fragment, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import { DialogContent } from '@mui/material';
 import FileUploadForm from './FileUploadForm';
+import Filter from '../search/Filter';
+import { OpenApiOperation } from '../../../openApi/model/OpenApiOperation';
 
 export interface DataHeaderProps {
   params: SearchParams
@@ -22,7 +24,7 @@ export interface DataHeaderProps {
 
 export default function DataHeader({ nextPageKey, params, onSetParams, count }: DataHeaderProps) {
   const [showUploadDialog, setShowUploadDialog] = useState(false)
-  const { uploadCreateOp } = usePersistyDataOperations()
+  const { uploadCreateOp, fileSearchOp } = usePersistyDataOperations()
   const token = useOAuthBearerToken()
   const { t } = useTranslation()
 
@@ -53,7 +55,7 @@ export default function DataHeader({ nextPageKey, params, onSetParams, count }: 
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
-        <div>Data Filter</div>
+        <Filter params={params} onSetParams={onSetParams} searchOp={fileSearchOp as OpenApiOperation} />
       </Grid>
       <Grid item xs>
         {uploadCreateOp && (

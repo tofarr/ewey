@@ -14,14 +14,16 @@ import { EweyLayoutHint, EweyLayoutHintProvider } from '../../../providers/EweyL
 import EweyForm from '../../../EweyForm';
 import HeightAnimator from '../../../component/HeightAnimator';
 import isEqual from 'lodash/isEqual';
+import { OpenApiOperation } from '../../../openApi/model/OpenApiOperation';
 
 export interface FilterProps {
   params: SearchParams
   onSetParams: (params: SearchParams) => void
+  searchOp: OpenApiOperation
 }
 
-export default function Filter({ params, onSetParams }: FilterProps) {
-  const { searchOp } = usePersistyOperations()
+export default function Filter({ params, onSetParams, searchOp }: FilterProps) {
+
   const [open, setOpen] = useState(false)
   const [internalParams, setInternalParams] = useState(params)
   const [schema, setSchema] = useState<AnySchemaObject | null>(null)

@@ -3,13 +3,13 @@ import JsonSchemaFieldFactory from "../../JsonSchemaFieldFactory"
 import EweyFactory from "../../eweyFactory/EweyFactory"
 import EweyField from "../../eweyField/EweyField"
 import FieldWrapper from "../../eweyField/FieldWrapper"
-import { JsonObjType, JsonType } from "json-urley";
+import { JsonType } from "json-urley";
 import TableWrapper, { Column } from "../../eweyField/TableWrapper"
 import { AnySchemaObject } from "../../schemaCompiler"
 import Result from "../Result"
-import { ResultSetCell } from "../components/search/ResultSetCell"
 import ResultSet from "../ResultSet"
-import { DataActionField } from "../components/data/DataActionField"
+import DataResultSetRow from "../components/data/DataResultSetRow"
+import DataResultSetHead from "../components/data/DataResultSetHead"
 
 export default class DataResultSetFieldFactory implements EweyFactory {
   priority: number = 200
@@ -37,11 +37,9 @@ export default class DataResultSetFieldFactory implements EweyFactory {
     const itemProperties = itemSchema.properties
     const {file_name, updated_at} = itemProperties
     const columns: Column[] = [
-      {key: "file_name", Field: JsonSchemaFieldFactory(file_name, components, ["results", "item", "file_name"], factories, [schema, itemSchema, file_name])},
-      {key: "updated_at", Field: JsonSchemaFieldFactory(updated_at, components, ["results", "item", "file_name"], factories, [schema, itemSchema, updated_at])}
+      {key: "updated_at", Field: JsonSchemaFieldFactory(updated_at, components, ["results", "item", "updated_at"], factories, [schema, itemSchema, updated_at])}
     ]
-    const TableComponent = TableWrapper(columns, ResultSetCell, DataActionField as unknown as EweyField<JsonObjType>) as unknown as EweyField<Result[]>
-
+    const TableComponent = TableWrapper(columns, DataResultSetRow, DataResultSetHead) as unknown as EweyField<Result[]>
     return FieldWrapper('results', TableComponent as unknown as EweyField<JsonType>);
   }
 }
