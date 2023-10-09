@@ -2,6 +2,7 @@ import { ReactElement, createContext, useContext } from "react";
 import { useOpenApi } from "../openApi/OpenApiProvider";
 import { OpenApiOperation } from "../openApi/model/OpenApiOperation";
 import { AnySchemaObject } from "../schemaCompiler";
+import { toCamelCase } from "./util";
 
 
 export interface PersistyDataOperations {
@@ -62,11 +63,4 @@ export default function usePersistyDataOperations(): PersistyDataOperations {
       throw new Error('missing_persisty_data_operations_provider')
     }
     return operations;
-}
-
-function toCamelCase(name: string){
-  let parts = name.split('_')
-  parts = parts.map(p => p ? (p.substring(0, 1).toUpperCase() + p.substring(1)) : "")
-  const result = parts.join("")
-  return result
 }

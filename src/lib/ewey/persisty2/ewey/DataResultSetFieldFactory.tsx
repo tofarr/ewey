@@ -34,8 +34,11 @@ export default class DataResultSetFieldFactory implements EweyFactory {
     if (!itemSchema.persistyData){
       return null
     }
+    const itemProperties = itemSchema.properties
+    const {file_name, updated_at} = itemProperties
     const columns: Column[] = [
-      {key: "file_name", Field: JsonSchemaFieldFactory({type: "string"}, components, ["results", "item", "file_name"], factories, [schema, itemSchema, {type: "string"}])},
+      {key: "file_name", Field: JsonSchemaFieldFactory(file_name, components, ["results", "item", "file_name"], factories, [schema, itemSchema, file_name])},
+      {key: "updated_at", Field: JsonSchemaFieldFactory(updated_at, components, ["results", "item", "file_name"], factories, [schema, itemSchema, updated_at])}
     ]
     const TableComponent = TableWrapper(columns, ResultSetCell, DataActionField as unknown as EweyField<JsonObjType>) as unknown as EweyField<Result[]>
 

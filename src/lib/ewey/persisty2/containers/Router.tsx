@@ -12,6 +12,7 @@ import Fader from "../../component/Fader";
 import FaderSwitch from "../../component/FaderSwitch";
 import { useState } from "react";
 import LoadingComponent from "../../component/LoadingComponent";
+import HasUrlFactory from "../ewey/HasUrlFactory";
 
 export interface RouterProps {
   storeName: string
@@ -61,6 +62,7 @@ export default function Router({ storeName }: RouterProps) {
       new ResultFieldFactory(),
       new ResultSetFieldFactory(),
       new BelongsToFactory(),
+      new HasUrlFactory(),
     ]}>
       <PersistyOperationsProvider storeName={previousStoreName}>
         {renderComponent()}

@@ -35,7 +35,7 @@ export function ActionField({ value, onSetValue }: EweyProps<Result>) {
       }
       {deleteOp &&
         <Grid item>
-          <DeleteDialog deleteOp={deleteOp} result={value} onDelete={() => navigate("")}>
+          <DeleteDialog result={value} onDelete={() => navigate("")}>
             {(isLoading, disabled, setDialogOpen) => (
              <IconButton 
                 disabled={disabled} 

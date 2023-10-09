@@ -40,7 +40,7 @@ export default function FileUploadForm({ onFinishUpload }: FileUploadFormProps) 
   const queryClient = useQueryClient()
   const messageBroker = useMessageBroker();
   const [file, setFile] = useState<File|null>(null)
-  const { uploadCreateOp, uploadPartCreateOp, uploadFinishOp, uploadDeleteOp, fileSchema, baseUrl } = usePersistyDataOperations()
+  const { fileSearchOp, uploadCreateOp, uploadFinishOp, fileSchema, baseUrl } = usePersistyDataOperations()
   
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
@@ -52,29 +52,36 @@ export default function FileUploadForm({ onFinishUpload }: FileUploadFormProps) 
       await new Promise((resolve, reject) => {
         const reader = new FileReader()
         reader.onloadend =  async function(event){
-          if (event?.target?.readyState == FileReader.DONE) {
-            const fileContent = event.target.result as ArrayBuffer
-            let offset = 0
-            let partIndex = 0
-            while (offset < file.size){
-              const part = upload.parts.results[partIndex++]
-              const partSize = Math.min(maxPartSize, file.size - offset)
-              let uploadUrl = part.upload_url
-              if (!uploadUrl.startsWith("http")) {
-                uploadUrl = baseUrl + uploadUrl
+          try{
+            if (event?.target?.readyState == FileReader.DONE) {
+              const fileContent = event.target.result as ArrayBuffer
+              let offset = 0
+              let partIndex = 0
+              while (offset < file.size){
+                const part = upload.parts.results[partIndex++]
+                const partSize = Math.min(maxPartSize, file.size - offset)
+                let uploadUrl = part.upload_url
+                if (!uploadUrl.startsWith("http")) {
+                  uploadUrl = baseUrl + uploadUrl
+                }
+                await fetch(uploadUrl, {
+                  method: "POST",
+                  body: fileContent.slice(offset, offset + partSize),
+                  headers
+                })
+                offset += partSize
               }
-              await fetch(uploadUrl, {
-                method: "POST",
-                body: fileContent.slice(offset, offset + partSize)
-              })
-              offset += partSize
+              resolve(null)
             }
           }
-          resolve(null)
+          catch(e){
+            reject(e)
+          }
         }
         reader.readAsArrayBuffer(file)  
       });
-      uploadFinishOp?.invoke(upload.id)
+      await uploadFinishOp?.invoke({upload_id: upload.id}, headers)
+      queryClient.invalidateQueries([fileSearchOp?.operationId], {exact: false})
       if (onFinishUpload){
         onFinishUpload(upload.file_name, upload.content_type)
       }

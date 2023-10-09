@@ -73,7 +73,7 @@ export default function Read() {
           }
           {deleteOp &&
             <Grid item>
-              <DeleteDialog deleteOp={deleteOp} result={result} onDelete={() => navigate("")}>
+              <DeleteDialog result={result} onDelete={() => navigate("")}>
                 {(isLoading, disabled, setDialogOpen) => (
                   <Fab title={getLabel("delete_item", t)} onClick={() => setDialogOpen(true)} disabled={disabled}>
                     {isLoading ? <CircularProgress size={24} /> : <DeleteIcon />}

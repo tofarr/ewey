@@ -9,7 +9,7 @@ import Router from './containers/Router';
 import DataRouter from './containers/DataRouter';
 
 const OPERATIONS = ['create', 'read', 'update', 'delete', 'search', 'count', "read_batch", "edit_batch"]
-const DATA_OPERATIONS = ['upload_create', 'upload_delete', 'upload_finish', 'upload_read', 'upload_search', 'upload_part_count', 'upload_part_search', 'upload_part_create']
+const DATA_OPERATIONS = ['file_read', 'file_count', 'file_delete', 'file_search', 'file_read_batch', 'upload_create', 'upload_delete', 'upload_finish', 'upload_read', 'upload_search', 'upload_part_count', 'upload_part_search', 'upload_part_create']
 
 
 export const persistySummaryRoute = (prefix: string, url: string) => {

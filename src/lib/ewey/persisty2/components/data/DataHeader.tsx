@@ -68,7 +68,9 @@ export default function DataHeader({ nextPageKey, params, onSetParams, count }: 
               maxWidth="lg"
             >
               <DialogContent>
-                <FileUploadForm />
+                <FileUploadForm onFinishUpload={() => {
+                  setShowUploadDialog(false)
+                }} />
               </DialogContent>
             </Dialog>
           </Fragment>

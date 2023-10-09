@@ -11,17 +11,22 @@ import { isLocked } from '../../../oauth/utils';
 import { useOAuthBearerToken } from '../../../oauth/OAuthBearerTokenProvider';
 import LockableLink from '../LockableLink';
 import usePersistyDataOperations from '../../PersistyDataOperationsProvider';
+import DataDeleteDialog from './DataDeleteDialog';
 
 
 export function DataActionField({ value }: EweyProps<Result>) {
-  const { fileDeleteOp } = usePersistyDataOperations()
+  const { fileDeleteOp, baseUrl } = usePersistyDataOperations()
   const navigate = useNavigate()
   const token = useOAuthBearerToken()
+  let downloadUrl = value.item.download_url as string
+  if (!downloadUrl.startsWith("http")){
+    downloadUrl = baseUrl + downloadUrl;
+  }
 
   return (
     <Grid container direction="row" spacing={1} justifyContent="flex-end">
       <Grid item>
-        <Link to={`?key=${encodeURIComponent(value.key)}`}>
+        <Link target="_blank" to={downloadUrl}>
           <IconButton>
             <MoreIcon />
           </IconButton>
@@ -29,7 +34,7 @@ export function DataActionField({ value }: EweyProps<Result>) {
       </Grid>
       {fileDeleteOp &&
         <Grid item>
-          <DeleteDialog deleteOp={fileDeleteOp} result={value} onDelete={() => navigate("")}>
+          <DataDeleteDialog result={value} onDelete={() => navigate("")}>
             {(isLoading, disabled, setDialogOpen) => (
              <IconButton 
                 disabled={disabled} 
@@ -38,7 +43,7 @@ export function DataActionField({ value }: EweyProps<Result>) {
                 {isLoading ? <CircularProgress size={24} /> : <DeleteIcon />}
               </IconButton>
             )}
-          </DeleteDialog>
+          </DataDeleteDialog>
         </Grid>
       }
     </Grid>
