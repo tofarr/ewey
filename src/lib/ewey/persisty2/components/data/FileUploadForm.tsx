@@ -38,7 +38,6 @@ export default function FileUploadForm({ onFinishUpload }: FileUploadFormProps) 
   const token = useOAuthBearerToken()
   const headers = headersFromToken(token?.token);
   const queryClient = useQueryClient()
-  const messageBroker = useMessageBroker();
   const [file, setFile] = useState<File|null>(null)
   const { fileSearchOp, uploadCreateOp, uploadFinishOp, fileSchema, baseUrl } = usePersistyDataOperations()
   

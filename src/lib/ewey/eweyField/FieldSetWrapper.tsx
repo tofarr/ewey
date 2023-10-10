@@ -186,7 +186,7 @@ const FieldSetWrapper = (
               </Grid>
             </Grid>
           ))}
-          {selectOptional && renderSelectForOptionalFields()}
+          {selectOptional && onSetValue && renderSelectForOptionalFields()}
         </Grid>
       )
     }

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { useOpenApi } from "../../../openApi/OpenApiProvider"
 import { JsonObjType, jsonObjToQueryStr } from "json-urley"
+import Button from "@mui/material/Button"
 
 
 export interface FileHandle {
@@ -15,10 +16,12 @@ export interface ResizedImgProps{
   storeName: string
   width?: number
   height?: number
+  onClick?: (fileHandle: FileHandle) => void
+  isValid?: boolean
 }
 
 
-export default function FileHandleLink({fileHandle, storeName, width, height}: ResizedImgProps) {
+export default function FileHandleLink({fileHandle, storeName, width, height, onClick, isValid}: ResizedImgProps) {
   const openApi = useOpenApi()
   const isImg = (fileHandle.content_type || "").startsWith("image/")
   if (!width){
@@ -26,6 +29,9 @@ export default function FileHandleLink({fileHandle, storeName, width, height}: R
   }
   if (!height){
     height = 60
+  }
+  if (isValid == null){
+    isValid = true
   }
 
   function renderSrc(){
@@ -48,15 +54,28 @@ export default function FileHandleLink({fileHandle, storeName, width, height}: R
     return src
   }
 
-  if (isImg) {
+  function renderContent(){
+    if (isImg) {
+      return (
+        <img src={renderSrc()} style={{width: width+"px", height: height + "px"}} />
+      )
+    }
+    return fileHandle.file_name as string
+  }
+
+  if (onClick){
     return (
-      <img src={renderSrc()} style={{width: width+"px", height: height + "px"}} />
+      <Button variant="outlined" color={isValid ? "primary" : "error"} onClick={() => onClick(fileHandle)} >
+        {renderContent()}
+      </Button>
     )
   }
 
   return (
-    <Link target="_blank" to={fileHandle.download_url}>
-      {fileHandle.file_name as string}
+    <Link to={openApi.baseUrl + fileHandle.download_url}>
+      <Button variant="outlined" color={isValid ? "primary" : "error" }>
+        {renderContent()}
+      </Button>
     </Link>
   )
 }
