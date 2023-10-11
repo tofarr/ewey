@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom"
+import ErrorIcon from "@mui/icons-material/Error";
 import { useOpenApi } from "../../../openApi/OpenApiProvider"
 import { JsonObjType, jsonObjToQueryStr } from "json-urley"
 import Button from "@mui/material/Button"
+import { useState } from "react"
 
 
 export interface FileHandle {
@@ -20,9 +22,16 @@ export interface ResizedImgProps{
   isValid?: boolean
 }
 
+enum Status {
+  READY = 1,
+  ERROR = 2,
+  RETRYING = 3,
+}
+
 
 export default function FileHandleLink({fileHandle, storeName, width, height, onClick, isValid}: ResizedImgProps) {
   const openApi = useOpenApi()
+  const [status, setStatus] = useState(Status.READY)
   const isImg = (fileHandle.content_type || "").startsWith("image/")
   if (!width){
     width = 80
@@ -50,14 +59,28 @@ export default function FileHandleLink({fileHandle, storeName, width, height, on
       width,
       height
     } as unknown as JsonObjType
+    if (status === Status.RETRYING){
+      params.nonce = new Date().getTime()
+    }
     const src = `${openApi.baseUrl}/resized-img?${jsonObjToQueryStr(params)}`
     return src
   }
 
+  function handleError(event: any){
+    if (status === Status.READY) {
+      setStatus(Status.RETRYING)
+    }else{
+      setStatus(Status.ERROR)
+    }
+  }
+
   function renderContent(){
     if (isImg) {
+      if (status === Status.ERROR){
+        return <ErrorIcon />
+      }
       return (
-        <img src={renderSrc()} style={{width: width+"px", height: height + "px"}} />
+        <img alt="" src={renderSrc()} style={{width: width+"px", height: height + "px"}} onError={handleError} />
       )
     }
     return fileHandle.file_name as string
