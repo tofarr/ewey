@@ -12,7 +12,7 @@ import { MessageDisplayProvider } from "./lib/ewey";
 import OAuthBearerTokenProvider, {
   Storage,
 } from "./lib/ewey/oauth/OAuthBearerTokenProvider";
-import { persistySummaryRoute } from "./lib/ewey/persisty2/PersistySummary";
+import { persistySummaryRoute } from "./lib/ewey/persisty/PersistySummary";
 
 const queryClient = new QueryClient();
 const OPEN_API_URL = "http://localhost:8000/openapi.json";
