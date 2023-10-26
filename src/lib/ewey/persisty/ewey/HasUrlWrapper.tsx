@@ -24,7 +24,6 @@ export default function HasUrlWrapper(
     const readOperation = openApi.operations.find(op => op.operationId === `${fileStoreName}_file_read`)
     const searchOperation = openApi.operations.find(op => op.operationId === `${fileStoreName}_file_search`)
     const token = useOAuthBearerToken()
-    const isReadable = readOperation && (!readOperation.requiresAuth || !!token?.token);
     const isSearchable = searchOperation && (!searchOperation.requiresAuth || !!token?.token);
     const isValid = validate(value)
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -32,6 +31,14 @@ export default function HasUrlWrapper(
     const handleClick = onSetValue ? () => {
       setDialogOpen(true)
     } : undefined
+
+    function renderError(){
+      return (
+        <Button variant="outlined" disabled={onSetValue == null} onClick={handleClick}>
+          <ErrorIcon color="error" />
+        </Button>
+      )
+    }
 
     function renderLink(){
       if (!value){
@@ -45,15 +52,12 @@ export default function HasUrlWrapper(
         <OpenApiQuery
           operationId={(readOperation as OpenApiOperation).operationId} 
           params={{file_name: value}}
-          ResultsLoadingComponent={() => <CircularProgress size={24} />}
+          ResultsLoadingComponent={() => <Button variant="outlined"><CircularProgress size={24} /></Button>}
+          ResultsErrorComponent={renderError}
         >
           {response => {
             if (!response) {
-              return (
-                <Button variant="outlined" disabled={onSetValue == null} onClick={handleClick}>
-                  <ErrorIcon color="error" />
-                </Button>
-              )
+              return renderError()
             }
             const result = response as unknown as Result
             const fileHandle = result.item as unknown as FileHandle

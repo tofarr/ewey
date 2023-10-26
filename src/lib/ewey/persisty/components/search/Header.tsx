@@ -17,10 +17,11 @@ export interface HeaderProps {
   params: SearchParams
   onSetParams: (params: SearchParams) => void
   nextPageKey?: string | null
+  creatable: boolean
   count?: number
 }
 
-export default function Header({ nextPageKey, params, onSetParams, count }: HeaderProps) {
+export default function Header({ nextPageKey, creatable, params, onSetParams, count }: HeaderProps) {
   const { createOp, searchOp } = usePersistyOperations()
   const token = useOAuthBearerToken()
   const { t } = useTranslation()
@@ -56,8 +57,8 @@ export default function Header({ nextPageKey, params, onSetParams, count }: Head
       </Grid>
       <Grid item xs>
         {createOp && (
-          <LockableLink to="?edit=true" locked={isLocked(createOp, token)}>
-            <IconButton >
+          <LockableLink to="?edit=true" locked={!creatable}>
+            <IconButton disabled={!creatable} >
               <AddIcon />
             </IconButton>
           </LockableLink>

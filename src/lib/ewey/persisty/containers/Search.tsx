@@ -9,6 +9,7 @@ import OpenApiContent from "../../openApi/OpenApiContent";
 import { OpenApiOperation } from "../../openApi/model/OpenApiOperation";
 import pick from 'lodash/pick';
 import useQueryParams from "../components/useQueryParams";
+import ResultSet from "../ResultSet";
 
 export interface SearchProps {
   limit?: number,
@@ -47,7 +48,8 @@ export default function Search({ limit }: SearchProps) {
                 <Header 
                   params={params} 
                   onSetParams={setParams} 
-                  nextPageKey={(resultSet as JsonObjType).next_page_key as string}
+                  nextPageKey={(resultSet as unknown as ResultSet).next_page_key}
+                  creatable={(resultSet as unknown as ResultSet).creatable}
                   count={count as number}
                 />
                 <OpenApiContent operationId={searchOp.operationId} value={resultSet} />
